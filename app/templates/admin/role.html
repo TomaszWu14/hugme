@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Role i uprawnienia – panel{% endblock %}
+{% block content %}
+<h1>Role i uprawnienia</h1>
+{% include "admin/_nav.html" %}
+<p class="lead">Co która rola widzi i może. Tabela opisuje reguły egzekwowane w kodzie (dekoratory i warunki w widokach) –
+  zmiana uprawnień to zmiana kodu, nie ustawienie. Liczby to aktywne konta.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Macierz uprawnień – na małym ekranie przewiń w bok">
+<table class="matrix">
+  <caption>Macierz uprawnień: funkcja × rola</caption>
+  <thead><tr><th scope="col">Funkcja</th>{% for k in role_keys %}<th scope="col">{{ role_names[k] }}{% if k != 'gosc' %}<br><span class="meta">{{ counts.get(k, 0) }} kont</span>{% endif %}</th>{% endfor %}</tr></thead>
+  <tbody>
+    {% for feature, perms in perms %}
+    <tr><th scope="row">{{ feature }}</th>
+      {% for k in role_keys %}<td class="num {{ 'ok' if perms[k] else 'no' }}">{% if perms[k] %}<span aria-hidden="true">✔</span><span class="sr-only">tak</span>{% else %}<span aria-hidden="true">–</span><span class="sr-only">nie</span>{% endif %}</td>{% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<section aria-labelledby="log-h">
+  <h2 id="log-h">Dziennik działań Hubu na kontach</h2>
+  {% if logs %}
+  <div class="table-wrap" tabindex="0" role="region" aria-label="Dziennik – na małym ekranie przewiń w bok">
+  <table><caption>Ostatnie 30 wpisów</caption>
+    <thead><tr><th scope="col">Kiedy</th><th scope="col">Kto</th><th scope="col">Konto</th><th scope="col">Co</th></tr></thead>
+    <tbody>{% for l in logs %}<tr><td>{{ l.created_at|date }}</td><td>{{ l.admin_name }}</td><td><a href="/admin/uzytkownicy/{{ l.user_id }}">{{ l.user_name }}</a></td><td>{{ l.action }}</td></tr>{% endfor %}</tbody>
+  </table></div>
+  {% else %}<p class="meta">Brak wpisów – pojawią się po pierwszej zmianie roli, blokadzie albo dodaniu konta.</p>{% endif %}
+</section>
+{% endblock %}

@@ -2,7 +2,7 @@
 {% set items = [] %}
 {% for href, text in [('/admin', 'Skrzynka'), ('/admin/watki', 'Wątki bez odpowiedzi'), ('/admin/luki', 'Luki'),
                       ('/admin/trendy', 'Trendy potrzeb'), ('/admin/razem', 'Razem z ZD'), ('/admin/potrzebny', 'Jestem potrzebny'), ('/admin/biblioteka', 'Biblioteka'), ('/admin/import', 'Import'),
-                      ('/admin/nabory', 'Nabory'), ('/admin/poczta', 'Kolejka e-mail')] %}
+                      ('/admin/nabory', 'Nabory'), ('/admin/poczta', 'Kolejka e-mail'), ('/admin/uzytkownicy', 'Użytkownicy'), ('/admin/role', 'Role')] %}
 {% set _ = items.append((href, text, request.path == href)) %}
 {% endfor %}
 <nav aria-label="Menu panelu Hubu" class="no-print admin-nav">

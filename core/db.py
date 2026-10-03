@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS users (
     areas TEXT NOT NULL DEFAULT '',
     email TEXT NOT NULL,
     bio TEXT NOT NULL DEFAULT '',
-    is_demo INTEGER NOT NULL DEFAULT 0
+    is_demo INTEGER NOT NULL DEFAULT 0,
+    is_active INTEGER NOT NULL DEFAULT 1
 );
 CREATE TABLE IF NOT EXISTS innovations (
     id INTEGER PRIMARY KEY,
@@ -232,6 +233,13 @@ CREATE TABLE IF NOT EXISTS workplaces (
     user_id INTEGER REFERENCES users(id),
     created_at TIMESTAMP NOT NULL
 );
+CREATE TABLE IF NOT EXISTS admin_log (
+    id INTEGER PRIMARY KEY,
+    admin_id INTEGER NOT NULL REFERENCES users(id),
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    action TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL
+);
 CREATE INDEX IF NOT EXISTS ix_reports_created ON reports(created_at);
 CREATE INDEX IF NOT EXISTS ix_notifications_user ON notifications(user_id, is_read);
 CREATE INDEX IF NOT EXISTS ix_messages_thread ON messages(thread_id);
@@ -263,6 +271,11 @@ def close_db(_exc=None):
 
 def init_schema(con):
     con.executescript(SCHEMA)
+    # Migracja istniejących baz (wolumen na produkcji): kolumny dodane po pierwszym wdrożeniu.
+    cols = {r[1] for r in con.execute("PRAGMA table_info(users)")}
+    if "is_active" not in cols:
+        con.execute("ALTER TABLE users ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1")
+        con.commit()
 
 
 def query(sql, args=()):

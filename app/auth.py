@@ -3,7 +3,7 @@
 Docelowo logowanie przez login.gov.pl albo link e-mail – patrz docs/ARCHITEKTURA.md."""
 from functools import wraps
 
-from flask import Blueprint, abort, g, redirect, render_template, request, session, url_for
+from flask import flash, Blueprint, abort, g, redirect, render_template, request, session, url_for
 
 from core import db
 
@@ -16,7 +16,7 @@ def init(app):
     @app.before_request
     def load_user():
         uid = session.get("uid")
-        g.user = db.one("SELECT * FROM users WHERE id = ?", (uid,)) if uid else None
+        g.user = db.one("SELECT * FROM users WHERE id = ? AND is_active = 1", (uid,)) if uid else None
         g.unread = db.one(
             "SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0", (uid,)
         )[0] if g.user else 0
@@ -26,7 +26,7 @@ def init(app):
         return {
             "pref_size": request.cookies.get("a11y_size") == "1",
             "pref_contrast": request.cookies.get("a11y_contrast") == "1",
-            "demo_users": db.query("SELECT id, name, role FROM users WHERE is_demo = 1 ORDER BY id"),
+            "demo_users": db.query("SELECT id, name, role FROM users WHERE is_demo = 1 AND is_active = 1 ORDER BY id"),
         }
 
 
@@ -63,9 +63,12 @@ def role_required(*roles):
 def demo():
     if request.method == "POST":
         uid = request.form.get("user_id", type=int)
-        user = db.one("SELECT id FROM users WHERE id = ?", (uid,)) if uid else None
+        user = db.one("SELECT id, is_active FROM users WHERE id = ?", (uid,)) if uid else None
         if uid and user is None:
             abort(400)
+        if user and not user["is_active"]:
+            flash("To konto jest zablokowane przez Hub – wybierz inne.", "error")
+            return redirect(url_for("auth.demo"))
         kept = {k: session[k] for k in ("draft", "razem_draft") if k in session}  # szkice przeżywają logowanie
         session.clear()  # nowa sesja przy zmianie konta (ochrona przed session fixation)
         session.update(kept)

@@ -16,7 +16,7 @@ klucz AI ustawiony, żeby pokazać miętowe ramki.
 | 2:25–2:33 | Praca | `/razem/praca` → klik „małopolskie” na mapie | „Mapa pokazuje, gdzie w Polsce naprawdę pracują osoby z zespołem Downa – każde miejsce ze źródłem.” |
 | 2:33–2:41 | Pośrednik | przełącz na gminę, gotowa karta usługi | „Gmina, która chce wdrożyć podobną usługę, dostaje od Pośrednika kartę: zespół, kroki, partnerzy, finansowanie.” |
 | 2:41–2:49 | Trendy i luki | admin: trendy (mapa powiat × obszar), luki | „Hub widzi, gdzie potrzeby rosną i gdzie brakuje rozwiązań. Luki stają się tematami nowych konkursów.” |
-| 2:49–2:54 | Dostępność | kliknij A+ i Wysoki kontrast | „Duży tekst, wysoki kontrast, klawiatura – 128 widoków bez naruszeń WCAG.” |
+| 2:49–2:54 | Dostępność | kliknij A+ i Wysoki kontrast | „Duży tekst, wysoki kontrast, klawiatura – 136 widoków bez naruszeń WCAG.” |
 | 2:50–3:00 | Strona startowa | logo, adres | „HugMe. Twój problem nie zostaje sam.” |
 
 **Wskazówki:** mów wolno (ok. 130 słów na minutę, cały tekst ma ok. 300 słów), nie pokazuj paska adresu

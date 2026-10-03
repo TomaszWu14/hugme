@@ -449,3 +449,10 @@ html.a11y-contrast .mf-0 { fill: #fff; } html.a11y-contrast .map__r { stroke: #0
 .stat-row--src .stat__num { font-size: 1.6rem; overflow-wrap: anywhere; }
 .stat-row--src .stat, .stat__src a { overflow-wrap: anywhere; min-width: 0; }
 @media (max-width: 40em) { .stat-row--src { grid-template-columns: 1fr; } }
+
+/* Panel: macierz uprawnień */
+.matrix td.num { text-align: center; font-weight: 700; }
+.matrix td.ok { background: #DDF2E3; color: var(--ok); }
+.matrix td.no { color: var(--ink-soft); }
+.matrix th[scope=row] { font-weight: 400; }
+html.a11y-contrast .matrix td.ok { background: #fff; border: 2px solid #000; }

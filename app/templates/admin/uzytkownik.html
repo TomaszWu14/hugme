@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf, field %}
+{% block title %}{{ u.name if u else 'Nowe konto' }} – panel{% endblock %}
+{% block content %}
+<h1>{{ u.name if u else 'Nowe konto' }}</h1>
+{% include "admin/_nav.html" %}
+<p><a href="/admin/uzytkownicy">← Wszyscy użytkownicy</a></p>
+<div class="two-col">
+  <form method="post" action="{{ '/admin/uzytkownicy/' ~ u.id if u else '/admin/uzytkownicy/nowy' }}" class="card" novalidate>
+    {{ csrf() }}
+    {% if errors %}<div class="error-summary" role="alert"><h2 class="h3">Popraw {{ errors|length }} {{ 'pole' if errors|length == 1 else 'pola' }}</h2>
+      <ul>{% for k, m in errors.items() %}<li><a href="#f-{{ k }}">{{ m }}</a></li>{% endfor %}</ul></div>{% endif %}
+    {{ field('name', 'Nazwa konta', hint='Anna – mama, powiat wadowicki', value=form.get('name', ''), error=errors.get('name'), required=true) }}
+    {{ field('role', 'Rola', options=ROLES.items()|list, value=form.get('role', ''), error=errors.get('role'), required=true) }}
+    {{ field('org', 'Organizacja / instytucja', hint='Fundacja Razem Bliżej', value=form.get('org') or '') }}
+    <fieldset><legend>Obszary (obserwowane / specjalizacja) <span class="optional">(nieobowiązkowe)</span></legend>
+      {% set picked = form.getlist('areas') if form.getlist is defined else (form.get('areas') or '').split(',') %}
+      <div class="choices">{% for slug, a in AREAS.items() %}<label class="choice"><input type="checkbox" name="areas" value="{{ slug }}" {% if slug in picked %}checked{% endif %}> {{ a.short }}</label>{% endfor %}</div>
+    </fieldset>
+    {{ field('bio', 'Opis (widoczny przy ekspertach)', rows=3, value=form.get('bio', ''), hint='Pedagożka specjalna, pomaga szkołom w integracji') }}
+    <button type="submit" class="btn btn--primary">{{ 'Zapisz' if u else 'Dodaj konto' }}</button>
+  </form>
+  <aside>
+    {% if u %}
+    <section class="card {{ 'card--raised' if not u.is_active }}">
+      <h2 class="h3">Stan konta</h2>
+      <p>{% if u.is_active %}<span class="badge badge--open">aktywne</span>{% else %}<span class="badge badge--closed">zablokowane</span> – nie da się na nie przełączyć.{% endif %}
+        {% if u.is_demo %}<span class="badge badge--example">demo</span>{% endif %}</p>
+      <form method="post" action="/admin/uzytkownicy/{{ u.id }}/blokada">{{ csrf() }}
+        <button type="submit" class="btn {{ 'btn--primary' if u.is_active }}">{{ 'Zablokuj konto' if u.is_active else 'Odblokuj konto' }}</button></form>
+    </section>
+    <section class="card">
+      <h2 class="h3">Aktywność</h2>
+      <ul class="list-plain">
+        <li>Zgłoszenia: <strong>{{ act.zgloszenia }}</strong></li><li>Pomysły: <strong>{{ act.pomysly }}</strong></li>
+        <li>Prośby Razem z ZD: <strong>{{ act.prosby }}</strong></li><li>Jestem potrzebny – uczestnicy/buddy: <strong>{{ act.uczestnicy }}</strong>, oferty: <strong>{{ act.oferty }}</strong></li>
+        <li>Wiadomości w wątkach: <strong>{{ act.wiadomosci }}</strong></li>
+      </ul>
+    </section>
+    <section class="card">
+      <h2 class="h3">Dziennik zmian</h2>
+      {% if logs %}<ul class="list-plain">{% for l in logs %}<li><span class="meta">{{ l.created_at|date }} · {{ l.admin_name }}</span><br>{{ l.action }}</li>{% endfor %}</ul>
+      {% else %}<p class="meta">Brak zmian dokonanych przez Hub.</p>{% endif %}
+    </section>
+    {% else %}
+    <p class="notice">Nowe konto jest kontem demo (bez hasła) – pojawi się w pasku „Tryb demo”. Docelowo konta powstają przez login.gov.pl.</p>
+    {% endif %}
+  </aside>
+</div>
+{% endblock %}

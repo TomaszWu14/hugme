@@ -55,6 +55,8 @@ PAGES = [
     ("admin", "/admin/import", None), ("admin", "/admin/nabory", None), ("admin", "/admin/poczta", None),
     ("admin", "/zgloszenie/1", "04-decyzja-hubu"), ("admin", "/admin/razem", "20-razem-panel"),
     ("admin", "/admin/potrzebny", "25-potrzebny-panel"),
+    ("admin", "/admin/uzytkownicy", "26-uzytkownicy"), ("admin", "/admin/uzytkownicy/2", None), ("admin", "/admin/uzytkownicy/nowy", None),
+    ("admin", "/admin/role", "27-role"),
 ]
 ROLE_INDEX = {"mieszkaniec": 0, "ngo": 1, "gmina": 2, "ekspert": 3, "admin": 4}
 

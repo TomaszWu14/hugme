@@ -3,7 +3,7 @@
 Wygenerowany przez `python scripts/axe_audit.py`. Reguły axe: wcag2a, wcag2aa, wcag21a, wcag21aa.
 Widoki: desktop 1280 px i telefon 320 px; dodatkowo tryb wysokiego kontrastu i A+.
 
-**Sprawdzonych widoków:** 128 · **z naruszeniami axe:** 0 · **z przewijaniem w poziomie:** 0
+**Sprawdzonych widoków:** 136 · **z naruszeniami axe:** 0 · **z przewijaniem w poziomie:** 0
 
 | Ekran | Rola | Ścieżka | Naruszenia axe | Reguły zaliczone | Przewijanie w bok | Małe cele dotykowe |
 |---|---|---|---|---|---|---|
@@ -69,6 +69,10 @@ Widoki: desktop 1280 px i telefon 320 px; dodatkowo tryb wysokiego kontrastu i A
 | desktop | admin | `/zgloszenie/1` | brak ✔ | 24 | nie ✔ | brak ✔ |
 | desktop | admin | `/admin/razem` | brak ✔ | 29 | nie ✔ | brak ✔ |
 | desktop | admin | `/admin/potrzebny` | brak ✔ | 28 | nie ✔ | brak ✔ |
+| desktop | admin | `/admin/uzytkownicy` | brak ✔ | 29 | nie ✔ | brak ✔ |
+| desktop | admin | `/admin/uzytkownicy/2` | brak ✔ | 24 | nie ✔ | brak ✔ |
+| desktop | admin | `/admin/uzytkownicy/nowy` | brak ✔ | 24 | nie ✔ | brak ✔ |
+| desktop | admin | `/admin/role` | brak ✔ | 28 | nie ✔ | brak ✔ |
 | desktop | gość (kontrast) | `/` | brak ✔ | 29 | nie ✔ | brak ✔ |
 | desktop | gość (duzy-tekst) | `/` | brak ✔ | 29 | nie ✔ | brak ✔ |
 | telefon | gość | `/` | brak ✔ | 30 | nie ✔ | brak ✔ |
@@ -133,5 +137,9 @@ Widoki: desktop 1280 px i telefon 320 px; dodatkowo tryb wysokiego kontrastu i A
 | telefon | admin | `/zgloszenie/1` | brak ✔ | 25 | nie ✔ | brak ✔ |
 | telefon | admin | `/admin/razem` | brak ✔ | 30 | nie ✔ | brak ✔ |
 | telefon | admin | `/admin/potrzebny` | brak ✔ | 29 | nie ✔ | brak ✔ |
+| telefon | admin | `/admin/uzytkownicy` | brak ✔ | 30 | nie ✔ | brak ✔ |
+| telefon | admin | `/admin/uzytkownicy/2` | brak ✔ | 25 | nie ✔ | brak ✔ |
+| telefon | admin | `/admin/uzytkownicy/nowy` | brak ✔ | 23 | nie ✔ | brak ✔ |
+| telefon | admin | `/admin/role` | brak ✔ | 28 | nie ✔ | brak ✔ |
 | telefon | gość (kontrast) | `/` | brak ✔ | 30 | nie ✔ | brak ✔ |
 | telefon | gość (duzy-tekst) | `/` | brak ✔ | 30 | nie ✔ | brak ✔ |

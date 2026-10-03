@@ -33,7 +33,7 @@ oraz współpraca międzysektorowa.
 | **Kreator pomysłów** | `/pomysly/nowy` (fiszka) → `/pomysly/<id>/kanwa` → asystent → `/pomysly/<id>/wniosek/<nabór>` (tylko w trakcie naboru) | `app/views/kreator.py` |
 | **Tester innowacji** | `/biblioteka/<id>#tester`: zgłoszenie do testu, ocena 1–5, usprawnienie (powiadomienie Hubu) | `app/views/wiedza.py` |
 | **Komunikacja** | wątki przy zgłoszeniu, pomyśle i innowacji, `/powiadomienia`, kolejka e-mail, obserwowanie obszarów, `/ekspert` | `app/views/komunikacja.py`, `core/notify.py` |
-| **Panel administratora (ROPS)** | `/admin`: skrzynka, wątki bez odpowiedzi, statusy, edycja i import Biblioteki, nabory, luki, poczta, eksport CSV | `app/views/admin.py` |
+| **Panel administratora (ROPS)** | `/admin`: skrzynka, wątki bez odpowiedzi, statusy, edycja i import Biblioteki, nabory, luki, poczta, eksport CSV; `/admin/uzytkownicy` – konta z aktywnością, zmiana roli, blokada, nowe konto; `/admin/role` – macierz uprawnień i dziennik działań | `app/views/admin.py`, `app/views/admin_users.py` |
 | **Pośrednik innowacji** (AI) | `/posrednik` → karta usługi (opis, odbiorcy, zespół, kroki, partnerzy, koszty bez kwot, finansowanie, mierniki, ryzyka) | `app/views/posrednik.py` |
 | **Razem z ZD** (pogłębienie pilotażu) | `/razem`: plan wg 6 etapów życia, wizyty (tylko w przeglądarce), prawa, wzory pism, rodzic-przewodnik, wytchnienie, Dzień Specjalistów, przyjazne miejsca, sprzęt, wydarzenia, „Strona dla mnie” w łatwym tekście; panel `/admin/razem` | `app/views/razem.py`, `data/razem.py` |
 | **„Jestem potrzebny”** (program pilotażowy) | `/razem/jestem-potrzebny`: osoby z ZD pomagają innym (psy ze schroniska, hospicjum/DPS, młodsze dzieci); zgłoszenie rodzica albo samej osoby w łatwym tekście, oferty miejsc, buddy, zasady; Hub łączy pary i potwierdza misje, dzienniczek z odznakami i dyplomem; panel `/admin/potrzebny` | `app/views/potrzebny.py`, `app/views/admin_potrzebny.py`, `data/potrzebny.py` |
@@ -53,7 +53,7 @@ ekspert, koordynatorka ROPS. Docelowe logowanie przez **login.gov.pl** albo link
   Treści od AI są zawsze oznaczone w interfejsie.
 - **Prywatność**: PESEL, telefon, e-mail, adres, kod pocztowy, imię po „syn/córka” i nazwisko po „dr” są maskowane
   **przed** zapisem i przed AI. Wszystkie dane są fikcyjne i oznaczone jako „PRZYKŁAD”.
-- **Dostępność (WCAG 2.1 AA)**: audyt axe-core 128/128 widoków bez naruszeń (desktop i 320 px),
+- **Dostępność (WCAG 2.1 AA)**: audyt axe-core 136/136 widoków bez naruszeń (desktop i 320 px),
   przyciski A+ i wysokiego kontrastu działają bez JS, cele dotykowe mają co najmniej 44 px.
 - **Bezpieczeństwo**: CSRF, CSP bez zewnętrznych skryptów i bez stylów inline, ciasteczka HttpOnly/SameSite,
   walidacja i role sprawdzane na serwerze.
@@ -78,7 +78,7 @@ Reset danych: usuń plik bazy. AI włączysz zmienną `ANTHROPIC_API_KEY` (przyk
 **Testy i audyt:**
 
 ```bash
-pytest                                   # 181 testów: ścieżki, role, CSRF, prywatność, trafność
+pytest                                   # 204 testów: ścieżki, role, CSRF, prywatność, trafność
 python -m playwright install chromium
 python scripts/axe_audit.py --zrzuty     # raport docs/WCAG_RAPORT.md + docs/zrzuty/
 ```
