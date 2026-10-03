@@ -16,7 +16,7 @@ from core.privacy import mask
 log = logging.getLogger(__name__)
 
 MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-haiku-4-5")
-TIMEOUT = 8.0
+TIMEOUT = 25.0  # ponytail: Haiku pisze 900 tokenów w ok. 6–10 s; przy 8 s prod spadał na szablony. Streaming, jeśli 25 s okaże się za mało
 
 SYSTEM = (
     "Jesteś asystentem Małopolskiego Hubu Innowacji Społecznych (platforma HugMe). "
