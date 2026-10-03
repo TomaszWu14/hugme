@@ -8,7 +8,7 @@ i oznaczone w interfejsie plakietką **PRZYKŁAD**:
 | Zbiór | Liczba | Uwagi |
 |---|---|---|
 | Innowacje | 24 | 7 obszarów, 7 z obszaru pilotażowego; organizacje z dopiskiem „(PRZYKŁAD)” |
-| Zgłoszenia | 22 | 18 powiatów, ostatnie 120 dni, opisy **grup**, nie osób (test pilnuje, że maskowanie nic w nich nie znajduje) |
+| Zgłoszenia | 42 | 18 powiatów, ostatnie 120 dni, skupiska do trendów (np. obszar pilotażowy: +10 m/m), opisy **grup**, nie osób (test pilnuje, że maskowanie nic w nich nie znajduje) |
 | Materiały | 8 | poradniki, listy kontrolne, instrukcje |
 | Nabory | 3 | 2 otwarte, 1 zamknięty |
 | Użytkownicy | 11 | 5 kont demo i 6 ekspertów do dopasowań |

@@ -4,7 +4,7 @@ from core import db
 def test_seed_volumes_and_fictional_marking(app):
     with app.app_context():
         assert db.one("SELECT COUNT(*) FROM innovations")[0] == 24
-        assert db.one("SELECT COUNT(*) FROM reports")[0] == 22
+        assert db.one("SELECT COUNT(*) FROM reports")[0] == 42
         assert db.one("SELECT COUNT(*) FROM users WHERE is_demo = 1")[0] == 5
         assert db.one("SELECT COUNT(*) FROM ideas")[0] == 2
         assert db.one("SELECT COUNT(DISTINCT powiat) FROM reports")[0] >= 12
