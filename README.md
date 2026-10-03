@@ -92,6 +92,9 @@ SECRET_KEY=$(python -c "import secrets;print(secrets.token_hex(32))") docker com
 Baza SQLite leży w wolumenie `hugme-data`. Healthcheck: `GET /zdrowie`. W Coolify wystarczy wskazać
 repozytorium (build z `Dockerfile`), ustawić `SECRET_KEY` i opcjonalnie `ANTHROPIC_API_KEY`, a potem podpiąć domenę.
 
+**CI/CD:** każdy PR i push do `main` uruchamia testy (GitHub Actions, `.github/workflows/ci.yml`). PR z gałęzi
+`claude/**` scala się sam po zielonym CI (squash), a push do `main` wyzwala wdrożenie w Coolify przez webhook.
+
 ## Scenariusz demo (5 minut)
 
 1. **Start, gość.** Pole „Co jest trudne? Kogo to dotyczy?” ma już wpisany przykład o wizytach u wielu specjalistów.
