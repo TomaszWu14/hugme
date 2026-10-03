@@ -93,6 +93,14 @@ def run(con):
         con.execute("INSERT INTO tests (innovation_id, user_id, kind, rating, body, created_at) VALUES (?,?,?,?,?,?)",
                     (iid, uid[ui], kind, rating, body, ago(20 - n * 3)))
 
+    for ui, kind, powiat, stg, alias, title, body, status, days in D.RAZEM_REQUESTS:
+        con.execute("INSERT INTO family_requests (user_id, kind, powiat, stage, alias, title, body, status, created_at) "
+                    "VALUES (?,?,?,?,?,?,?,?,?)", (uid[ui], kind, powiat, stg, alias, title, body, status, ago(days)))
+    for title, powiat, in_days, place, body in D.RAZEM_EVENTS:
+        date = (datetime.now(timezone.utc) + timedelta(days=in_days)).strftime("%Y-%m-%d")
+        con.execute("INSERT INTO events (title, powiat, date, place, body, created_at) VALUES (?,?,?,?,?,?)",
+                    (title, powiat, date, place, body, ago(10)))
+
     for ui, body, link, days in [
         (0, "Hub odpowiedział na Twoje zgłoszenie „informacja o terapiach i turnusach”.", f"/zgloszenie/{report_ids[1]}", 8),
         (0, "Nowa innowacja w obszarze, który obserwujesz: „Mapa Wsparcia Rodzin”.", f"/biblioteka/{inno['Mapa Wsparcia Rodzin']}", 30),

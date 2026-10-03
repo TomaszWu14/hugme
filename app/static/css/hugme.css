@@ -279,3 +279,46 @@ code { background: var(--sand); padding: 0 .25rem; border-radius: 4px; }
 
 /* Ikony SVG (zamiast emoji) – kolor z tekstu */
 .ico { width: 1.15em; height: 1.15em; vertical-align: -.2em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ── Moduł „Razem z ZD” ─────────────────────────────────────────────── */
+.razem-nav { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: .5rem .7rem; margin: .5rem 0 1.5rem; }
+.razem-nav__brand { margin: 0 0 .3rem; font-weight: 700; }
+.razem-nav__brand a { color: var(--ink); text-decoration: none; display: inline-flex; gap: .4rem; align-items: center; min-height: 44px; font-size: 1.1rem; }
+.razem-nav__brand .ico { color: var(--coral); }
+.razem-nav .nav a { font-size: .92rem; }
+.razem-hero h1 { margin-top: .2rem; }
+.grid--two { grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
+.stage-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr)); }
+.stage-btn { display: flex; flex-direction: column; align-items: center; gap: .3rem; width: 100%; min-height: 8rem; padding: 1rem .6rem;
+  background: var(--paper); border: 2px solid var(--line); border-radius: var(--radius); font: inherit; color: var(--ink); cursor: pointer; text-align: center; }
+.stage-btn .ico { width: 2.4rem; height: 2.4rem; color: var(--thread, var(--coral)); }
+.stage-btn:hover { border-color: var(--ink); }
+.stage-btn--on { border-color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+.stage-btn__name { font-weight: 700; }
+.stage-btn__age { font-size: .9rem; color: var(--ink-soft); }
+.stage-grid .stage-btn { --thread: #7A3E9D; }
+.stage-tabs .nav { margin-bottom: 1rem; }
+.etr { font-size: 1.15rem; background: var(--sand); border-radius: 10px; padding: .6rem .9rem; }
+.checklist { list-style: none; padding: 0; }
+.checklist li { padding: .4rem 0 .4rem 2rem; position: relative; }
+.checklist li::before { content: "☐"; position: absolute; left: 0; font-size: 1.2rem; line-height: 1.3; }
+.visit-list .visit { display: flex; justify-content: space-between; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.letter { white-space: pre-wrap; font-family: Georgia, "Times New Roman", serif; line-height: 1.7; }
+/* Tekst łatwy do czytania: większa czcionka, krótkie linie, dużo światła */
+.etr-page { font-size: 1.2rem; max-width: 46rem; }
+.etr-line { margin: 0 0 .5rem; }
+.picto-grid { display: grid; gap: .8rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 8.5rem), 1fr)); }
+.picto-choice { position: relative; display: block; font-weight: 700; margin: 0; }
+.picto-choice input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.picto-choice__box { display: flex; flex-direction: column; align-items: center; gap: .4rem; min-height: 7.5rem; padding: .9rem .5rem;
+  border: 3px solid var(--border-input); border-radius: var(--radius); background: var(--paper); cursor: pointer; text-align: center; }
+.picto-choice__box .ico { width: 3rem; height: 3rem; color: var(--ink); }
+.picto-choice input:checked + .picto-choice__box { border-color: var(--coral); box-shadow: inset 0 0 0 3px var(--coral); background: var(--coral-soft); }
+.picto-choice input:checked + .picto-choice__box::after { content: "✔ wybrane"; font-size: .85rem; color: var(--coral-dark); }
+.picto-choice input:focus-visible + .picto-choice__box { outline: 3px solid var(--focus); outline-offset: 3px; }
+.picto { display: inline-flex; flex-direction: column; align-items: center; gap: .2rem; }
+.picto .ico { width: 2.4rem; height: 2.4rem; }
+.home-razem { display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr) auto; align-items: center; margin-bottom: 2rem; }
+@media (max-width: 40em) { .home-razem { grid-template-columns: minmax(0, 1fr); } }
+@media print { .razem-nav { display: none !important; } .letter { border: 0; box-shadow: none; } }
+.etr-page #czytaj { margin-bottom: 1rem; }

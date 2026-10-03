@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from "razem/_razem.html" import module_nav %}
+{% block title %}Jaka szkoła? – Razem z ZD{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<h1>Jaka szkoła?</h1>
+<p class="lead">Nie ma jednej dobrej odpowiedzi. Porównaj spokojnie i porozmawiaj z dyrekcją – nie oceniamy konkretnych szkół.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Porównanie typów szkół – na małym ekranie przewiń w bok">
+<table>
+  <caption>Typy szkół</caption>
+  <thead><tr><th scope="col">Typ</th><th scope="col">Co to jest</th><th scope="col">Plusy</th><th scope="col">O co zapytać dyrektora</th></tr></thead>
+  <tbody>{% for s in schools %}<tr><th scope="row">{{ s.type }}</th><td>{{ s.what }}</td><td>{{ s.good }}</td><td>{{ s.ask }}</td></tr>{% endfor %}</tbody>
+</table>
+</div>
+<p><a href="/razem/pisma/dostosowanie">Wzór: prośba o dostosowanie warunków nauki</a> · <a href="/biblioteka/6">Klasa w Ruchu – integracja od pierwszego dnia</a></p>
+{% endblock %}

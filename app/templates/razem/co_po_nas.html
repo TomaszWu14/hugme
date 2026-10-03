@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% from "_cards.html" import innovation_card %}
+{% from "razem/_razem.html" import module_nav %}
+{% block title %}Co po nas – Razem z ZD{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<h1>„Co po nas?”</h1>
+<p class="lead">Najtrudniejsze pytanie wielu rodziców. Łatwiej, gdy zacznie się je planować wcześnie – razem z dorosłym dzieckiem.</p>
+<ul class="grid">
+  {% for q, a in items %}<li class="card"><h2 class="h3">{{ q }}</h2><p>{{ a }}</p></li>{% endfor %}
+</ul>
+<p class="notice">Brakuje mieszkań treningowych w Twoim powiecie? <a href="/">Zgłoś to</a> – Hub widzi takie luki i zamienia je w tematy konkursów.</p>
+<h2>Co już działa</h2>
+<ul class="grid">{% for i in innovations %}<li>{{ innovation_card(i) }}</li>{% endfor %}</ul>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf, icon, example %}
+{% from "_cards.html" import innovation_card %}
+{% from "razem/_razem.html" import module_nav %}
+{% block title %}Plan: {{ s.name }} – Razem z ZD{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<nav aria-label="Etapy życia" class="stage-tabs">
+  <ol class="nav">{% for st in stages %}<li><a href="/razem/etap/{{ st.slug }}" {% if st.slug == s.slug %}aria-current="page"{% endif %}>{{ st.name }}</a></li>{% endfor %}</ol>
+</nav>
+<header class="card card--thread thread--rodziny-zd">
+  <p class="eyebrow">Plan rodziny · {{ s.age }}</p>
+  <h1>{{ icon(s.icon) }} {{ s.name }}</h1>
+  <p class="etr" lang="pl"><strong>Łatwy tekst:</strong> {{ s.etr }}</p>
+</header>
+
+<div class="two-col">
+  <div>
+    <section aria-labelledby="teraz-h">
+      <h2 id="teraz-h">Co teraz ważne</h2>
+      <ol class="steps">{% for t in s.now %}<li>{{ t }}</li>{% endfor %}</ol>
+    </section>
+
+    <section aria-labelledby="lek-h" class="card">
+      <h2 id="lek-h">{{ icon('lekarz') }} O co zapytać lekarza</h2>
+      <ul>{% for q in s.ask_doctor %}<li>{{ q }}</li>{% endfor %}</ul>
+      <p class="notice">{{ disclaimer }}</p>
+      <p><a href="/razem/wizyty">Zapisz wizyty na swoim urządzeniu</a></p>
+    </section>
+
+    <section aria-labelledby="dok-h">
+      <h2 id="dok-h">Dokumenty i terminy</h2>
+      <ul>{% for d in s.documents %}<li>{{ d }}</li>{% endfor %}</ul>
+      <p><a href="/razem/prawa">Sprawdź, gdzie zapytać o świadczenia</a> · <a href="/razem/pisma">Wzory pism</a></p>
+    </section>
+
+    <section aria-labelledby="inn-h">
+      <h2 id="inn-h">Co działa w Małopolsce</h2>
+      <ul class="list-plain">{% for i in innovations %}<li>{{ innovation_card(i) }}</li>{% endfor %}</ul>
+    </section>
+  </div>
+
+  <aside aria-label="Ludzie i pomoc">
+    <section aria-labelledby="kto-h" class="card">
+      <h2 id="kto-h" class="h3">Kto pomoże</h2>
+      <ul class="list-plain">{% for e in experts %}<li><strong>{{ e.name }}</strong> {{ example() }}<br><span class="meta">{{ e.bio|truncate(100) }}</span></li>{% endfor %}</ul>
+      <p><a class="btn" href="/razem/przewodnik">Znajdź rodzica-przewodnika</a></p>
+    </section>
+
+    <section aria-labelledby="dzien-h" class="card card--raised">
+      <h2 id="dzien-h" class="h3">Dzień Specjalistów w Twoim powiecie</h2>
+      <p>Kilku lekarzy jednego dnia, w jednym miejscu. Daj znać, że go potrzebujesz – Hub zbiera głosy z powiatów.</p>
+      {% if g.user %}
+      <form method="post" action="/razem/prosba/dzien-specjalistow">
+        {{ csrf() }}<input type="hidden" name="wroc" value="{{ request.path }}">
+        <input type="hidden" name="alias" value="{{ g.user.name.split(' – ')[0] }}">
+        <div class="field"><label for="f-dzien-powiat">Powiat</label>
+          <select id="f-dzien-powiat" name="powiat"><option value="">— wybierz —</option>{% for p in powiaty %}<option value="{{ p }}">{{ p }}</option>{% endfor %}</select></div>
+        <button type="submit" class="btn btn--primary">Chcę Dzień Specjalistów</button>
+      </form>
+      {% else %}<p><a class="btn btn--primary" href="/konto?next={{ request.path }}">Wybierz konto, żeby zagłosować</a></p>{% endif %}
+    </section>
+  </aside>
+</div>
+{% endblock %}

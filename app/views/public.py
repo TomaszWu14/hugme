@@ -6,6 +6,7 @@ from app.views.komunikacja import ensure_thread, thread_view
 from core import catalog, db, notify
 from core.domain import AREAS, POWIATY
 from core.privacy import describe, mask
+from data.razem import MY_TOPICS
 
 bp = Blueprint("public", __name__)
 
@@ -14,6 +15,7 @@ EXAMPLE_PROBLEM = (
     "endokrynologa. Każda wizyta to inny termin i inna przychodnia, a rodzice są tym zmęczeni."
 )
 MIN_LEN, MAX_LEN = 15, 1500
+MY_TOPIC_LABELS = {slug: label for slug, label, _ in MY_TOPICS}
 
 
 def validate_problem(text):
@@ -35,6 +37,9 @@ def home():
 def search():
     text = request.form.get("opis", "").strip()
     powiat = request.form.get("powiat", "")
+    topic = MY_TOPIC_LABELS.get(request.form.get("temat", ""))  # „Moje sprawy” – temat wybrany obrazkiem
+    if topic and text:
+        text = f"{topic}: {text}"
     error = validate_problem(text)
     if error:
         return render_template("home.html", example=text, error=error, powiaty=POWIATY), 422

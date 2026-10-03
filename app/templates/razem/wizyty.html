@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% from "razem/_razem.html" import module_nav %}
+{% block title %}Wizyty – Razem z ZD{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<h1>{{ icon('kalendarz') }} Wizyty u specjalistów</h1>
+<p class="lead">Zapisz wizyty w jednym miejscu. Lista zostaje <strong>tylko na tym urządzeniu</strong> – nie wysyłamy jej nigdzie,
+  bo informacje o zdrowiu należą do Ciebie.</p>
+
+<section aria-labelledby="lista-h" class="card" id="wizyty-app" hidden>
+  <h2 id="lista-h">Moje wizyty</h2>
+  <form id="wizyta-form" class="visit-form" novalidate>
+    <div class="field"><label for="w-spec">Specjalista</label><p class="hint" id="h-w-spec">kardiolog, logopeda</p>
+      <input id="w-spec" type="text" required aria-describedby="h-w-spec"></div>
+    <div class="field"><label for="w-data">Data</label><input id="w-data" type="date" required></div>
+    <div class="field"><label for="w-gdzie">Gdzie <span class="optional">(nieobowiązkowe)</span></label><p class="hint" id="h-w-gdzie">przychodnia w Wadowicach</p>
+      <input id="w-gdzie" type="text" aria-describedby="h-w-gdzie"></div>
+    <p class="error-msg" id="w-blad" role="alert" hidden><span aria-hidden="true">⚠</span> Wpisz specjalistę i datę.</p>
+    <button type="submit" class="btn btn--primary">Dodaj wizytę</button>
+  </form>
+  <p id="wizyty-status" class="sr-only" role="status" aria-live="polite"></p>
+  <ol id="wizyty-lista" class="list-plain visit-list"></ol>
+  <p id="wizyty-puste" class="meta">Nie masz jeszcze zapisanych wizyt.</p>
+</section>
+
+<noscript>
+  <p class="notice">Lista wizyt działa w przeglądarce z włączonym JavaScriptem. Bez niego wydrukuj listę poniżej i wpisz wizyty ręcznie.</p>
+</noscript>
+
+<section aria-labelledby="zabrac-h">
+  <h2 id="zabrac-h">Co zabrać na każdą wizytę</h2>
+  <ul class="checklist">
+    <li>Skierowanie (jeśli potrzebne) i dowód osobisty rodzica.</li>
+    <li>Wyniki ostatnich badań i wypisy – w jednej teczce.</li>
+    <li>Listę leków i suplementów.</li>
+    <li>Zeszyt z pytaniami spisanymi przed wizytą.</li>
+    <li>Coś, co uspokaja dziecko (zabawka, przekąska, słuchawki).</li>
+  </ul>
+  {% if s %}<p>Pytania do lekarza na etapie „{{ s.name }}”: <a href="/razem/etap/{{ s.slug }}#lek-h">zobacz w planie</a>.</p>{% endif %}
+  <p class="notice">{{ disclaimer }}</p>
+  <p class="no-print"><a href="/wiedza/material/1">Poradnik: jak przygotować się do wizyty</a> · <a href="/biblioteka/1">Asystent zdrowia rodziny</a></p>
+</section>
+<script src="{{ url_for('static', filename='js/razem.js') }}" defer></script>
+{% endblock %}

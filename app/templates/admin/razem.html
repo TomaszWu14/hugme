@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf %}
+{% block title %}Razem z ZD – panel{% endblock %}
+{% block content %}
+<h1>Razem z ZD – panel Hubu</h1>
+{% include "admin/_nav.html" %}
+
+<section aria-labelledby="pary-h">
+  <h2 id="pary-h">Propozycje par: rodzic-przewodnik ↔ rodzina</h2>
+  <p>Ten sam powiat; pary z tym samym etapem życia są na górze. Połącz dopiero po rozmowie telefonicznej z obiema stronami.</p>
+  {% if pairs %}
+  <ul class="list-plain">
+    {% for s, o, same in pairs %}
+    <li class="actions">
+      <span><strong>{{ s.alias }}</strong> (szuka, {{ s.powiat }}, etap: {{ s.stage or '—' }}) ↔ <strong>{{ o.alias }}</strong> (przewodnik, etap: {{ o.stage or '—' }})
+        {% if same %}<span class="badge badge--open">✔ ten sam etap</span>{% endif %}</span>
+      <form method="post" action="/admin/razem/polacz">{{ csrf() }}
+        <input type="hidden" name="szukam_id" value="{{ s.id }}"><input type="hidden" name="oferuje_id" value="{{ o.id }}">
+        <button type="submit" class="btn btn--small btn--primary">Połącz<span class="sr-only"> {{ s.alias }} z {{ o.alias }}</span></button></form>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}<p>Brak par do połączenia.</p>{% endif %}
+</section>
+
+<section aria-labelledby="mod-h">
+  <h2 id="mod-h">Do sprawdzenia: miejsca i ogłoszenia</h2>
+  {% if pending %}
+  <ul class="list-plain">
+    {% for r in pending %}
+    <li><strong>{{ kinds[r.kind] }}:</strong> {{ r.title }} <span class="meta">{{ r.powiat }} · {{ r.alias }}</span><br>{{ r.body }}
+      <div class="actions">
+        <form method="post" action="/admin/razem/{{ r.id }}/status">{{ csrf() }}<input type="hidden" name="status" value="zatwierdzone">
+          <button type="submit" class="btn btn--small btn--primary">✔ Zatwierdź<span class="sr-only"> {{ r.title }}</span></button></form>
+        <form method="post" action="/admin/razem/{{ r.id }}/status">{{ csrf() }}<input type="hidden" name="status" value="odrzucone">
+          <button type="submit" class="btn btn--small">✖ Odrzuć<span class="sr-only"> {{ r.title }}</span></button></form>
+      </div></li>
+    {% endfor %}
+  </ul>
+  {% else %}<p><span aria-hidden="true">✔</span> Wszystko sprawdzone.</p>{% endif %}
+</section>
+
+<section aria-labelledby="prosby-h">
+  <h2 id="prosby-h">Prośby rodzin</h2>
+  <ul class="list-plain">
+    {% for r in other %}<li><strong>{{ kinds[r.kind] }}</strong> – {{ r.alias }}, {{ r.powiat }}{% if r.title %} · {{ r.title }}{% endif %}<br>{{ r.body }}
+      <span class="meta">{{ r.created_at|date }}</span></li>{% else %}<li>Brak nowych próśb.</li>{% endfor %}
+  </ul>
+</section>
+
+<section aria-labelledby="dzien-h">
+  <h2 id="dzien-h">Dzień Specjalistów – głosy rodzin wg powiatu</h2>
+  <div class="table-wrap" tabindex="0" role="region" aria-label="Głosy na Dzień Specjalistów – na małym ekranie przewiń w bok">
+  <table><caption>Gdzie rodziny chcą Dnia Specjalistów</caption>
+    <thead><tr><th scope="col">Powiat</th><th scope="col">Liczba rodzin</th></tr></thead>
+    <tbody>{% for d in days %}<tr><th scope="row">{{ d.powiat }}</th><td>{{ d.n }}</td></tr>{% else %}<tr><td colspan="2">Brak głosów.</td></tr>{% endfor %}</tbody>
+  </table></div>
+  <p>Gdzie głosów jest najwięcej, warto zaproponować CUS wdrożenie innowacji <a href="/biblioteka/2">„Dzień Specjalistów w jednym miejscu”</a>.</p>
+</section>
+{% endblock %}

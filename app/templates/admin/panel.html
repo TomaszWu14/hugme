@@ -16,7 +16,7 @@
 <form method="get" action="/admin" class="actions" aria-label="Filtr skrzynki">
   <label for="typ">Pokaż:</label>
   <select id="typ" name="typ" class="select-inline">
-    {% for val, text in [('', 'wszystko'), ('zgloszenie', 'zgłoszenia'), ('pomysl', 'pomysły'), ('test', 'testy'), ('wniosek', 'wnioski')] %}
+    {% for val, text in [('', 'wszystko'), ('zgloszenie', 'zgłoszenia'), ('pomysl', 'pomysły'), ('test', 'testy'), ('wniosek', 'wnioski'), ('razem', 'Razem z ZD')] %}
     <option value="{{ val }}" {% if kind == val %}selected{% endif %}>{{ text }}</option>{% endfor %}
   </select>
   <button type="submit" class="btn btn--small">Filtruj</button>
@@ -30,7 +30,7 @@
   <tbody>
     {% for typ, when, text, link, row in items %}
     <tr>
-      <td>{{ {'zgloszenie': 'Zgłoszenie', 'pomysl': 'Pomysł', 'test': 'Test', 'wniosek': 'Wniosek'}[typ] }}</td>
+      <td>{{ {'zgloszenie': 'Zgłoszenie', 'pomysl': 'Pomysł', 'test': 'Test', 'wniosek': 'Wniosek', 'razem': 'Razem z ZD'}[typ] }}</td>
       <td>{{ when|date }}</td>
       <td><a href="{{ link }}">{{ text|truncate(90) }}</a></td>
       <td>{% if typ == 'zgloszenie' %}{{ status(row.status) }} {{ area_tag(row.area) }} {{ row.powiat or '' }}{% if not row.approved %} <span class="badge badge--closed">niezatwierdzone</span>{% endif %}{% endif %}</td>

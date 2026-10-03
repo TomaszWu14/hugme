@@ -1,0 +1,65 @@
+{% from "_macros.html" import csrf, icon %}
+
+{% macro module_nav() -%}
+<nav aria-label="Moduł Razem z ZD" class="razem-nav no-print">
+  <p class="razem-nav__brand"><a href="/razem">{{ icon('serce') }} Razem z ZD</a> <span class="meta">– dla osób z zespołem Downa i ich rodzin</span></p>
+  <ul class="nav">
+    {% for href, text in [('/razem', 'Plan rodziny'), ('/razem/wizyty', 'Wizyty'), ('/razem/prawa', 'Prawa'),
+                          ('/razem/przewodnik', 'Rodzic-przewodnik'), ('/razem/wytchnienie', 'Wytchnienie'),
+                          ('/razem/miejsca', 'Przyjazne miejsca'), ('/razem/wydarzenia', 'Wydarzenia'),
+                          ('/razem/moje-sprawy', 'Strona dla mnie (łatwy tekst)')] %}
+    {% set cur = request.path == href or (href != '/razem' and request.path.startswith(href)) %}
+    <li><a href="{{ href }}" {% if cur %}aria-current="page"{% endif %}>{{ text }}</a></li>
+    {% endfor %}
+  </ul>
+</nav>
+{%- endmacro %}
+
+{# Formularz prośby: id pól z prefiksem rodzaju (kilka formularzy na jednej stronie bez duplikatów id). #}
+{% macro request_form(kind, button, errors={}, form={}, error_kind=none, powiaty=[], stages=[], with_stage=false,
+                      title_label='', title_hint='', body_label='', body_hint='', categories=none, back='') -%}
+{% set err = errors if error_kind == kind else {} %}
+{% set val = form if error_kind == kind else {} %}
+<form method="post" action="/razem/prosba/{{ kind }}" class="card" novalidate>
+  {{ csrf() }}
+  {% if back %}<input type="hidden" name="wroc" value="{{ back }}">{% endif %}
+  {% if err %}
+  <div class="error-summary" role="alert" aria-labelledby="err-{{ kind }}">
+    <h3 id="err-{{ kind }}">Popraw {{ err|length }} {{ 'pole' if err|length == 1 else 'pola' }}</h3>
+    <ul>{% for k, msg in err.items() %}<li><a href="#f-{{ kind }}-{{ k }}">{{ msg }}</a></li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+  {% for name, label, hint, kind_of in [
+      ('alias', 'Twój pseudonim', 'Mama Ani – nie musi to być prawdziwe imię', 'text'),
+      ('powiat', 'Powiat', 'wadowicki', 'powiat')] + ([('stage', 'Etap życia dziecka', 'przedszkole', 'stage')] if with_stage else [])
+      + ([('category', 'Rodzaj miejsca', 'dentysta', 'category')] if categories else [])
+      + ([('title', title_label, title_hint, 'text')] if title_label else [])
+      + ([('body', body_label, body_hint, 'textarea')] if body_label else []) %}
+  <div class="field {{ 'field--error' if err.get(name) }}">
+    <label for="f-{{ kind }}-{{ name }}">{{ label }}</label>
+    <p class="hint" id="h-{{ kind }}-{{ name }}">{{ hint }}</p>
+    {% if err.get(name) %}<p class="error-msg" id="e-{{ kind }}-{{ name }}"><span aria-hidden="true">⚠</span> {{ err[name] }}</p>{% endif %}
+    {% set desc = 'h-' ~ kind ~ '-' ~ name ~ (' e-' ~ kind ~ '-' ~ name if err.get(name) else '') %}
+    {% if kind_of == 'powiat' %}
+    <select id="f-{{ kind }}-{{ name }}" name="{{ name }}" aria-describedby="{{ desc }}" {% if err.get(name) %}aria-invalid="true"{% endif %}>
+      <option value="">— wybierz —</option>{% for p in powiaty %}<option value="{{ p }}" {% if val.get(name) == p %}selected{% endif %}>{{ p }}</option>{% endfor %}
+    </select>
+    {% elif kind_of == 'stage' %}
+    <select id="f-{{ kind }}-{{ name }}" name="{{ name }}" aria-describedby="{{ desc }}" {% if err.get(name) %}aria-invalid="true"{% endif %}>
+      <option value="">— wybierz —</option>{% for s in stages %}<option value="{{ s.slug }}" {% if val.get(name) == s.slug %}selected{% endif %}>{{ s.name }} ({{ s.age }})</option>{% endfor %}
+    </select>
+    {% elif kind_of == 'category' %}
+    <select id="f-{{ kind }}-{{ name }}" name="{{ name }}" aria-describedby="{{ desc }}">
+      {% for c in categories %}<option value="{{ c }}" {% if val.get(name) == c %}selected{% endif %}>{{ c }}</option>{% endfor %}
+    </select>
+    {% elif kind_of == 'textarea' %}
+    <textarea id="f-{{ kind }}-{{ name }}" name="{{ name }}" rows="3" aria-describedby="{{ desc }}" {% if err.get(name) %}aria-invalid="true"{% endif %}>{{ val.get(name, '') }}</textarea>
+    {% else %}
+    <input id="f-{{ kind }}-{{ name }}" name="{{ name }}" type="text" value="{{ val.get(name, '') }}" aria-describedby="{{ desc }}" {% if err.get(name) %}aria-invalid="true"{% endif %}>
+    {% endif %}
+  </div>
+  {% endfor %}
+  {% if g.user %}<button type="submit" class="btn btn--primary">{{ button }}</button>
+  {% else %}<p><a class="btn btn--primary" href="/konto?next={{ request.path }}">Wybierz konto, żeby wysłać</a></p>{% endif %}
+</form>
+{%- endmacro %}

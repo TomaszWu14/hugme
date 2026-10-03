@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% from "razem/_razem.html" import module_nav %}
+{% block title %}Prawa i świadczenia – Razem z ZD{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<h1>Prawa i świadczenia – gdzie zapytać?</h1>
+<p class="lead">Odpowiedz na kilka pytań. Pokażemy instytucje i dokumenty. Nie podajemy kwot ani progów – zmieniają się,
+  a dokładną informację dostaniesz w urzędzie.</p>
+<form method="get" action="/razem/prawa" class="card">
+  {% for key, question in questions %}
+  <fieldset>
+    <legend>{{ question }}</legend>
+    <label class="choice"><input type="radio" name="{{ key }}" value="tak" {% if answers[key] is sameas true %}checked{% endif %}> Tak</label>
+    <label class="choice"><input type="radio" name="{{ key }}" value="nie" {% if answers[key] is sameas false %}checked{% endif %}> Nie</label>
+  </fieldset>
+  {% endfor %}
+  <button type="submit" class="btn btn--primary">Pokaż, gdzie zapytać</button>
+</form>
+{% if result %}
+<section aria-labelledby="wynik-h" role="region">
+  <h2 id="wynik-h">Gdzie warto zapytać</h2>
+  <ol class="list-plain">
+    {% for r in result %}
+    <li class="card"><h3>{{ r.institution }}</h3><p>{{ r.why }}</p>
+      {% if r.documents %}<p><strong>Weź ze sobą:</strong> {{ r.documents|join(', ') }}.</p>{% endif %}</li>
+    {% endfor %}
+  </ol>
+  <p class="notice">To ogólna informacja (PRZYKŁAD), nie porada prawna. Zasady sprawdź w instytucji.</p>
+</section>
+{% endif %}
+{% endblock %}

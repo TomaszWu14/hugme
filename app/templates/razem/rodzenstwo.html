@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% from "razem/_razem.html" import module_nav %}
+{% block title %}Dla rodzeństwa – Razem z ZD{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<h1>Dla rodzeństwa</h1>
+<p class="lead">Bracia i siostry osób z zespołem Downa często dorastają szybciej. Też potrzebują uwagi i miejsca na swoje emocje.</p>
+<ul class="list-plain">{% for t in tips %}<li>{{ t }}</li>{% endfor %}</ul>
+{% if events %}
+<h2>Zajęcia dla rodzeństwa</h2>
+<ul class="list-plain">{% for e in events %}<li><strong>{{ e.date|date }}</strong> – {{ e.title }}, {{ e.place }}</li>{% endfor %}</ul>
+<p><a href="/razem/wydarzenia">Zapisz się w wydarzeniach</a></p>
+{% endif %}
+<p><a href="/biblioteka/4">Klub Rodziców i Rodzeństwa</a></p>
+{% endblock %}

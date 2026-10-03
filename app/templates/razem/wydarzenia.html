@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf, icon, example %}
+{% from "razem/_razem.html" import module_nav %}
+{% block title %}Wydarzenia – Razem z ZD{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<h1>{{ icon('kalendarz') }} Wydarzenia</h1>
+<p class="lead">Pikniki, kluby i spotkania – okazja, żeby poznać inne rodziny. Zapis jednym kliknięciem, przypomnienie w powiadomieniach.</p>
+<ul class="grid">
+  {% for e in rows %}
+  <li class="card card--thread thread--rodziny-zd">
+    <p class="eyebrow">{{ e.date|date }} · {{ e.powiat }}</p>
+    <h2 class="h3">{{ e.title }}</h2>
+    <p>{{ e.body }}</p>
+    <p class="meta"><span>{{ e.place }}</span> <span>Zapisanych: {{ e.n }}</span> {{ example() }}</p>
+    {% if g.user %}
+    <form method="post" action="/razem/wydarzenia/{{ e.id }}/zapis">{{ csrf() }}
+      <button type="submit" class="btn {{ 'btn--primary' if e.id not in mine }}" aria-pressed="{{ 'true' if e.id in mine else 'false' }}">
+        {{ '✔ Zapisano – wypisz mnie' if e.id in mine else 'Zapisz się' }}<span class="sr-only">: {{ e.title }}</span></button></form>
+    {% else %}<a class="btn" href="/konto?next=/razem/wydarzenia">Wybierz konto, żeby się zapisać</a>{% endif %}
+  </li>
+  {% else %}<li>Brak nadchodzących wydarzeń.</li>{% endfor %}
+</ul>
+{% endblock %}

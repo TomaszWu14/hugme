@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf, icon %}
+{% from "razem/_razem.html" import module_nav %}
+{% block title %}Strona dla mnie – Razem z ZD{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<div class="etr-page">
+  <h1>{{ icon('serce') }} Strona dla mnie</h1>
+  <button type="button" id="czytaj" class="btn btn--large" hidden aria-controls="etr-tekst">{{ icon('glosnik') }} Przeczytaj na głos</button>
+  <div id="etr-tekst">
+    {% for line in intro %}<p class="etr-line">{{ line }}</p>{% endfor %}
+  </div>
+
+  <form method="post" action="/szukaj" class="card" novalidate>
+    {{ csrf() }}
+    <fieldset>
+      <legend>Co jest trudne? Wybierz obrazek.</legend>
+      <div class="picto-grid">
+        {% for slug, label, example in topics %}
+        <label class="picto-choice">
+          <input type="radio" name="temat" value="{{ slug }}" {% if loop.first %}required{% endif %}>
+          <span class="picto-choice__box">{{ icon(slug) }}<span class="picto-choice__label">{{ label }}</span></span>
+        </label>
+        {% endfor %}
+      </div>
+    </fieldset>
+    <div class="field">
+      <label for="f-opis-etr">Napisz jedno zdanie.</label>
+      <p class="hint" id="h-opis-etr">Chcę pracować w kawiarni.</p>
+      <textarea id="f-opis-etr" name="opis" rows="2" aria-describedby="h-opis-etr"></textarea>
+    </div>
+    <p class="etr-line">Nie musisz pisać, jak się nazywasz.</p>
+    <button type="submit" class="btn btn--primary btn--large">Wyślij</button>
+  </form>
+
+  <section aria-labelledby="pomoc-etr">
+    <h2 id="pomoc-etr">Kto mi pomoże?</h2>
+    <p class="etr-line">Hub to ludzie, którzy pomagają.</p>
+    <p class="etr-line">Odpiszą Ci w HugMe.</p>
+    <p class="etr-line">Możesz poprosić kogoś bliskiego o pomoc.</p>
+  </section>
+</div>
+<script src="{{ url_for('static', filename='js/razem.js') }}" defer></script>
+{% endblock %}

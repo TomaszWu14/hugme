@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, example %}
+{% from "razem/_razem.html" import module_nav, request_form %}
+{% block title %}Przyjazne miejsca – Razem z ZD{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<h1>{{ icon('lekarz') }} Przyjazne miejsca</h1>
+<p class="lead">Przychodnie, dentyści, fryzjerzy, baseny i kawiarnie, w których osoby z zespołem Downa są mile widziane.
+  Polecają rodzice, sprawdza Hub. Polecamy miejsca – nie oceniamy lekarzy z nazwiska.</p>
+{% set by_powiat = rows|groupby('powiat') %}
+{% for powiat, items in by_powiat %}
+<section aria-labelledby="p-{{ loop.index }}">
+  <h2 id="p-{{ loop.index }}" class="h3">Powiat {{ powiat }}</h2>
+  <ul class="grid">
+    {% for m in items %}
+    {% set cat, _, desc = m.body.partition(': ') %}
+    <li class="card card--thread thread--rodziny-zd"><h3>{{ m.title }}</h3>
+      <p class="meta"><span>{{ cat }}</span> <span>Poleca: {{ m.alias }}</span> {{ example() }}</p><p>{{ desc or m.body }}</p></li>
+    {% endfor %}
+  </ul>
+</section>
+{% else %}<p>Brak poleceń.</p>{% endfor %}
+<section aria-labelledby="polec-h">
+  <h2 id="polec-h">Poleć miejsce</h2>
+  {{ request_form('miejsce', 'Poleć miejsce', errors, form, error_kind, powiaty, stages, categories=categories,
+                  title_label='Nazwa miejsca', title_hint='Gabinet stomatologiczny „Uśmiech”',
+                  body_label='Dlaczego jest przyjazne?', body_hint='dentystka ma czas, pierwsza wizyta to oswajanie') }}
+</section>
+{% endblock %}

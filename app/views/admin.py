@@ -77,6 +77,12 @@ def panel():
         for a in db.query("SELECT a.*, c.title AS call_title FROM applications a JOIN calls c ON c.id = a.call_id "
                           "WHERE a.status = 'zlozony' ORDER BY a.created_at DESC"):
             items.append(("wniosek", a["created_at"], a["call_title"], f"/wnioski/{a['id']}", a))
+    if kind in ("", "razem"):
+        from data.razem import REQUEST_KINDS
+        for r in db.query("SELECT * FROM family_requests WHERE status = 'nowe' AND kind != 'dzien-specjalistow' "
+                          "ORDER BY created_at DESC"):
+            items.append(("razem", r["created_at"], f"{REQUEST_KINDS[r['kind']]} – {r['alias']} ({r['powiat']})",
+                          "/admin/razem", r))
     items.sort(key=lambda x: x[1], reverse=True)
     rate, rated = helpful_rate()
     stats = {
@@ -311,3 +317,61 @@ def export(kind):
     w.writerows([[_csv_cell(v) for v in row] for row in rows])
     return Response("﻿" + buf.getvalue(), mimetype="text/csv",
                     headers={"Content-Disposition": f"attachment; filename=hugme-{kind}.csv"})
+
+
+# ── Moduł „Razem z ZD” ─────────────────────────────────────────────────────────
+def guide_pairs():
+    """Propozycje par przewodnik ↔ rodzina: ten sam powiat; ten sam etap wyżej."""
+    seek = db.query("SELECT * FROM family_requests WHERE kind = 'przewodnik-szukam' AND status = 'nowe'")
+    offer = db.query("SELECT * FROM family_requests WHERE kind = 'przewodnik-oferuje' AND status = 'nowe'")
+    pairs = [(s, o, s["stage"] == o["stage"]) for s in seek for o in offer if s["powiat"] == o["powiat"]]
+    return sorted(pairs, key=lambda p: not p[2])
+
+
+@bp.route("/razem")
+def razem_panel():
+    from data.razem import REQUEST_KINDS
+    by_kind = db.query("SELECT kind, powiat, COUNT(*) AS n FROM family_requests WHERE status IN ('nowe','zatwierdzone') "
+                       "GROUP BY kind, powiat ORDER BY n DESC")
+    days = [r for r in by_kind if r["kind"] == "dzien-specjalistow"]
+    pending = db.query("SELECT * FROM family_requests WHERE kind IN ('miejsce','sprzet-oddam','sprzet-przyjme') "
+                       "AND status = 'nowe' ORDER BY created_at")
+    other = db.query("SELECT * FROM family_requests WHERE kind IN ('wytchnienie','przewodnik-szukam','przewodnik-oferuje') "
+                     "AND status = 'nowe' ORDER BY created_at DESC")
+    return render_template("admin/razem.html", pairs=guide_pairs(), days=days, pending=pending, other=other,
+                           kinds=REQUEST_KINDS)
+
+
+@bp.post("/razem/<int:rid>/status")
+def razem_status(rid):
+    r = db.one("SELECT * FROM family_requests WHERE id = ?", (rid,))
+    if r is None:
+        abort(404)
+    status = request.form.get("status")
+    if status not in ("zatwierdzone", "odrzucone", "zamkniete"):
+        abort(400)
+    db.execute("UPDATE family_requests SET status = ? WHERE id = ?", (status, rid))
+    what = {"zatwierdzone": "Hub zatwierdził", "odrzucone": "Hub nie opublikował", "zamkniete": "Hub zamknął"}[status]
+    notify.notify([r["user_id"]], f"{what}: „{(r['title'] or r['kind'])[:60]}”", "/razem")
+    flash("Zapisane – autor dostał powiadomienie.", "success")
+    return redirect(url_for("admin.razem_panel"))
+
+
+@bp.post("/razem/polacz")
+def razem_pair():
+    s = db.one("SELECT * FROM family_requests WHERE id = ? AND kind = 'przewodnik-szukam' AND status = 'nowe'",
+               (request.form.get("szukam_id", type=int),))
+    o = db.one("SELECT * FROM family_requests WHERE id = ? AND kind = 'przewodnik-oferuje' AND status = 'nowe'",
+               (request.form.get("oferuje_id", type=int),))
+    if s is None or o is None:
+        abort(400)
+    con = db.get_db()
+    con.execute("UPDATE family_requests SET status = 'polaczone', matched_with = ? WHERE id = ?", (o["id"], s["id"]))
+    con.execute("UPDATE family_requests SET status = 'polaczone', matched_with = ? WHERE id = ?", (s["id"], o["id"]))
+    con.commit()
+    notify.notify([s["user_id"]], f"Hub połączył Cię z rodzicem-przewodnikiem „{o['alias']}”. Koordynatorka zadzwoni, "
+                                  "żeby umówić pierwszą rozmowę.", "/razem/przewodnik")
+    notify.notify([o["user_id"]], f"Hub połączył Cię z rodziną „{s['alias']}”, która szuka przewodnika. Dziękujemy!",
+                  "/razem/przewodnik")
+    flash(f"Połączono: {s['alias']} ↔ {o['alias']}. Obie strony dostały powiadomienie.", "success")
+    return redirect(url_for("admin.razem_panel"))

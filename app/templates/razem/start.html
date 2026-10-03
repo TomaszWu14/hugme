@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf, icon, picto, example %}
+{% from "razem/_razem.html" import module_nav %}
+{% block title %}Razem z ZD{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<section class="razem-hero card card--thread thread--rodziny-zd" aria-labelledby="rz-h">
+  <p class="eyebrow">Razem z ZD</p>
+  <h1 id="rz-h">Wasza rodzina nie zostaje sama</h1>
+  <p class="lead">Dla rodzin osób z zespołem Downa i dla dorosłych osób z ZD. Wybierz etap życia – pokażemy, co teraz ważne,
+    o co zapytać, co działa w Małopolsce i kto pomoże.</p>
+  {% if chosen %}<p class="notice"><strong>Twój etap: {{ chosen.name }}</strong> ({{ chosen.age }}). <a href="/razem/etap/{{ chosen.slug }}">Otwórz plan</a></p>{% endif %}
+</section>
+
+<section aria-labelledby="etapy-h">
+  <h2 id="etapy-h">Wybierz etap życia</h2>
+  <p class="meta">Nie pytamy o datę urodzenia ani diagnozę – wystarczy etap.</p>
+  <form method="post" action="/razem/etap">
+    {{ csrf() }}
+    <ul class="grid stage-grid">
+      {% for s in stages %}
+      <li><button type="submit" name="etap" value="{{ s.slug }}" class="stage-btn {{ 'stage-btn--on' if chosen and chosen.slug == s.slug }}"
+                  {% if chosen and chosen.slug == s.slug %}aria-pressed="true"{% endif %}>
+        {{ icon(s.icon) }}<span class="stage-btn__name">{{ s.name }}</span><span class="stage-btn__age">{{ s.age }}</span></button></li>
+      {% endfor %}
+    </ul>
+  </form>
+</section>
+
+<section aria-labelledby="pomoc-h">
+  <h2 id="pomoc-h">Czego teraz potrzebujesz?</h2>
+  <ul class="grid">
+    <li class="card"><h3><a href="/razem/wizyty">{{ icon('kalendarz') }} Wizyty u specjalistów</a></h3><p>Lista wizyt na Twoim urządzeniu i „co zabrać”.</p></li>
+    <li class="card"><h3><a href="/razem/przewodnik">{{ icon('przyjaciele') }} Rodzic-przewodnik</a></h3><p>Porozmawiaj z rodzicem, który przeszedł tę drogę.</p></li>
+    <li class="card"><h3><a href="/razem/wytchnienie">{{ icon('serce') }} Chwila wytchnienia</a></h3><p>Poproś o kilka godzin opieki, żeby odpocząć.</p></li>
+    <li class="card"><h3><a href="/razem/prawa">{{ icon('dom') }} Prawa i świadczenia</a></h3><p>Kilka pytań tak/nie – dowiesz się, gdzie zapytać.</p></li>
+    <li class="card"><h3><a href="/razem/pisma">{{ icon('szkola') }} Wzory pism</a></h3><p>Wniosek o asystenta, dostosowanie nauki, wytchnienie.</p></li>
+    <li class="card"><h3><a href="/razem/co-po-nas">{{ icon('dom') }} „Co po nas”</a></h3><p>Przyszłość dorosłej osoby z ZD – zaplanujcie ją razem.</p></li>
+    <li class="card"><h3><a href="/razem/miejsca">{{ icon('lekarz') }} Przyjazne miejsca</a></h3><p>Polecane przez rodziców przychodnie, dentyści, baseny.</p></li>
+    <li class="card"><h3><a href="/razem/sprzet">{{ icon('praca') }} Wymiana sprzętu</a></h3><p>Oddam / przyjmę – kontakt przez Hub.</p></li>
+    <li class="card"><h3><a href="/razem/rodzenstwo">{{ icon('przyjaciele') }} Dla rodzeństwa</a></h3><p>Bracia i siostry też potrzebują uwagi.</p></li>
+    <li class="card"><h3><a href="/razem/szkoly">{{ icon('szkola') }} Jaka szkoła?</a></h3><p>Ogólnodostępna, integracyjna, specjalna – porównanie.</p></li>
+  </ul>
+</section>
+
+<section aria-labelledby="ja-h" class="card card--raised">
+  <h2 id="ja-h">Jesteś dorosłą osobą z zespołem Downa?</h2>
+  <p>Mamy stronę dla Ciebie. Krótkie zdania i obrazki.</p>
+  <p><a class="btn btn--primary btn--large" href="/razem/moje-sprawy">{{ icon('serce') }} Strona dla mnie</a></p>
+</section>
+
+{% if events %}
+<section aria-labelledby="ev-h">
+  <h2 id="ev-h">Najbliższe wydarzenia</h2>
+  <ul class="list-plain">{% for e in events %}<li><strong>{{ e.date|date }}</strong> – {{ e.title }} <span class="meta">{{ e.powiat }}</span></li>{% endfor %}</ul>
+  <p><a href="/razem/wydarzenia">Wszystkie wydarzenia i zapisy</a></p>
+</section>
+{% endif %}
+{% endblock %}

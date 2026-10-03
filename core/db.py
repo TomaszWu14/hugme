@@ -144,6 +144,35 @@ CREATE TABLE IF NOT EXISTS broker_cards (
     by_ai INTEGER NOT NULL DEFAULT 0,
     created_at TIMESTAMP NOT NULL
 );
+CREATE TABLE IF NOT EXISTS family_requests (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    kind TEXT NOT NULL CHECK (kind IN ('przewodnik-szukam','przewodnik-oferuje','wytchnienie',
+        'dzien-specjalistow','miejsce','sprzet-oddam','sprzet-przyjme')),
+    powiat TEXT NOT NULL,
+    stage TEXT,
+    alias TEXT NOT NULL,
+    title TEXT NOT NULL DEFAULT '',
+    body TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'nowe' CHECK (status IN ('nowe','zatwierdzone','odrzucone','polaczone','zamkniete')),
+    matched_with INTEGER REFERENCES family_requests(id),
+    created_at TIMESTAMP NOT NULL
+);
+CREATE TABLE IF NOT EXISTS events (
+    id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    powiat TEXT NOT NULL,
+    date TEXT NOT NULL,
+    place TEXT NOT NULL,
+    body TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL
+);
+CREATE TABLE IF NOT EXISTS event_signups (
+    event_id INTEGER NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    created_at TIMESTAMP NOT NULL,
+    PRIMARY KEY (event_id, user_id)
+);
 CREATE INDEX IF NOT EXISTS ix_reports_created ON reports(created_at);
 CREATE INDEX IF NOT EXISTS ix_notifications_user ON notifications(user_id, is_read);
 CREATE INDEX IF NOT EXISTS ix_messages_thread ON messages(thread_id);

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% from "razem/_razem.html" import module_nav %}
+{% block title %}Wzory pism – Razem z ZD{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<h1>Wzory pism</h1>
+<p class="lead">Wypełnij formularz – przygotujemy pismo do wydruku. Niczego nie zapisujemy.</p>
+<ul class="grid">
+  {% for slug, l in letters.items() %}<li class="card"><h2 class="h3"><a href="/razem/pisma/{{ slug }}">{{ l.title }}</a></h2></li>{% endfor %}
+</ul>
+{% endblock %}

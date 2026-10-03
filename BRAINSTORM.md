@@ -12,11 +12,11 @@ Jak odpowiadać: wpisz po `ODP:`.
 
 1. ⚡ Ile osób w zespole i kto co robi (kod, UX, slajdy, film)?
    Propozycja: ja kod; Ty decyzje + demo + film
-   ODP:wszystko ja
+   ODP:wszystko jedna osoba
 
 2. ⚡ Ile godzin realnie masz do 11:00 (ze snem)?
    Propozycja: ~16 h
-   ODP: tak
+   ODP: 16
 
 3. ⚡ Wszystkie 7 modułów to wymóg, czy mogą być płytsze?
    Propozycja: wszystkie 7, moduły 4–7 „cienkie, ale działające”
@@ -176,7 +176,7 @@ Jak odpowiadać: wpisz po `ODP:`.
 
 40. Ścieżka rodziny: statyczny tekst czy oś z linkami?
     Propozycja: oś 4 kroków z linkami do innowacji i materiałów
-    ODP:ok
+    ODP:oś
 
 41. Kto pisze treść ścieżki (treść medyczna — ostrożnie)?
     Propozycja: ja, ogólnikowo, z dopiskiem „PRZYKŁAD — skonsultuj z lekarzem”

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% from "_cards.html" import innovation_card %}
+{% from "razem/_razem.html" import module_nav, request_form %}
+{% block title %}Chwila wytchnienia – Razem z ZD{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<h1>{{ icon('serce') }} Chwila wytchnienia</h1>
+<p class="lead">Odpoczynek to nie luksus. Poproś o kilka godzin opieki – Hub przekaże prośbę organizacjom i ośrodkom,
+  które prowadzą opiekę wytchnieniową w Twoim powiecie.</p>
+<div class="two-col">
+  <section aria-labelledby="prosba-h">
+    <h2 id="prosba-h">Poproś o wytchnienie</h2>
+    {{ request_form('wytchnienie', 'Wyślij prośbę', errors, form, error_kind, powiaty, stages, with_stage=true,
+                    title_label='Kiedy i na ile?', title_hint='sobota, 4 godziny',
+                    body_label='Co jest ważne dla opiekuna?', body_hint='syn lubi spacery, nie lubi głośnych miejsc') }}
+    <p><a href="/razem/pisma/wytchnienie">Wzór wniosku o opiekę wytchnieniową do OPS</a></p>
+  </section>
+  <aside aria-labelledby="dziala-h">
+    <h2 id="dziala-h" class="h3">Co już działa</h2>
+    <ul class="list-plain">{% for i in innovations %}<li>{{ innovation_card(i) }}</li>{% endfor %}</ul>
+  </aside>
+</div>
+{% endblock %}

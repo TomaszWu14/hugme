@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% from "razem/_razem.html" import module_nav, request_form %}
+{% block title %}Rodzic-przewodnik – Razem z ZD{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<h1>{{ icon('przyjaciele') }} Rodzic-przewodnik</h1>
+<p class="lead">Po diagnozie najbardziej pomaga rozmowa z kimś, kto przeszedł tę drogę. Rodzic-przewodnik to doświadczony
+  rodzic z Twojej okolicy, który ma czas na kawę i rozmowę.</p>
+<ol class="steps">
+  <li><strong>Zgłaszasz się</strong> – pod pseudonimem, bez danych dziecka.</li>
+  <li><strong>Hub dobiera parę</strong> – ten sam powiat, podobny etap życia.</li>
+  <li><strong>Hub Was łączy</strong> – za zgodą obu stron. Nikt nie widzi Twoich danych bez Twojej zgody.</li>
+</ol>
+<div class="grid grid--two">
+  <section aria-labelledby="szukam-h">
+    <h2 id="szukam-h">Szukam przewodnika</h2>
+    {{ request_form('przewodnik-szukam', 'Szukam przewodnika', errors, form, error_kind, powiaty, stages, with_stage=true,
+                    body_label='O czym chcesz porozmawiać?', body_hint='córka zaczyna przedszkole, nie wiem, jak przygotować kadrę') }}
+  </section>
+  <section aria-labelledby="oferuje-h">
+    <h2 id="oferuje-h">Chcę być przewodnikiem</h2>
+    {{ request_form('przewodnik-oferuje', 'Zgłaszam się jako przewodnik', errors, form, error_kind, powiaty, stages, with_stage=true,
+                    body_label='Czym możesz się podzielić?', body_hint='przeszliśmy przez szkołę integracyjną z asystentem') }}
+  </section>
+</div>
+{% endblock %}

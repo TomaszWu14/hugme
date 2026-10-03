@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, example %}
+{% from "razem/_razem.html" import module_nav, request_form %}
+{% block title %}Wymiana sprzętu – Razem z ZD{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<h1>{{ icon('praca') }} Wymiana sprzętu</h1>
+<p class="lead">Pomoce do terapii, sprzęt rehabilitacyjny, książki. Oddaj to, z czego dziecko wyrosło – przyda się innej rodzinie.
+  Ogłoszenia sprawdza Hub, a kontakt odbywa się przez Hub (bez telefonów w ogłoszeniach).</p>
+<ul class="grid">
+  {% for r in rows %}
+  <li class="card"><p class="badge {{ 'badge--open' if r.kind == 'sprzet-oddam' else 'badge--pilot' }}">{{ '↗ Oddam' if r.kind == 'sprzet-oddam' else '↙ Przyjmę' }}</p>
+    <h2 class="h3">{{ r.title }}</h2><p>{{ r.body }}</p><p class="meta"><span>{{ r.powiat }}</span> <span>{{ r.alias }}</span> {{ example() }}</p></li>
+  {% else %}<li>Brak ogłoszeń.</li>{% endfor %}
+</ul>
+<div class="grid grid--two">
+  <section aria-labelledby="oddam-h"><h2 id="oddam-h">Oddam</h2>
+    {{ request_form('sprzet-oddam', 'Dodaj ogłoszenie', errors, form, error_kind, powiaty, stages,
+                    title_label='Co oddajesz?', title_hint='pionizator dziecięcy', body_label='Opis', body_hint='dobry stan, dla dziecka do 4 lat') }}</section>
+  <section aria-labelledby="przyjme-h"><h2 id="przyjme-h">Przyjmę</h2>
+    {{ request_form('sprzet-przyjme', 'Dodaj ogłoszenie', errors, form, error_kind, powiaty, stages,
+                    title_label='Czego szukasz?', title_hint='piłka rehabilitacyjna', body_label='Opis', body_hint='duża, do ćwiczeń w domu') }}</section>
+</div>
+{% endblock %}

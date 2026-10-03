@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf, ai_box %}
+{% from "razem/_razem.html" import module_nav %}
+{% block title %}{{ spec.title }} – Razem z ZD{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<p class="no-print"><a href="/razem/pisma">← Wzory pism</a></p>
+<h1 class="no-print">{{ spec.title }}</h1>
+{% if text %}
+{% if ai_text %}{% call ai_box(true) %}<p>Uzasadnienie zaproponowało AI – przeczytaj je i popraw przed wysłaniem.</p>{% endcall %}{% endif %}
+<article class="card letter" aria-label="Gotowe pismo">{{ text }}</article>
+<p class="no-print notice">Wydruk albo PDF: <kbd>Ctrl</kbd>+<kbd>P</kbd>. Pisma nie zapisujemy – po zamknięciu strony zniknie.</p>
+{% endif %}
+<form method="post" class="card no-print" novalidate>
+  {{ csrf() }}
+  {% if errors %}
+  <div class="error-summary" role="alert" aria-labelledby="err-h"><h2 id="err-h">Uzupełnij {{ errors|length }} {{ 'pole' if errors|length == 1 else 'pola' }}</h2>
+    <ul>{% for k in errors %}<li><a href="#f-{{ k }}">{{ (spec.fields|selectattr(0, 'equalto', k)|first)[1] }}</a></li>{% endfor %}</ul></div>
+  {% endif %}
+  <p class="notice">Dane wpisane tutaj zostają w Twojej przeglądarce i na wydruku – nie trafiają do bazy. Do AI wysyłamy wyłącznie uzasadnienie bez danych osobowych.</p>
+  {% for name, label, hint in spec.fields %}
+  <div class="field {{ 'field--error' if errors.get(name) }}">
+    <label for="f-{{ name }}">{{ label }}</label>
+    <p class="hint" id="h-{{ name }}">{{ hint }}</p>
+    {% if errors.get(name) %}<p class="error-msg" id="e-{{ name }}"><span aria-hidden="true">⚠</span> {{ errors[name] }}</p>{% endif %}
+    {% if name == 'uzasadnienie' %}
+    <textarea id="f-{{ name }}" name="{{ name }}" rows="3" aria-describedby="h-{{ name }}{{ ' e-' ~ name if errors.get(name) }}" {% if errors.get(name) %}aria-invalid="true"{% endif %}>{{ values.get(name, '') }}</textarea>
+    {% else %}
+    <input id="f-{{ name }}" name="{{ name }}" type="text" value="{{ values.get(name, '') }}" aria-describedby="h-{{ name }}{{ ' e-' ~ name if errors.get(name) }}" {% if errors.get(name) %}aria-invalid="true"{% endif %}>
+    {% endif %}
+  </div>
+  {% endfor %}
+  <div class="actions">
+    <button type="submit" name="akcja" value="pismo" class="btn btn--primary">Przygotuj pismo</button>
+    {% if ai_enabled %}<button type="submit" name="akcja" value="ai" class="btn btn--ai"><span aria-hidden="true">✦</span> Pismo z uzasadnieniem od AI</button>{% endif %}
+  </div>
+</form>
+{% endblock %}
