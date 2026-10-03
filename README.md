@@ -1,5 +1,7 @@
 # HugMe — platforma dla HubMi.pl
 
+[![Testy](https://github.com/TomaszWu14/hugme/actions/workflows/ci.yml/badge.svg)](https://github.com/TomaszWu14/hugme/actions/workflows/ci.yml)
+
 > **Twój problem nie zostaje sam.**
 
 Prototyp platformy dla **Małopolskiego Hubu Innowacji Społecznych** (Regionalny Ośrodek Polityki Społecznej
