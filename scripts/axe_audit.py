@@ -160,7 +160,7 @@ def main(screens=False):
                 if screens and vp_name == "telefon" and pref == "kontrast":
                     page.screenshot(path=str(shots / "15-wysoki-kontrast-telefon.png"))
             ctx.close()
-        layout_bad = layout_big_text(browser)
+        layout_bad = layout_big_text(browser) + keyboard_flows(browser)
         browser.close()
     server.shutdown()
     write_report(results, layout_bad)
@@ -172,6 +172,54 @@ def main(screens=False):
     for line in layout_bad:
         print("  " + line)
     return 1 if bad or layout_bad else 0
+
+
+FOCUS_JS = """() => { const e = document.activeElement, cs = getComputedStyle(e);
+  return {tag: e.tagName, text: (e.innerText || e.value || e.getAttribute('aria-label') || '').trim().slice(0, 40),
+          visible: e !== document.body && (parseFloat(cs.outlineWidth) >= 2 && cs.outlineStyle !== 'none' || cs.boxShadow !== 'none')}; }"""
+
+
+def tab_to(page, label, limit=80):
+    """Naciska Tab, aż fokus trafi na element z tekstem `label`; po drodze każdy fokus musi być widoczny."""
+    for _ in range(limit):
+        page.keyboard.press("Tab")
+        f = page.evaluate(FOCUS_JS)
+        if not f["visible"]:
+            return f"niewidoczny fokus na {f['tag']} „{f['text']}”"
+        if label in f["text"]:
+            return None
+    return f"„{label}” nieosiągalne Tabem w {limit} krokach"
+
+
+def keyboard_flows(browser):
+    """Główne ścieżki tylko klawiaturą: skip link, wyszukiwanie, wybór konta demo (2.1.1, 2.4.1, 2.4.7)."""
+    ctx = browser.new_context(viewport=VIEWPORTS["desktop"], locale="pl-PL")
+    page, bad = ctx.new_page(), []
+    page.goto(BASE + "/")
+    page.keyboard.press("Tab")
+    if "Przejdź do treści" not in page.evaluate(FOCUS_JS)["text"]:
+        bad.append("[klawiatura] / : pierwszy Tab nie trafia w „Przejdź do treści”")
+    page.keyboard.press("Enter")
+    if page.evaluate("document.activeElement.id") != "tresc":
+        bad.append("[klawiatura] / : skip link nie przenosi fokusu do treści")
+    if err := tab_to(page, "Znajdź rozwiązania"):
+        bad.append(f"[klawiatura] / : {err}")
+    else:
+        with page.expect_navigation():
+            page.keyboard.press("Enter")
+        if "/wyniki" not in page.url:
+            bad.append("[klawiatura] / : Enter na „Znajdź rozwiązania” nie prowadzi do wyników")
+    page.goto(BASE + "/konto")
+    if err := tab_to(page, "Wejdź jako koordynatorka"):
+        bad.append(f"[klawiatura] /konto: {err}")
+    else:
+        with page.expect_navigation():
+            page.keyboard.press("Enter")
+        page.goto(BASE + "/admin")
+        if err := tab_to(page, "Skrzynka"):
+            bad.append(f"[klawiatura] /admin: {err}")
+    ctx.close()
+    return bad
 
 
 def layout_big_text(browser):
