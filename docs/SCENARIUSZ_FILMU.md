@@ -23,6 +23,8 @@ bez klucza AI – film pokazuje, że dopasowanie działa bez sztucznej inteligen
 w `sceny.txt`), a `python scripts/film_napisy.py <katalog> [lektor.mp3]` przyspiesza je do 2:59, wtapia napisy PL
 i dokłada planszę końcową. Tekst i dokładne czasy lektora: [film/lektor.srt](film/lektor.srt) – to samo źródło dla
 głosu z syntezatora i dla napisów; gotowe audio podaje się jako drugi argument.
+W oddanej wersji lektor to syntezator mowy (edge-tts, głos `pl-PL-ZofiaNeural`), generowany osobno dla każdej sceny
+i dopasowany do jej okna.
 
 **Wskazówki:** mów wolno (ok. 130 słów na minutę, cały tekst ma ok. 300 słów), nie pokazuj paska adresu
 z localhost, w drugiej wersji filmu dodaj napisy.
