@@ -26,7 +26,7 @@ def init(app):
         return {
             "pref_size": request.cookies.get("a11y_size") == "1",
             "pref_contrast": request.cookies.get("a11y_contrast") == "1",
-            "demo_users": db.query("SELECT id, name, role FROM users ORDER BY id"),
+            "demo_users": db.query("SELECT id, name, role FROM users WHERE is_demo = 1 ORDER BY id"),
         }
 
 

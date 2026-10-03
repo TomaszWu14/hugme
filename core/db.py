@@ -13,7 +13,9 @@ CREATE TABLE IF NOT EXISTS users (
     role TEXT NOT NULL CHECK (role IN ('mieszkaniec','ngo','gmina','ekspert','admin')),
     org TEXT,
     areas TEXT NOT NULL DEFAULT '',
-    email TEXT NOT NULL
+    email TEXT NOT NULL,
+    bio TEXT NOT NULL DEFAULT '',
+    is_demo INTEGER NOT NULL DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS innovations (
     id INTEGER PRIMARY KEY,
