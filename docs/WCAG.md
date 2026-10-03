@@ -11,7 +11,10 @@ kontrola układu (przewijanie w bok, tekst poza kartą) na wszystkich widokach n
 
 **136/136 widoków bez naruszeń wykrywanych automatycznie, bez przewijania w poziomie na 320 px – także z A+.**
 Automaty wykrywają tylko część problemów, dlatego wynik uzupełnia przegląd ręczny (klawiatura, czytnik ekranu) poniżej.
-Audyt działa w CI (job `a11y`) i blokuje scalenie zmiany, która wprowadza naruszenie. Szczegóły: [WCAG_RAPORT.md](WCAG_RAPORT.md).
+Audyt działa w CI (job `a11y`) i blokuje scalenie zmiany, która wprowadza naruszenie.
+Ten sam audyt przechodzi główne ścieżki **samą klawiaturą**: pierwszy Tab to „Przejdź do treści” (fokus trafia do
+treści), Tab + Enter prowadzą od pola opisu do wyników i od wyboru konta demo do panelu Hubu, a na każdym zatrzymaniu
+fokus musi być widoczny (2.1.1, 2.4.1, 2.4.7). Szczegóły: [WCAG_RAPORT.md](WCAG_RAPORT.md).
 
 Audyt znalazł i pomógł naprawić: tabele przewijane w poziomie niedostępne z klawiatury (dodane `role="region"`
 i `tabindex="0"`), tekst dla czytników ekranu rozpychający stronę na telefonie, listę ról za szeroką w trybie A+.
