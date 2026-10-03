@@ -1,0 +1,11 @@
+.venv
+.git
+instance
+.env
+graphify-out
+.pytest_cache
+__pycache__
+scripts/.cache
+docs/zrzuty
+tests
+.idea

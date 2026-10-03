@@ -7,7 +7,7 @@
 <p class="notice">Widok tylko dla Hubu. Dane zagregowane – bez treści zgłoszeń i bez autorów. Wszystkich zgłoszeń: {{ total }}.
   {% if rate is not none %}Dopasowania ocenione jako pomocne: <strong>{{ rate }}%</strong> ({{ rated }} ocen).{% endif %}</p>
 
-<div class="table-wrap">
+<div class="table-wrap" tabindex="0" role="region" aria-label="Tabela – na małym ekranie przewiń w bok">
 <table>
   <caption>Zgłoszenia według obszaru – ostatnie 30 dni wobec poprzednich 30</caption>
   <thead><tr><th scope="col">Obszar</th><th scope="col">Razem</th><th scope="col">Ostatnie 30 dni</th><th scope="col">Poprzednie 30 dni</th><th scope="col">Zmiana</th></tr></thead>
@@ -21,7 +21,7 @@
 </table>
 </div>
 
-<div class="table-wrap heat">
+<div class="table-wrap heat" tabindex="0" role="region" aria-label="Mapa potrzeb – na małym ekranie przewiń w bok">
 <table>
   <caption>Mapa potrzeb: powiat × obszar (liczba zgłoszeń; ciemniej = więcej)</caption>
   <thead><tr><th scope="col">Powiat</th>{% for slug, a in AREAS.items() %}<th scope="col">{{ a.short }}</th>{% endfor %}</tr></thead>

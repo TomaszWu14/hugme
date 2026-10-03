@@ -161,3 +161,10 @@ def accessibility():
 @bp.route("/prywatnosc")
 def privacy():
     return render_template("prywatnosc.html")
+
+
+@bp.route("/zdrowie")
+def health():
+    """Sprawdzenie dla Coolify/Dockera: aplikacja odpowiada i baza działa."""
+    db.one("SELECT 1")
+    return {"status": "ok"}

@@ -59,3 +59,7 @@ def test_logout(client):
     token = login(client, "mieszkaniec")
     client.post("/konto/wyloguj", data={"_csrf": token})
     assert "Wyloguj" not in client.get("/").get_data(as_text=True)
+
+
+def test_health_endpoint(client):
+    assert client.get("/zdrowie").get_json() == {"status": "ok"}

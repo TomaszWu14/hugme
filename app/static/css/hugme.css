@@ -211,7 +211,7 @@ textarea { resize: vertical; line-height: 1.5; }
 /* Filtry, tabele */
 .filters { display: grid; gap: .8rem 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); align-items: end; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; margin-bottom: 1.4rem; }
 .filters .field { margin: 0; }
-.table-wrap { overflow-x: auto; max-width: 100%; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); margin-bottom: 1.5rem; }
+.table-wrap { position: relative; overflow-x: auto; max-width: 100%; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); margin-bottom: 1.5rem; }
 table { border-collapse: collapse; width: 100%; font-size: .92rem; }
 th, td { text-align: left; padding: .55rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { background: var(--sand); }
@@ -262,3 +262,7 @@ select.select-inline { width: auto; }
 .stat a:hover .stat__num { text-decoration: underline; }
 kbd { border: 1px solid var(--ink-soft); border-radius: 4px; padding: 0 .3rem; font: inherit; font-size: .85em; background: var(--paper); }
 code { background: var(--sand); padding: 0 .25rem; border-radius: 4px; }
+.role-switch { min-width: 0; max-width: 100%; }
+.demo-bar .role-switch select { max-width: 100%; min-width: 0; }
+@media (max-width: 30em) { .demo-bar .role-switch select { width: 100%; } }
+.table-wrap:focus-visible { outline-offset: 0; }

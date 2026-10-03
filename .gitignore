@@ -6,3 +6,4 @@ instance/
 graphify-out/
 .pytest_cache/
 .idea/workspace.xml
+scripts/.cache/

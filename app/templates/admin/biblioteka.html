@@ -6,7 +6,7 @@
 {% include "admin/_nav.html" %}
 <p>Zmiany działają od razu – w Bibliotece i w dopasowaniach, bez przebudowy.</p>
 <p class="actions"><a class="btn btn--primary" href="/admin/biblioteka/nowa">Dodaj innowację</a> <a class="btn" href="/admin/import">Import z pliku ROPS</a></p>
-<div class="table-wrap">
+<div class="table-wrap" tabindex="0" role="region" aria-label="Tabela – na małym ekranie przewiń w bok">
 <table>
   <caption>Innowacje ({{ rows|length }})</caption>
   <thead><tr><th scope="col">Tytuł</th><th scope="col">Obszar</th><th scope="col">Powiat</th><th scope="col">Etap</th><th scope="col">Źródło</th><th scope="col">Akcja</th></tr></thead>

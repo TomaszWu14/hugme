@@ -22,7 +22,7 @@
   <p><span aria-hidden="true">✔</span> Zaimportowano: <strong>{{ report.ok }}</strong>.
     {% if report.bad %}<span aria-hidden="true">⚠</span> Pominięto: <strong>{{ report.bad|length }}</strong>.{% endif %}</p>
   {% if report.bad %}
-  <div class="table-wrap"><table><caption>Pominięte wiersze</caption>
+  <div class="table-wrap" tabindex="0" role="region" aria-label="Tabela – na małym ekranie przewiń w bok"><table><caption>Pominięte wiersze</caption>
     <thead><tr><th scope="col">Wiersz</th><th scope="col">Tytuł</th><th scope="col">Problem</th></tr></thead>
     <tbody>{% for n, t, why in report.bad %}<tr><td>{{ n }}</td><td>{{ t }}</td><td>{{ why }}</td></tr>{% endfor %}</tbody></table></div>
   {% endif %}

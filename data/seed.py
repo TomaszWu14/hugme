@@ -40,11 +40,13 @@ def run(con):
         rid = cur.lastrowid
         report_ids.append(rid)
         results = index.search(body, k=5)
-        for r in results:
+        for rank, r in enumerate(results):
             # Część autorów oceniła dopasowania – dane do metryki trafności w panelu.
+            # Luki (status „luka”) oceniono jako niepomocne; w pozostałych czołówka zwykle pomaga.
             fb = None
             if n % 2 == 0 and rnd.random() < 0.7:
-                fb = 1 if r.score >= 0.45 else -1
+                helpful = status != "luka" and (rank < 2 or rnd.random() < 0.35)
+                fb = 1 if helpful else -1
             con.execute("INSERT INTO matches (report_id, innovation_id, score, feedback) VALUES (?,?,?,?)",
                         (rid, r.doc_id, r.score, fb))
         best = results[0].score if results else 0

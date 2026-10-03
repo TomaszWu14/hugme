@@ -23,7 +23,7 @@
   <a class="btn btn--small btn--ghost" href="/admin/eksport/zgloszenia.csv">Eksport zgłoszeń (CSV)</a>
 </form>
 {% if items %}
-<div class="table-wrap">
+<div class="table-wrap" tabindex="0" role="region" aria-label="Tabela – na małym ekranie przewiń w bok">
 <table>
   <caption>Nowe sprawy ({{ items|length }})</caption>
   <thead><tr><th scope="col">Rodzaj</th><th scope="col">Data</th><th scope="col">Treść</th><th scope="col">Szczegóły</th></tr></thead>

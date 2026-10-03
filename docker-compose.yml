@@ -1,0 +1,16 @@
+services:
+  hugme:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      SECRET_KEY: ${SECRET_KEY:?Ustaw SECRET_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-haiku-4-5}
+      COOKIE_SECURE: ${COOKIE_SECURE:-1}
+    volumes:
+      - hugme-data:/data
+
+volumes:
+  hugme-data:
