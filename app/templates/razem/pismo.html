@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import csrf, ai_box %}
+{% from "_macros.html" import csrf, ai_box, ai_note %}
 {% from "razem/_razem.html" import module_nav %}
 {% block title %}{{ spec.title }} – Razem z ZD{% endblock %}
 {% block content %}
@@ -32,7 +32,7 @@
   {% endfor %}
   <div class="actions">
     <button type="submit" name="akcja" value="pismo" class="btn btn--primary">Przygotuj pismo</button>
-    {% if ai_enabled %}<button type="submit" name="akcja" value="ai" class="btn btn--ai"><span aria-hidden="true">✦</span> Pismo z uzasadnieniem od AI</button>
+    {% if ai_enabled %}<button type="submit" name="akcja" value="ai" class="btn btn--ai"><span aria-hidden="true">✦</span> Pismo z uzasadnieniem od AI</button> {{ ai_note() }}
     {% else %}<button type="submit" name="akcja" value="ai" class="btn">Dopisz uzasadnienie z szablonu</button>{% endif %}
   </div>
 </form>

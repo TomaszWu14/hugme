@@ -42,9 +42,13 @@ def clock():
     return time.time() - T0
 
 
+MARKS = []  # (planowana sekunda sceny, faktyczna) – źródło czasów dla docs/film/lektor.srt
+
+
 def until(sec):
-    """Czeka do danej sekundy filmu (rytm scen jak w scenariuszu)."""
+    """Czeka do danej sekundy filmu (rytm scen jak w scenariuszu) i zapisuje, kiedy scena naprawdę ruszyła."""
     time.sleep(max(0.0, sec - clock()))
+    MARKS.append((sec, round(clock(), 2)))
 
 
 class Film:
@@ -282,6 +286,7 @@ def main():
     final = OUT / "hugme-przeklikanie.webm"
     shutil.move(webm, final)
     print("webm:", final, final.stat().st_size // 1024, "KB,", round(clock()), "s")
+    (OUT / "sceny.txt").write_text("".join(f"{plan}\t{real}\n" for plan, real in MARKS), encoding="utf-8")
     try:  # ffmpeg Playwrighta ma tylko VP8 – do MP4 (H.264) potrzebny pełny ffmpeg: pip install imageio-ffmpeg
         import imageio_ffmpeg
         ff = [imageio_ffmpeg.get_ffmpeg_exe()]
@@ -290,7 +295,7 @@ def main():
     if ff and ff[0]:
         mp4 = OUT / "hugme-przeklikanie.mp4"
         r = subprocess.run([ff[0], "-y", "-loglevel", "error", "-i", str(final), "-c:v", "libx264", "-preset", "medium",
-                            "-crf", "22", "-pix_fmt", "yuv420p", "-r", "25", "-movflags", "+faststart", str(mp4)])
+                            "-crf", "26", "-pix_fmt", "yuv420p", "-r", "25", "-movflags", "+faststart", str(mp4)])
         print("mp4:", mp4 if r.returncode == 0 else f"ffmpeg bez H.264 (kod {r.returncode}) – zostaje webm")
 
 

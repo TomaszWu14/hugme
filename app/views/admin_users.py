@@ -1,6 +1,6 @@
 """Panel Hubu – użytkownicy i role: lista kont z aktywnością, karta konta (edycja, zmiana roli, blokada),
 nowe konto, macierz uprawnień i dziennik działań na kontach."""
-from flask import Blueprint, abort, flash, g, redirect, render_template, request, url_for
+from flask import Blueprint, abort, current_app, flash, g, redirect, render_template, request, url_for
 
 from core import db
 from core.domain import AREAS, ROLES
@@ -53,6 +53,14 @@ def log(user_id, action):
 
 def activity(uid):
     return {k: db.one(sql, (uid,))[0] for k, sql in ACTIVITY.items()}
+
+
+DEMO_IDS = range(1, 6)  # 5 kont z paska „Tryb demo” (pierwsze w seedzie)
+DEMO_LOCKED = "Na publicznym demo konta z paska „Tryb demo” zostają bez zmian, żeby kolejne osoby mogły je obejrzeć."
+
+
+def _demo_locked(uid):
+    return current_app.config["DEMO_MODE"] and uid in DEMO_IDS
 
 
 def _user_or_404(uid):
@@ -116,6 +124,8 @@ def user(uid):
         if not errors and data["role"] != "admin" and u["role"] == "admin" and \
                 db.one("SELECT COUNT(*) FROM users WHERE role = 'admin' AND is_active = 1")[0] <= 1:
             errors["role"] = "To ostatnie aktywne konto Hubu – nie można odebrać mu roli."
+        if not errors and data["role"] != u["role"] and _demo_locked(uid):
+            errors["role"] = DEMO_LOCKED
         if not errors:
             db.execute("UPDATE users SET name = ?, role = ?, org = ?, areas = ?, bio = ? WHERE id = ?",
                        (data["name"], data["role"], data["org"], data["areas"], data["bio"], uid))
@@ -137,6 +147,9 @@ def toggle_block(uid):
     u = _user_or_404(uid)
     if uid == g.user["id"]:
         flash("Nie możesz zablokować własnego konta.", "error")
+        return redirect(url_for("admin_users.user", uid=uid))
+    if _demo_locked(uid):
+        flash(DEMO_LOCKED, "error")
         return redirect(url_for("admin_users.user", uid=uid))
     new = 0 if u["is_active"] else 1
     db.execute("UPDATE users SET is_active = ? WHERE id = ?", (new, uid))

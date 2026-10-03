@@ -1,4 +1,4 @@
-{% from "_macros.html" import example, area_tag %}
+{% from "_macros.html" import example, area_tag, hide_button %}
 
 {% macro score_bar(score, label) -%}
 <p class="score"><span>{{ label }}</span>
@@ -31,9 +31,11 @@
   {% if tv.messages %}
   <ol class="thread">
     {% for m in tv.messages %}
-    <li class="msg {{ 'msg--hub' if m.role in ('admin', 'ekspert') }}">
-      <p class="msg__who">{{ m.name }} <span class="msg__when">· {{ ROLES[m.role] }} · {{ m.created_at|date }}</span></p>
+    <li class="msg {{ 'msg--hub' if m.role in ('admin', 'ekspert') }} {{ 'msg--hidden' if m.hidden }}">
+      <p class="msg__who">{{ m.name }} <span class="msg__when">· {{ ROLES[m.role] }} · {{ m.created_at|date }}</span>
+        {% if m.hidden %}<span class="badge">ukryta – widzi tylko Hub</span>{% endif %}</p>
       <p>{{ m.body }}</p>
+      {% if g.user and g.user.role == 'admin' %}{{ hide_button('wiadomosc', m.id, m.hidden, 'wiadomość', request.path) }}{% endif %}
     </li>
     {% endfor %}
   </ol>

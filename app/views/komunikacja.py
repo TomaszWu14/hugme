@@ -30,7 +30,8 @@ def ensure_thread(stype, sid, title, first_message=None):
 def thread_view(stype, sid):
     t = db.one("SELECT * FROM threads WHERE subject_type = ? AND subject_id = ?", (stype, sid))
     msgs = db.query("SELECT m.*, u.name, u.role FROM messages m JOIN users u ON u.id = m.user_id "
-                    "WHERE m.thread_id = ? ORDER BY m.created_at, m.id", (t["id"],)) if t else []
+                    "WHERE m.thread_id = ? AND (m.hidden = 0 OR ?) ORDER BY m.created_at, m.id",
+                    (t["id"], bool(g.user and g.user["role"] == "admin"))) if t else []
     return {"thread": t, "messages": msgs, "subject_type": stype, "subject_id": sid}
 
 
@@ -119,14 +120,14 @@ def expert_inbox():
     # Wątki pomysłów i innowacji z moich obszarów, w których ostatnie słowo nie należy do eksperta.
     rows = db.query(f"""
         SELECT t.*, (SELECT u.role FROM messages m JOIN users u ON u.id = m.user_id
-                     WHERE m.thread_id = t.id ORDER BY m.created_at DESC, m.id DESC LIMIT 1) AS last_role,
-               (SELECT MAX(created_at) FROM messages m WHERE m.thread_id = t.id) AS last_at,
+                     WHERE m.thread_id = t.id AND m.hidden = 0 ORDER BY m.created_at DESC, m.id DESC LIMIT 1) AS last_role,
+               (SELECT MAX(created_at) FROM messages m WHERE m.thread_id = t.id AND m.hidden = 0) AS last_at,
                COALESCE(i.area, n.area, r.area) AS area
         FROM threads t
         LEFT JOIN ideas i ON t.subject_type = 'pomysl' AND i.id = t.subject_id
         LEFT JOIN innovations n ON t.subject_type = 'innowacja' AND n.id = t.subject_id
         LEFT JOIN reports r ON t.subject_type = 'zgloszenie' AND r.id = t.subject_id
-        WHERE COALESCE(i.area, n.area, r.area) IN ({marks})
+        WHERE COALESCE(i.area, n.area, r.area) IN ({marks}) AND COALESCE(i.hidden, 0) = 0
         ORDER BY last_at DESC""", areas)
     waiting = [r for r in rows if r["last_role"] not in ("ekspert", "admin")]
     return render_template("ekspert.html", waiting=waiting, others=[r for r in rows if r not in waiting],

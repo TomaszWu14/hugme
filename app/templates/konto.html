@@ -5,6 +5,7 @@
 <h1>Wybierz konto demo</h1>
 <p class="lead">To prototyp, więc konta nie mają haseł. Docelowo zalogujesz się przez <strong>login.gov.pl</strong>
   (profil zaufany, e-dowód) albo jednorazowym linkiem wysłanym e-mailem.</p>
+{% if config.DEMO_MODE %}<p class="notice">To publiczne demo: odnawia się samo po 20 minutach bez nowych wpisów, a konta poniżej zostają bez zmian, żeby każdy mógł je obejrzeć.</p>{% endif %}
 <ul class="grid grid--accounts">
   {% for u in demo_users %}
   <li class="card">

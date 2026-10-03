@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import icon, field, csrf %}
+{% from "_macros.html" import icon, field, csrf, ai_note %}
 {% from "razem/_razem.html" import module_nav %}
 {% from "potrzebny/_form.html" import error_summary, err, choices, submit_or_login %}
 {% set as_parent = source == 'rodzic' %}
@@ -32,7 +32,8 @@
     <p class="actions">
       <button type="submit" name="action" value="uprosc" class="btn btn--ai btn--small" formnovalidate>✦ Uprość tekst (AI)</button>
       {% if easy_info %}<span class="meta" role="status">{{ easy_info }}</span>
-      {% elif not ai_on %}<span class="meta">W tym demo AI jest wyłączone – napisz łatwy tekst według wskazówek.</span>{% endif %}
+      {% elif not ai_on %}<span class="meta">W tym demo AI jest wyłączone – napisz łatwy tekst według wskazówek.</span>
+      {% else %}{{ ai_note() }}{% endif %}
     </p>
     {% if form.get('easy_by_ai') == '1' and form.get('body_easy') %}<p class="ai-box__label"><span aria-hidden="true">✦</span> Wygenerowane przez AI – sprawdź, zanim wyślesz</p>{% endif %}
   </div>

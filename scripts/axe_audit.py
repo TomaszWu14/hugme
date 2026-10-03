@@ -160,23 +160,47 @@ def main(screens=False):
                 if screens and vp_name == "telefon" and pref == "kontrast":
                     page.screenshot(path=str(shots / "15-wysoki-kontrast-telefon.png"))
             ctx.close()
+        layout_bad = layout_big_text(browser)
         browser.close()
     server.shutdown()
-    write_report(results)
+    write_report(results, layout_bad)
     bad = [r for r in results if r["violations"] or r["hscroll"] or r["clipped"]]
-    print(f"Widoków sprawdzonych: {len(results)}; z problemami: {len(bad)}")
+    print(f"Widoków sprawdzonych: {len(results)}; z problemami: {len(bad)}; "
+          f"układ telefon A+: {len(PAGES)} widoków, z problemami: {len(layout_bad)}")
     for r in bad:
         print(f"  [{r['vp']}] {r['role']} {r['url']}: {r['violations']} hscroll={r['hscroll']} clipped={r['clipped']}")
-    return 1 if bad else 0
+    for line in layout_bad:
+        print("  " + line)
+    return 1 if bad or layout_bad else 0
 
 
-def write_report(results):
+def layout_big_text(browser):
+    """Telefon 320 px z A+ (137,5 %): tylko układ – przewijanie w bok i tekst poza kartą. Axe nie zależy od rozmiaru tekstu."""
+    ctx = browser.new_context(viewport=VIEWPORTS["telefon"], locale="pl-PL")
+    page, current_role, bad = ctx.new_page(), "?", []
+    for role, path, _ in PAGES:
+        if role != current_role:
+            ctx.clear_cookies()
+            ctx.add_cookies([{"name": "a11y_size", "value": "1", "url": BASE}])
+            if role:
+                login(page, role)
+            current_role = role
+        open_path(page, path)
+        extra = page.evaluate(CHECKS_JS)
+        if extra["hscroll"] or extra["clipped"]:
+            bad.append(f"[telefon A+] {role or 'gość'} {page.url.replace(BASE, '')}: hscroll={extra['hscroll']} clipped={extra['clipped']}")
+    ctx.close()
+    return bad
+
+
+def write_report(results, layout_bad=()):
     lines = ["# Raport audytu WCAG 2.1 AA (axe-core + Playwright)", "",
              "Wygenerowany przez `python scripts/axe_audit.py`. Reguły axe: " + ", ".join(TAGS) + ".",
              "Widoki: desktop 1280 px i telefon 320 px; dodatkowo tryb wysokiego kontrastu i A+.", "",
              f"**Sprawdzonych widoków:** {len(results)} · **z naruszeniami axe:** "
              f"{sum(1 for r in results if r['violations'])} · **z przewijaniem w poziomie:** "
-             f"{sum(1 for r in results if r['hscroll'])}", "",
+             f"{sum(1 for r in results if r['hscroll'])} · **układ na telefonie z A+ (wszystkie widoki):** "
+             f"{'bez problemów ✔' if not layout_bad else f'{len(layout_bad)} z problemami ⚠'}", "",
              "| Ekran | Rola | Ścieżka | Naruszenia axe | Reguły zaliczone | Przewijanie w bok | Małe cele dotykowe |",
              "|---|---|---|---|---|---|---|"]
     for r in results:

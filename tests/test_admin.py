@@ -129,3 +129,28 @@ def test_csv_export_and_formula_injection_guard(client):
     for kind in ("luki", "oceny"):
         assert client.get(f"/admin/eksport/{kind}.csv").status_code == 200
     assert client.get("/admin/eksport/hasla.csv").status_code == 404
+
+
+
+def test_admin_hides_and_restores_idea_and_message(client, app):
+    with app.app_context():
+        title = db.one("SELECT title FROM ideas WHERE id = 1")[0]
+        msg = db.one("SELECT m.id, m.body FROM messages m JOIN threads t ON t.id = m.thread_id "
+                     "WHERE t.subject_type = 'pomysl' AND t.subject_id = 1")
+    token = login(client, "ngo")
+    assert client.post("/admin/ukryj/pomysl/1", data={"_csrf": token}).status_code == 403
+    token = login(client, "admin")
+    r = client.post("/admin/ukryj/pomysl/1", data={"_csrf": token, "next": "https://zly.example"})
+    assert r.headers["Location"] == "/admin"                                  # bez open redirect
+    client.post(f"/admin/ukryj/wiadomosc/{msg['id']}", data={"_csrf": token})
+    assert "widzi go tylko Hub" in client.get("/pomysly/1").get_data(as_text=True)  # Hub widzi i może przywrócić
+    with app.app_context():
+        assert "ukryto pomysł #1" in db.one("SELECT action FROM admin_log WHERE action LIKE '%pomysł%'")[0]
+    login(client, "mieszkaniec")
+    assert title not in client.get("/pomysly").get_data(as_text=True)
+    assert client.get("/pomysly/1").status_code == 404
+    token = login(client, "admin")
+    client.post("/admin/ukryj/pomysl/1", data={"_csrf": token})
+    login(client, "mieszkaniec")
+    page = client.get("/pomysly/1").get_data(as_text=True)
+    assert title in page and msg["body"][:30] not in page and "Ukryj" not in page

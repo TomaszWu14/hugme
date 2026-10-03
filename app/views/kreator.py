@@ -38,7 +38,7 @@ APPLICATION_FIELDS = [
 
 def _idea_or_404(iid):
     idea = db.one("SELECT * FROM ideas WHERE id = ?", (iid,))
-    if idea is None:
+    if idea is None or (idea["hidden"] and not (g.user and g.user["role"] == "admin")):
         abort(404)
     return idea
 
@@ -54,7 +54,7 @@ def _clean(value, limit):
 
 @bp.route("/pomysly")
 def index():
-    ideas = db.query("SELECT i.*, u.name AS author FROM ideas i JOIN users u ON u.id = i.user_id ORDER BY i.created_at DESC")
+    ideas = db.query("SELECT i.*, u.name AS author FROM ideas i JOIN users u ON u.id = i.user_id WHERE i.hidden = 0 ORDER BY i.created_at DESC")
     calls = db.query("SELECT * FROM calls ORDER BY is_open DESC, deadline")
     return render_template("pomysly.html", ideas=ideas, calls=calls)
 
@@ -95,7 +95,7 @@ def detail(iid, assistant=None):
                     "WHERE a.idea_id = ?", (iid,))
     return render_template("pomysl.html", idea=idea, author=author, canvas=json.loads(idea["canvas"]),
                            fields=CANVAS, open_calls=open_calls, apps=apps, assistant=assistant,
-                           thread=thread_view("pomysl", iid))
+                           thread=thread_view("pomysl", iid), ai_enabled=ai.enabled())
 
 
 @bp.route("/pomysly/<int:iid>/kanwa", methods=["GET", "POST"])
