@@ -5,7 +5,7 @@ Dzień Specjalistów, przyjazne miejsca, sprzęt, wydarzenia i „Moje sprawy”
 Na serwer nie trafiają dane o zdrowiu ani dane dziecka."""
 from datetime import date
 
-from flask import Blueprint, abort, flash, g, redirect, render_template, request, url_for
+from flask import Blueprint, abort, flash, g, redirect, render_template, request, session, url_for
 
 from app.auth import login_required
 from core import ai, db, notify
@@ -48,7 +48,8 @@ def stage_plan(slug):
     s = R.stage(slug)
     if s is None:
         abort(404)
-    experts = db.query("SELECT * FROM users WHERE role = 'ekspert' AND areas LIKE '%rodziny-zd%'")
+    area = R.GROUPS[R.DEFAULT_GROUP]["area"]
+    experts = db.query("SELECT * FROM users WHERE role = 'ekspert' AND areas LIKE ?", (f"%{area}%",))
     return render_template("razem/etap.html", s=s, stages=R.stages(), innovations=innovations_by_title(s["innovations"]),
                            experts=experts, disclaimer=R.DISCLAIMER, powiaty=POWIATY)
 
@@ -84,12 +85,6 @@ def future():
 
 
 # ── Prośby (jedna tabela, rodzaj w polu kind) ─────────────────────────────────
-REQUEST_PAGES = {"przewodnik-szukam": "przewodnik", "przewodnik-oferuje": "przewodnik", "wytchnienie": "wytchnienie",
-                 "dzien-specjalistow": "start", "miejsce": "miejsca", "sprzet-oddam": "sprzet", "sprzet-przyjme": "sprzet"}
-NEEDS_BODY = {"przewodnik-szukam", "przewodnik-oferuje", "wytchnienie", "miejsce", "sprzet-oddam", "sprzet-przyjme"}
-NEEDS_TITLE = {"miejsce", "sprzet-oddam", "sprzet-przyjme"}
-
-
 def save_request(kind, form):
     """Waliduje i zapisuje prośbę. Zwraca (id, {}) albo (None, błędy)."""
     data = {k: form.get(k, "").strip() for k in ("powiat", "stage", "alias", "title", "body", "category")}
@@ -100,9 +95,10 @@ def save_request(kind, form):
         errors["stage"] = "Wybierz etap z listy."
     if not 2 <= len(data["alias"]) <= 40:
         errors["alias"] = "Wpisz pseudonim (2–40 znaków) – np. „Mama Ani”. Nie musi to być prawdziwe imię."
-    if kind in NEEDS_TITLE and len(data["title"]) < 3:
+    spec = R.KINDS[kind]
+    if spec["title"] and len(data["title"]) < 3:
         errors["title"] = "Wpisz nazwę (co najmniej 3 znaki)."
-    if kind in NEEDS_BODY and not 10 <= len(data["body"]) <= 1000:
+    if spec["body"] and not 10 <= len(data["body"]) <= 1000:
         errors["body"] = "Napisz kilka słów (10–1000 znaków)."
     if errors:
         return None, errors
@@ -118,24 +114,16 @@ def save_request(kind, form):
     return rid, {}
 
 
-THANKS = {
-    "przewodnik-szukam": "Dziękujemy. Koordynatorka Hubu poszuka rodzica-przewodnika z Twojej okolicy i da znać.",
-    "przewodnik-oferuje": "Dziękujemy, że chcesz pomóc! Hub odezwie się, gdy pojawi się rodzina z Twojej okolicy.",
-    "wytchnienie": "Prośba wysłana. Hub przekaże ją organizacjom, które prowadzą opiekę wytchnieniową w powiecie.",
-    "dzien-specjalistow": "Zapisaliśmy Twój głos. Gdy w powiecie zbierze się więcej rodzin, Hub porozmawia o Dniu Specjalistów z CUS.",
-    "miejsce": "Dziękujemy za polecenie. Pojawi się na liście po sprawdzeniu przez Hub.",
-    "sprzet-oddam": "Ogłoszenie pojawi się po sprawdzeniu przez Hub. Kontakt odbędzie się przez Hub.",
-    "sprzet-przyjme": "Ogłoszenie pojawi się po sprawdzeniu przez Hub. Kontakt odbędzie się przez Hub.",
-}
-
-
 @bp.post("/prosba/<kind>")
 def create_request(kind):
-    if kind not in R.REQUEST_KINDS:
+    if kind not in R.KINDS:
         abort(404)
-    page = REQUEST_PAGES[kind]
+    page = R.KINDS[kind]["page"]
     if g.user is None:
-        flash("Wybierz konto, żeby wysłać prośbę.", "info")
+        # Szkic formularza czeka na zalogowanie (bez zapisu w bazie, tylko w podpisanej sesji).
+        session["razem_draft"] = {"kind": kind, **{k: request.form.get(k, "")[:1000] for k in
+                                  ("powiat", "stage", "alias", "title", "body", "category")}}
+        flash("Wybierz konto – Twój formularz poczeka.", "info")
         return redirect(url_for("auth.demo", next=url_for(f"razem.{page}")))
     back = request.form.get("wroc", "")
     back = back if back.startswith("/razem") and not back.startswith("//") else url_for(f"razem.{page}")
@@ -145,25 +133,34 @@ def create_request(kind):
         return redirect(back)
     if errors:
         return render_page(page, errors=errors, form=request.form, kind=kind), 422
-    flash(THANKS[kind], "success")
+    flash(R.KINDS[kind]["thanks"], "success")
     return redirect(back)
 
 
+def _public_rows(kinds):
+    marks = ",".join("?" * len(kinds))
+    return db.query(f"SELECT * FROM family_requests WHERE kind IN ({marks}) AND status = ? ORDER BY powiat, title",
+                    (*kinds, R.Status.APPROVED))
+
+
+# Strona formularza → (szablon, dodatkowy kontekst). Jedno miejsce zamiast łańcucha if.
+PAGES = {
+    "przewodnik": ("razem/przewodnik.html", lambda: {}),
+    "wytchnienie": ("razem/wytchnienie.html", lambda: {"innovations": innovations_by_title(
+        ["Godziny dla rodzica – opieka wytchnieniowa", "Krąg Opiekunów"])}),
+    "miejsca": ("razem/miejsca.html", lambda: {"categories": R.PLACE_CATEGORIES, "rows": _public_rows(["miejsce"])}),
+    "sprzet": ("razem/sprzet.html", lambda: {"rows": _public_rows(["sprzet-oddam", "sprzet-przyjme"])}),
+}
+
+
 def render_page(page, errors=None, form=None, kind=None):
-    ctx = {"errors": errors or {}, "form": form or {}, "error_kind": kind, "powiaty": POWIATY, "stages": R.stages()}
-    if page == "przewodnik":
-        return render_template("razem/przewodnik.html", **ctx)
-    if page == "wytchnienie":
-        return render_template("razem/wytchnienie.html", **ctx, innovations=innovations_by_title(
-            ["Godziny dla rodzica – opieka wytchnieniowa", "Krąg Opiekunów"]))
-    if page == "miejsca":
-        return render_template("razem/miejsca.html", **ctx, categories=R.PLACE_CATEGORIES, rows=db.query(
-            "SELECT * FROM family_requests WHERE kind = 'miejsce' AND status = 'zatwierdzone' ORDER BY powiat, title"))
-    if page == "sprzet":
-        return render_template("razem/sprzet.html", **ctx, rows=db.query(
-            "SELECT * FROM family_requests WHERE kind IN ('sprzet-oddam','sprzet-przyjme') AND status = 'zatwierdzone' "
-            "ORDER BY created_at DESC"))
-    return start()
+    template, extra = PAGES[page]
+    draft = session.get("razem_draft")
+    if not errors and draft and g.user and R.KINDS[draft["kind"]]["page"] == page:
+        session.pop("razem_draft")
+        form, kind = draft, draft["kind"]
+    return render_template(template, errors=errors or {}, form=form or {}, error_kind=kind, powiaty=POWIATY,
+                           stages=R.stages(), **extra())
 
 
 @bp.route("/przewodnik")
@@ -189,11 +186,14 @@ def sprzet():
 # ── Wydarzenia ────────────────────────────────────────────────────────────────
 @bp.route("/wydarzenia")
 def events():
+    powiat = request.args.get("powiat", "")
+    powiat = powiat if powiat in POWIATY else ""
     rows = db.query("SELECT e.*, (SELECT COUNT(*) FROM event_signups s WHERE s.event_id = e.id) AS n FROM events e "
-                    "WHERE date >= date('now') ORDER BY date")
+                    "WHERE date >= date('now') AND (? = '' OR powiat = ?) ORDER BY powiat, date", (powiat, powiat))
     mine = {r["event_id"] for r in db.query("SELECT event_id FROM event_signups WHERE user_id = ?", (g.user["id"],))} \
         if g.user else set()
-    return render_template("razem/wydarzenia.html", rows=rows, mine=mine)
+    powiaty = [r["powiat"] for r in db.query("SELECT DISTINCT powiat FROM events WHERE date >= date('now') ORDER BY powiat")]
+    return render_template("razem/wydarzenia.html", rows=rows, mine=mine, powiat=powiat, powiaty=powiaty)
 
 
 @bp.post("/wydarzenia/<int:eid>/zapis")
@@ -211,7 +211,8 @@ def toggle_signup(eid):
                    "ON CONFLICT (event_id, user_id) DO NOTHING", (eid, g.user["id"], db.now()))
         notify.notify([g.user["id"]], f"Zapisano: „{e['title']}” – {e['date']}, {e['place']}", "/razem/wydarzenia")
         flash("Zapisano. Przypomnienie znajdziesz w powiadomieniach.", "success")
-    return redirect(url_for("razem.events"))
+    powiat = request.form.get("powiat", "")
+    return redirect(url_for("razem.events", powiat=powiat) if powiat in POWIATY else url_for("razem.events"))
 
 
 # ── Pisma (POST → wydruk, nic nie zapisujemy) ─────────────────────────────────
@@ -220,26 +221,36 @@ def letters():
     return render_template("razem/pisma.html", letters=R.LETTERS)
 
 
+def letter_justification(spec, text):
+    """Uzasadnienie od AI (tylko zamaskowany tekst) albo zdanie szablonowe. Zwraca (tekst, by_ai)."""
+    answer = ai.ask("Napisz 2–3 zdania rzeczowego uzasadnienia do pisma rodzica do szkoły/OPS "
+                    f"(„{spec['title']}”). Punkt wyjścia: {mask(text)[0]}. Bez danych osobowych, bez diagnoz, uprzejmie.",
+                    max_tokens=300)
+    if answer:
+        return answer, True
+    if R.LETTER_FALLBACK in text:  # ponowne kliknięcie nie dokleja zdania drugi raz
+        return text, False
+    return f"{text.rstrip(' .')}. {R.LETTER_FALLBACK}", False
+
+
 @bp.route("/pisma/<slug>", methods=["GET", "POST"])
 def letter(slug):
     spec = R.LETTERS.get(slug)
     if spec is None:
         abort(404)
-    values, text, ai_text, errors = {}, None, None, {}
-    if request.method == "POST":
-        values = {name: request.form.get(name, "").strip()[:500] for name, *_ in spec["fields"]}
-        errors = {name: "To pole jest potrzebne do pisma." for name, *_ in spec["fields"] if not values[name]}
-        if not errors:
-            if request.form.get("akcja") == "ai":
-                # Do AI trafia tylko zamaskowane uzasadnienie – bez imion, nazwisk i nazwy szkoły.
-                ai_text = ai.ask("Napisz 2–3 zdania rzeczowego uzasadnienia do pisma rodzica do szkoły/OPS "
-                                 f"(„{spec['title']}”). Punkt wyjścia: {mask(values['uzasadnienie'])[0]}. "
-                                 "Bez danych osobowych, bez diagnoz, uprzejmie.", max_tokens=300)
-                if ai_text:
-                    values["uzasadnienie"] = ai_text
-            text = spec["template"].format(data=date.today().strftime("%d.%m.%Y"), **values)
-    return render_template("razem/pismo.html", spec=spec, slug=slug, values=values, text=text, ai_text=ai_text,
-                           errors=errors, ai_enabled=ai.enabled()), (422 if errors else 200)
+    ctx = {"spec": spec, "slug": slug, "values": {}, "text": None, "helper": None, "errors": {}, "ai_enabled": ai.enabled()}
+    if request.method == "GET":
+        return render_template("razem/pismo.html", **ctx)
+    values = {name: request.form.get(name, "").strip()[:500] for name, *_ in spec["fields"]}
+    errors = {name: "To pole jest potrzebne do pisma." for name, *_ in spec["fields"] if not values[name]}
+    ctx.update(values=values, errors=errors)
+    if errors:
+        return render_template("razem/pismo.html", **ctx), 422
+    if request.form.get("akcja") == "ai":
+        values["uzasadnienie"], by_ai = letter_justification(spec, values["uzasadnienie"])
+        ctx["helper"] = {"by_ai": by_ai}
+    ctx["text"] = spec["template"].format(data=date.today().strftime("%d.%m.%Y"), **values)
+    return render_template("razem/pismo.html", **ctx)
 
 
 # ── „Moje sprawy” (ETR) ───────────────────────────────────────────────────────

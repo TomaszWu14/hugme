@@ -44,7 +44,8 @@ def innovations():
         value = request.args.get(key)
         if value:
             if value not in allowed:
-                abort(400)
+                return jsonify(error=f"Nieznana wartość parametru '{key}': {value}.",
+                               dozwolone=sorted(allowed)), 400
             sql += f" AND {col} = ?"
             args.append(value)
     rows = db.query(sql + " ORDER BY id", args)

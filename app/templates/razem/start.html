@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import csrf, icon, picto, example %}
+{% from "_macros.html" import csrf, icon, example %}
 {% from "razem/_razem.html" import module_nav %}
 {% block title %}Razem z ZD{% endblock %}
 {% block content %}
@@ -29,7 +29,7 @@
 
 <section aria-labelledby="pomoc-h">
   <h2 id="pomoc-h">Czego teraz potrzebujesz?</h2>
-  <ul class="grid">
+  <ul class="grid grid--needs">
     <li class="card"><h3><a href="/razem/wizyty">{{ icon('kalendarz') }} Wizyty u specjalistów</a></h3><p>Lista wizyt na Twoim urządzeniu i „co zabrać”.</p></li>
     <li class="card"><h3><a href="/razem/przewodnik">{{ icon('przyjaciele') }} Rodzic-przewodnik</a></h3><p>Porozmawiaj z rodzicem, który przeszedł tę drogę.</p></li>
     <li class="card"><h3><a href="/razem/wytchnienie">{{ icon('serce') }} Chwila wytchnienia</a></h3><p>Poproś o kilka godzin opieki, żeby odpocząć.</p></li>

@@ -94,6 +94,8 @@ def run(con):
                     (iid, uid[ui], kind, rating, body, ago(20 - n * 3)))
 
     for ui, kind, powiat, stg, alias, title, body, status, days in D.RAZEM_REQUESTS:
+        if "PRZYKŁAD" not in title + body:  # każda treść przykładowa oznaczona także w samym tekście
+            body = f"{body} (PRZYKŁAD)".strip()
         con.execute("INSERT INTO family_requests (user_id, kind, powiat, stage, alias, title, body, status, created_at) "
                     "VALUES (?,?,?,?,?,?,?,?,?)", (uid[ui], kind, powiat, stg, alias, title, body, status, ago(days)))
     for title, powiat, in_days, place, body in D.RAZEM_EVENTS:

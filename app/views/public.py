@@ -6,7 +6,7 @@ from app.views.komunikacja import ensure_thread, thread_view
 from core import catalog, db, notify
 from core.domain import AREAS, POWIATY
 from core.privacy import describe, mask
-from data.razem import MY_TOPICS
+from data.razem import ETR_ERROR, MY_TOPIC_LABELS
 
 bp = Blueprint("public", __name__)
 
@@ -15,7 +15,6 @@ EXAMPLE_PROBLEM = (
     "endokrynologa. Każda wizyta to inny termin i inna przychodnia, a rodzice są tym zmęczeni."
 )
 MIN_LEN, MAX_LEN = 15, 1500
-MY_TOPIC_LABELS = {slug: label for slug, label, _ in MY_TOPICS}
 
 
 def validate_problem(text):
@@ -40,7 +39,11 @@ def search():
     topic = MY_TOPIC_LABELS.get(request.form.get("temat", ""))  # „Moje sprawy” – temat wybrany obrazkiem
     if topic and text:
         text = f"{topic}: {text}"
-    error = validate_problem(text)
+    error = validate_problem(text) or validate_problem(mask(text)[0])  # maskowanie może wydłużyć tekst
+    if request.form.get("zrodlo") == "etr" and (error or not topic):
+        # „Strona dla mnie”: błąd pokazujemy w module, w tekście łatwym do czytania.
+        flash(ETR_ERROR, "error")
+        return redirect(url_for("razem.my_matters"))
     if error:
         return render_template("home.html", example=text, error=error, powiaty=POWIATY), 422
     masked, found = mask(text)

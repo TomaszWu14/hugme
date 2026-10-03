@@ -1,9 +1,10 @@
-<nav aria-label="Menu panelu Hubu" class="no-print">
-  <ul class="nav admin-nav">
-    {% for href, text in [('/admin', 'Skrzynka'), ('/admin/watki', 'Wątki bez odpowiedzi'), ('/admin/luki', 'Luki'),
-                          ('/admin/trendy', 'Trendy potrzeb'), ('/admin/razem', 'Razem z ZD'), ('/admin/biblioteka', 'Biblioteka'), ('/admin/import', 'Import'),
-                          ('/admin/nabory', 'Nabory'), ('/admin/poczta', 'Kolejka e-mail')] %}
-    <li><a href="{{ href }}" {% if request.path == href %}aria-current="page"{% endif %}>{{ text }}</a></li>
-    {% endfor %}
-  </ul>
+{% from "_macros.html" import compact_nav %}
+{% set items = [] %}
+{% for href, text in [('/admin', 'Skrzynka'), ('/admin/watki', 'Wątki bez odpowiedzi'), ('/admin/luki', 'Luki'),
+                      ('/admin/trendy', 'Trendy potrzeb'), ('/admin/razem', 'Razem z ZD'), ('/admin/biblioteka', 'Biblioteka'), ('/admin/import', 'Import'),
+                      ('/admin/nabory', 'Nabory'), ('/admin/poczta', 'Kolejka e-mail')] %}
+{% set _ = items.append((href, text, request.path == href)) %}
+{% endfor %}
+<nav aria-label="Menu panelu Hubu" class="no-print admin-nav">
+  {{ compact_nav(items, 'Menu panelu') }}
 </nav>

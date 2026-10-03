@@ -4,6 +4,7 @@ import csv
 import io
 import json
 from collections import Counter, defaultdict
+from datetime import date
 
 from flask import Blueprint, Response, abort, flash, g, redirect, render_template, request, url_for
 
@@ -11,6 +12,7 @@ from app.auth import role_required
 from app.views.wiedza import embed_url
 from core import db, notify
 from core.domain import AREAS, AUDIENCES, GAP_THRESHOLD, POWIATY, REPORT_STATUSES, STAGES
+from data.razem import MODERATION_MESSAGES, PUBLIC_KINDS, REQUEST_KINDS, Status
 
 bp = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -78,9 +80,7 @@ def panel():
                           "WHERE a.status = 'zlozony' ORDER BY a.created_at DESC"):
             items.append(("wniosek", a["created_at"], a["call_title"], f"/wnioski/{a['id']}", a))
     if kind in ("", "razem"):
-        from data.razem import REQUEST_KINDS
-        for r in db.query("SELECT * FROM family_requests WHERE status = 'nowe' AND kind != 'dzien-specjalistow' "
-                          "ORDER BY created_at DESC"):
+        for r in db.query("SELECT * FROM family_requests WHERE status = 'nowe' ORDER BY created_at DESC"):
             items.append(("razem", r["created_at"], f"{REQUEST_KINDS[r['kind']]} – {r['alias']} ({r['powiat']})",
                           "/admin/razem", r))
     items.sort(key=lambda x: x[1], reverse=True)
@@ -183,7 +183,9 @@ def parse_import(filename, raw):
     text = raw.decode("utf-8-sig")
     if filename.lower().endswith(".json"):
         data = json.loads(text)
-        rows = data if isinstance(data, list) else data.get("innowacje", [])
+        rows = data if isinstance(data, list) else data.get("innowacje") if isinstance(data, dict) else None
+        if not isinstance(rows, list) or not all(isinstance(r, dict) for r in rows):
+            raise ValueError("JSON musi być listą obiektów albo {\"innowacje\": [...]}")
     else:
         sample = text[:2000]
         dialect = csv.Sniffer().sniff(sample, delimiters=",;") if sample else csv.excel
@@ -210,7 +212,7 @@ def import_library():
             return redirect(url_for("admin.import_library"))
         try:
             rows = parse_import(f.filename, f.read())
-        except (UnicodeDecodeError, json.JSONDecodeError, csv.Error):
+        except (UnicodeDecodeError, ValueError, csv.Error):  # JSONDecodeError dziedziczy po ValueError
             flash("Nie udało się odczytać pliku. Sprawdź, czy to CSV/JSON w kodowaniu UTF-8.", "error")
             return redirect(url_for("admin.import_library"))
         ok, bad = 0, []
@@ -249,7 +251,12 @@ def toggle_call(cid):
 def new_call():
     title, area = request.form.get("title", "").strip(), request.form.get("area")
     desc, deadline = request.form.get("description", "").strip(), request.form.get("deadline", "")
-    if len(title) < 5 or area not in AREAS or len(desc) < 10 or len(deadline) != 10:
+    try:
+        date.fromisoformat(deadline)
+        valid_date = True
+    except ValueError:
+        valid_date = False
+    if len(title) < 5 or area not in AREAS or len(desc) < 10 or not valid_date:
         flash("Uzupełnij tytuł, obszar, opis i termin naboru.", "error")
     else:
         db.execute("INSERT INTO calls (title, area, description, is_open, deadline, created_at) VALUES (?,?,?,0,?,?)",
@@ -330,12 +337,12 @@ def guide_pairs():
 
 @bp.route("/razem")
 def razem_panel():
-    from data.razem import REQUEST_KINDS
     by_kind = db.query("SELECT kind, powiat, COUNT(*) AS n FROM family_requests WHERE status IN ('nowe','zatwierdzone') "
                        "GROUP BY kind, powiat ORDER BY n DESC")
     days = [r for r in by_kind if r["kind"] == "dzien-specjalistow"]
-    pending = db.query("SELECT * FROM family_requests WHERE kind IN ('miejsce','sprzet-oddam','sprzet-przyjme') "
-                       "AND status = 'nowe' ORDER BY created_at")
+    public = sorted(PUBLIC_KINDS)
+    pending = db.query(f"SELECT * FROM family_requests WHERE kind IN ({','.join('?' * len(public))}) "
+                       "AND status = ? ORDER BY created_at", (*public, Status.NEW))
     other = db.query("SELECT * FROM family_requests WHERE kind IN ('wytchnienie','przewodnik-szukam','przewodnik-oferuje') "
                      "AND status = 'nowe' ORDER BY created_at DESC")
     return render_template("admin/razem.html", pairs=guide_pairs(), days=days, pending=pending, other=other,
@@ -347,15 +354,13 @@ def razem_status(rid):
     r = db.one("SELECT * FROM family_requests WHERE id = ?", (rid,))
     if r is None:
         abort(404)
-    from data.razem import PUBLIC_KINDS
     status = request.form.get("status")
     # Zatwierdzanie dotyczy tylko treści publicznych (miejsca, sprzęt); pozostałe prośby można jedynie zamknąć.
-    allowed = ("zatwierdzone", "odrzucone", "zamkniete") if r["kind"] in PUBLIC_KINDS else ("zamkniete",)
+    allowed = tuple(MODERATION_MESSAGES) if r["kind"] in PUBLIC_KINDS else (Status.CLOSED,)
     if status not in allowed:
         abort(400)
     db.execute("UPDATE family_requests SET status = ? WHERE id = ?", (status, rid))
-    what = {"zatwierdzone": "Hub zatwierdził", "odrzucone": "Hub nie opublikował", "zamkniete": "Hub zamknął"}[status]
-    notify.notify([r["user_id"]], f"{what}: „{(r['title'] or r['kind'])[:60]}”", "/razem")
+    notify.notify([r["user_id"]], f"{MODERATION_MESSAGES[status]}: „{(r['title'] or r['kind'])[:60]}”", "/razem")
     flash("Zapisane – autor dostał powiadomienie.", "success")
     return redirect(url_for("admin.razem_panel"))
 

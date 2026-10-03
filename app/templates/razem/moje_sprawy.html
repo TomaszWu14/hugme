@@ -12,7 +12,7 @@
   </div>
 
   <form method="post" action="/szukaj" class="card" novalidate>
-    {{ csrf() }}
+    {{ csrf() }}<input type="hidden" name="zrodlo" value="etr">
     <fieldset>
       <legend>Co jest trudne? Wybierz obrazek.</legend>
       <div class="picto-grid">

@@ -6,6 +6,12 @@
 {{ module_nav() }}
 <h1>{{ icon('kalendarz') }} Wydarzenia</h1>
 <p class="lead">Pikniki, kluby i spotkania – okazja, żeby poznać inne rodziny. Zapis jednym kliknięciem, przypomnienie w powiadomieniach.</p>
+<form method="get" action="/razem/wydarzenia" class="actions" aria-label="Filtr wydarzeń">
+  <label for="f-ev-powiat">Powiat:</label>
+  <select id="f-ev-powiat" name="powiat" class="select-inline"><option value="">wszystkie</option>
+    {% for p in powiaty %}<option value="{{ p }}" {% if p == powiat %}selected{% endif %}>{{ p }}</option>{% endfor %}</select>
+  <button type="submit" class="btn btn--small">Pokaż</button>
+</form>
 <ul class="grid">
   {% for e in rows %}
   <li class="card card--thread thread--rodziny-zd">
@@ -14,7 +20,7 @@
     <p>{{ e.body }}</p>
     <p class="meta"><span>{{ e.place }}</span> <span>Zapisanych: {{ e.n }}</span> {{ example() }}</p>
     {% if g.user %}
-    <form method="post" action="/razem/wydarzenia/{{ e.id }}/zapis">{{ csrf() }}
+    <form method="post" action="/razem/wydarzenia/{{ e.id }}/zapis">{{ csrf() }}<input type="hidden" name="powiat" value="{{ powiat }}">
       <button type="submit" class="btn {{ 'btn--primary' if e.id not in mine }}" aria-pressed="{{ 'true' if e.id in mine else 'false' }}">
         {{ '✔ Zapisano – wypisz mnie' if e.id in mine else 'Zapisz się' }}<span class="sr-only">: {{ e.title }}</span></button></form>
     {% else %}<a class="btn" href="/konto?next=/razem/wydarzenia">Wybierz konto, żeby się zapisać</a>{% endif %}

@@ -1,17 +1,16 @@
-{% from "_macros.html" import csrf, icon %}
+{% from "_macros.html" import csrf, icon, compact_nav %}
 
 {% macro module_nav() -%}
+{% set items = [] %}
+{% for href, text in [('/razem', 'Plan rodziny'), ('/razem/wizyty', 'Wizyty'), ('/razem/prawa', 'Prawa'),
+                      ('/razem/przewodnik', 'Rodzic-przewodnik'), ('/razem/wytchnienie', 'Wytchnienie'),
+                      ('/razem/miejsca', 'Przyjazne miejsca'), ('/razem/wydarzenia', 'Wydarzenia'),
+                      ('/razem/moje-sprawy', 'Strona dla mnie (łatwy tekst)')] %}
+{% set _ = items.append((href, text, request.path == href or (href != '/razem' and request.path.startswith(href)))) %}
+{% endfor %}
 <nav aria-label="Moduł Razem z ZD" class="razem-nav no-print">
   <p class="razem-nav__brand"><a href="/razem">{{ icon('serce') }} Razem z ZD</a> <span class="meta">– dla osób z zespołem Downa i ich rodzin</span></p>
-  <ul class="nav">
-    {% for href, text in [('/razem', 'Plan rodziny'), ('/razem/wizyty', 'Wizyty'), ('/razem/prawa', 'Prawa'),
-                          ('/razem/przewodnik', 'Rodzic-przewodnik'), ('/razem/wytchnienie', 'Wytchnienie'),
-                          ('/razem/miejsca', 'Przyjazne miejsca'), ('/razem/wydarzenia', 'Wydarzenia'),
-                          ('/razem/moje-sprawy', 'Strona dla mnie (łatwy tekst)')] %}
-    {% set cur = request.path == href or (href != '/razem' and request.path.startswith(href)) %}
-    <li><a href="{{ href }}" {% if cur %}aria-current="page"{% endif %}>{{ text }}</a></li>
-    {% endfor %}
-  </ul>
+  {{ compact_nav(items, 'Menu modułu') }}
 </nav>
 {%- endmacro %}
 

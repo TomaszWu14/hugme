@@ -238,3 +238,63 @@ def test_guide_request_cannot_be_approved_only_closed(client, app):
         rid = db.one("SELECT id FROM family_requests WHERE kind='przewodnik-szukam' LIMIT 1")["id"]
     assert client.post(f"/admin/razem/{rid}/status", data={"_csrf": token, "status": "zatwierdzone"}).status_code == 400
     assert client.post(f"/admin/razem/{rid}/status", data={"_csrf": token, "status": "zamkniete"}).status_code == 302
+
+
+# ── Poprawki z przeglądu dwuosiowego ──────────────────────────────────────────
+@pytest.mark.parametrize("role", ["mieszkaniec", "ngo", "gmina", "ekspert", "admin"])
+def test_module_pages_render_for_roles(client, role):
+    login(client, role)
+    for path in PAGES:
+        assert client.get(path).status_code == 200, (role, path)
+
+
+@pytest.mark.parametrize("back", ["//evil.example", "https://evil.example", "/admin"])
+def test_request_back_param_cannot_redirect_outside_module(client, back):
+    token = login(client, "mieszkaniec")
+    resp = client.post("/razem/prosba/dzien-specjalistow", data={"_csrf": token, "powiat": "suski", "alias": "Rodzic", "wroc": back})
+    assert resp.headers["Location"] == "/razem"
+
+
+def test_easy_read_error_stays_in_module(client):
+    token = csrf_of(client, "/razem/moje-sprawy")
+    resp = client.post("/szukaj", data={"_csrf": token, "zrodlo": "etr", "opis": "Chcę pracować."})  # bez obrazka
+    assert resp.headers["Location"].endswith("/razem/moje-sprawy")
+    assert razem.ETR_ERROR in client.get("/razem/moje-sprawy").get_data(as_text=True)
+
+
+def test_letter_template_fallback_without_ai(client):
+    token = csrf_of(client, "/razem/pisma/asystent")
+    html = client.post("/razem/pisma/asystent", data={
+        "_csrf": token, "akcja": "ai", "rodzic": "Jan Testowy", "szkola": "SP 1", "klasa": "2b",
+        "uzasadnienie": "przerwy", "miejscowosc": "Wadowice"}).get_data(as_text=True)
+    assert "Podpowiedź z szablonu" in html and razem.LETTER_FALLBACK in html
+
+
+def test_specialist_day_votes_in_inbox_with_pseudonym(client):
+    html = client.get("/razem/etap/przedszkole")
+    login(client, "admin")
+    inbox = client.get("/admin?typ=razem").get_data(as_text=True)
+    assert "Chcę Dzień Specjalistów" in inbox
+    login(client, "mieszkaniec")
+    assert 'name="alias" value="Rodzic"' in client.get("/razem/etap/przedszkole").get_data(as_text=True)
+
+
+def test_events_filter_by_powiat(client):
+    html = client.get("/razem/wydarzenia?powiat=Kraków").get_data(as_text=True)
+    assert "Klub rodzeństwa" in html and "Piknik rodzin" not in html
+
+
+def test_respite_requires_when_and_how_long(client):
+    token = login(client, "mieszkaniec")
+    resp = client.post("/razem/prosba/wytchnienie", data={"_csrf": token, "powiat": "wadowicki", "alias": "Mama",
+                                                         "body": "Potrzebuję przerwy w sobotę."})
+    assert resp.status_code == 422 and "Wpisz nazwę" in resp.get_data(as_text=True)
+
+
+def test_admin_can_close_family_request(client, app):
+    token = login(client, "admin")
+    with app.app_context():
+        rid = db.one("SELECT id FROM family_requests WHERE kind='wytchnienie' LIMIT 1")["id"]
+    assert "Zamknij – sprawa załatwiona" in client.get("/admin/razem").get_data(as_text=True)
+    client.post(f"/admin/razem/{rid}/status", data={"_csrf": token, "status": "zamkniete"})
+    assert count(app, "SELECT COUNT(*) FROM family_requests WHERE id=? AND status='zamkniete'", (rid,)) == 1

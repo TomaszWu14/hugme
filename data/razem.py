@@ -83,16 +83,40 @@ def stage(slug, group=DEFAULT_GROUP):
     return next((s for s in stages(group) if s["slug"] == slug), None)
 
 
-REQUEST_KINDS = {
-    "przewodnik-szukam": "Szukam rodzica-przewodnika",
-    "przewodnik-oferuje": "Chcę być rodzicem-przewodnikiem",
-    "wytchnienie": "Prośba o opiekę wytchnieniową",
-    "dzien-specjalistow": "Chcę Dzień Specjalistów w powiecie",
-    "miejsce": "Polecenie przyjaznego miejsca",
-    "sprzet-oddam": "Oddam sprzęt",
-    "sprzet-przyjme": "Przyjmę sprzęt",
+# Jedno źródło prawdy o rodzajach próśb (lista dozwolonych wartości powtórzona tylko w CHECK w core/db.py).
+# page – strona modułu z formularzem; title/body – czy pole wymagane; public – widoczne po zatwierdzeniu przez Hub.
+_SPRZET_THANKS = "Ogłoszenie pojawi się po sprawdzeniu przez Hub. Kontakt odbędzie się przez Hub."
+KINDS = {
+    "przewodnik-szukam": {"label": "Szukam rodzica-przewodnika", "page": "przewodnik", "title": False, "body": True,
+                          "public": False,
+                          "thanks": "Dziękujemy. Koordynatorka Hubu poszuka rodzica-przewodnika z Twojej okolicy i da znać."},
+    "przewodnik-oferuje": {"label": "Chcę być rodzicem-przewodnikiem", "page": "przewodnik", "title": False, "body": True,
+                           "public": False,
+                           "thanks": "Dziękujemy, że chcesz pomóc! Hub odezwie się, gdy pojawi się rodzina z Twojej okolicy."},
+    "wytchnienie": {"label": "Prośba o opiekę wytchnieniową", "page": "wytchnienie", "title": True, "body": True,
+                    "public": False,
+                    "thanks": "Prośba wysłana. Hub przekaże ją organizacjom, które prowadzą opiekę wytchnieniową w powiecie."},
+    "dzien-specjalistow": {"label": "Chcę Dzień Specjalistów w powiecie", "page": "start", "title": False, "body": False,
+                           "public": False,
+                           "thanks": "Zapisaliśmy Twój głos. Gdy w powiecie zbierze się więcej rodzin, Hub porozmawia "
+                                     "o Dniu Specjalistów z CUS."},
+    "miejsce": {"label": "Polecenie przyjaznego miejsca", "page": "miejsca", "title": True, "body": True, "public": True,
+                "thanks": "Dziękujemy za polecenie. Pojawi się na liście po sprawdzeniu przez Hub."},
+    "sprzet-oddam": {"label": "Oddam sprzęt", "page": "sprzet", "title": True, "body": True, "public": True,
+                     "thanks": _SPRZET_THANKS},
+    "sprzet-przyjme": {"label": "Przyjmę sprzęt", "page": "sprzet", "title": True, "body": True, "public": True,
+                       "thanks": _SPRZET_THANKS},
 }
-PUBLIC_KINDS = {"miejsce", "sprzet-oddam", "sprzet-przyjme"}  # widoczne publicznie po zatwierdzeniu przez Hub
+REQUEST_KINDS = {k: v["label"] for k, v in KINDS.items()}
+PUBLIC_KINDS = {k for k, v in KINDS.items() if v["public"]}
+
+
+class Status:
+    """Statusy próśb (zgodne z CHECK w core/db.py)."""
+    NEW, APPROVED, REJECTED, PAIRED, CLOSED = "nowe", "zatwierdzone", "odrzucone", "polaczone", "zamkniete"
+
+
+MODERATION_MESSAGES = {Status.APPROVED: "Hub zatwierdził", Status.REJECTED: "Hub nie opublikował", Status.CLOSED: "Hub zamknął"}
 PLACE_CATEGORIES = ["przychodnia", "dentysta", "fryzjer", "basen i sport", "kawiarnia", "inne"]
 
 RIGHTS_QUESTIONS = [
@@ -207,6 +231,10 @@ FUTURE = [
     ("Czego chce osoba z ZD?", "Najważniejsze: zapytajcie ją samą. To jej przyszłość."),
 ]
 
+LETTER_FALLBACK = ("Wsparcie pozwoli dziecku bezpiecznie i samodzielnie uczestniczyć w zajęciach razem z rówieśnikami "
+                   "oraz odciąży rodzinę w codziennej opiece.")
+ETR_ERROR = "Wybierz obrazek. Napisz jedno zdanie."
+
 # „Moje sprawy” – tekst łatwy do czytania (ETR): krótkie zdania, jedno zdanie = jedna myśl.
 MY_TOPICS = [
     ("praca", "Praca", "Chcę pracować. Chcę się uczyć pracy."),
@@ -216,6 +244,7 @@ MY_TOPICS = [
     ("szkola", "Szkoła", "Mam kłopot w szkole. Potrzebuję pomocy."),
     ("pieniadze", "Pieniądze", "Chcę umieć liczyć pieniądze. Chcę robić zakupy."),
 ]
+MY_TOPIC_LABELS = {slug: label for slug, label, _ in MY_TOPICS}
 MY_INTRO = [
     "To jest strona dla Ciebie.",
     "Możesz tu powiedzieć, co jest trudne.",

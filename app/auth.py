@@ -66,10 +66,9 @@ def demo():
         user = db.one("SELECT id FROM users WHERE id = ?", (uid,)) if uid else None
         if uid and user is None:
             abort(400)
-        draft = session.get("draft")  # opis problemu przeżywa logowanie
+        kept = {k: session[k] for k in ("draft", "razem_draft") if k in session}  # szkice przeżywają logowanie
         session.clear()  # nowa sesja przy zmianie konta (ochrona przed session fixation)
-        if draft:
-            session["draft"] = draft
+        session.update(kept)
         if user:
             session["uid"] = user["id"]
         return redirect(safe_next(request.form.get("next"), url_for("public.home")))

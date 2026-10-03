@@ -7,7 +7,7 @@
 <p class="no-print"><a href="/razem/pisma">← Wzory pism</a></p>
 <h1 class="no-print">{{ spec.title }}</h1>
 {% if text %}
-{% if ai_text %}{% call ai_box(true) %}<p>Uzasadnienie zaproponowało AI – przeczytaj je i popraw przed wysłaniem.</p>{% endcall %}{% endif %}
+{% if helper %}{% call ai_box(helper.by_ai) %}<p>{{ 'Uzasadnienie zaproponowało AI – przeczytaj je i popraw przed wysłaniem.' if helper.by_ai else 'Dopisaliśmy zdanie z szablonu – popraw je, jeśli trzeba.' }}</p>{% endcall %}{% endif %}
 <article class="card letter" aria-label="Gotowe pismo">{{ text }}</article>
 <p class="no-print notice">Wydruk albo PDF: <kbd>Ctrl</kbd>+<kbd>P</kbd>. Pisma nie zapisujemy – po zamknięciu strony zniknie.</p>
 {% endif %}
@@ -32,7 +32,8 @@
   {% endfor %}
   <div class="actions">
     <button type="submit" name="akcja" value="pismo" class="btn btn--primary">Przygotuj pismo</button>
-    {% if ai_enabled %}<button type="submit" name="akcja" value="ai" class="btn btn--ai"><span aria-hidden="true">✦</span> Pismo z uzasadnieniem od AI</button>{% endif %}
+    {% if ai_enabled %}<button type="submit" name="akcja" value="ai" class="btn btn--ai"><span aria-hidden="true">✦</span> Pismo z uzasadnieniem od AI</button>
+    {% else %}<button type="submit" name="akcja" value="ai" class="btn">Dopisz uzasadnienie z szablonu</button>{% endif %}
   </div>
 </form>
 {% endblock %}

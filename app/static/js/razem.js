@@ -28,6 +28,8 @@
     var spec = document.getElementById("w-spec");
     var when = document.getElementById("w-data");
     var where = document.getElementById("w-gdzie");
+    var heading = document.getElementById("lista-h");
+    heading.setAttribute("tabindex", "-1");
     app.hidden = false;
 
     function render() {
@@ -46,10 +48,11 @@
         del.setAttribute("aria-label", "Usuń wizytę: " + v.spec + " " + fmt(v.date));
         del.addEventListener("click", function () {
           var all = load();
-          all.splice(all.findIndex(function (x) { return x.id === v.id; }), 1);
-          save(all);
+          var idx = all.findIndex(function (x) { return x.id === v.id; });
+          if (idx !== -1) { all.splice(idx, 1); save(all); }  // -1: usunięta już w innej karcie
           render();
           status.textContent = "Usunięto wizytę.";
+          heading.focus();  // lista jest przebudowana – fokus wraca do nagłówka listy, nie na górę strony
         });
         li.appendChild(text);
         li.appendChild(del);

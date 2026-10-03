@@ -74,11 +74,12 @@ def new():
         if form["stage"] not in STAGES:
             errors["stage"] = "Wybierz etap."
         if not errors:
+            title = _clean(form["title"], 120)
             iid = db.execute(
                 "INSERT INTO ideas (user_id, title, essence, audience, stage, area, created_at) VALUES (?,?,?,?,?,?,?)",
-                (g.user["id"], _clean(form["title"], 120), _clean(form["essence"], 1000), form["audience"],
+                (g.user["id"], title, _clean(form["essence"], 1000), form["audience"],
                  form["stage"], form["area"] if form["area"] in AREAS else None, db.now()))
-            notify.notify_admins(f"Nowy pomysł: „{form['title'][:60]}”", f"/pomysly/{iid}", exclude=g.user["id"])
+            notify.notify_admins(f"Nowy pomysł: „{title[:60]}”", f"/pomysly/{iid}", exclude=g.user["id"])
             flash("Fiszka zapisana i opublikowana. Teraz możesz uzupełnić kanwę albo zapytać asystenta.", "success")
             return redirect(url_for("kreator.detail", iid=iid))
     return render_template("pomysl_nowy.html", form=form, errors=errors, audiences=AUDIENCES, stages=STAGES), \

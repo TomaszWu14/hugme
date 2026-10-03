@@ -1,4 +1,4 @@
-{% from "_macros.html" import csrf %}<!doctype html>
+{% from "_macros.html" import csrf, compact_nav %}<!doctype html>
 <html lang="pl" class="{{ 'a11y-size' if pref_size }} {{ 'a11y-contrast' if pref_contrast }}">
 <head>
   <meta charset="utf-8">
@@ -17,7 +17,7 @@
     <form method="post" action="{{ url_for('auth.demo') }}" class="role-switch">
       {{ csrf() }}
       <input type="hidden" name="next" value="{{ request.path }}">
-      <label for="role-switch">Tryb demo – oglądasz jako:</label>
+      <label for="role-switch">Tryb demo – <span class="sr-only-sm">oglądasz </span>jako:</label>
       <select id="role-switch" name="user_id">
         {% if not g.user %}<option value="">gość (niezalogowany)</option>{% endif %}
         {% for u in demo_users %}
@@ -59,28 +59,21 @@
       ('/pomysly', 'Pomysły'),
       ('/posrednik', 'Pośrednik'),
     ] %}
-    <nav aria-label="Główne menu">
-      <ul class="nav">
-        {% for href, text in nav %}
-        {% set current = request.path == href or (href != '/' and request.path.startswith(href)) %}
-        <li><a href="{{ href }}" {% if current %}aria-current="page"{% endif %}>{{ text }}</a></li>
-        {% endfor %}
-        {% if g.user %}
-        <li><a href="/moje" {% if request.path.startswith('/moje') %}aria-current="page"{% endif %}>Moje sprawy</a></li>
-        <li><a href="/powiadomienia" {% if request.path.startswith('/powiadomienia') %}aria-current="page"{% endif %}>Powiadomienia{% if g.unread %} <span class="count">{{ g.unread }}<span class="sr-only"> nowych</span></span>{% endif %}</a></li>
-        {% endif %}
-        {% if g.user and g.user.role == 'ekspert' %}
-        <li><a href="/ekspert" {% if request.path.startswith('/ekspert') %}aria-current="page"{% endif %}>Pytania do mnie</a></li>
-        {% endif %}
-        {% if g.user and g.user.role == 'admin' %}
-        <li><a href="/admin" class="nav__admin" {% if request.path.startswith('/admin') %}aria-current="page"{% endif %}>Panel Hubu</a></li>
-        {% endif %}
-      </ul>
+    {% if g.user %}
+      {% set _ = nav.append(('/moje', 'Moje sprawy')) %}
+      {% set _ = nav.append(('/powiadomienia', 'Powiadomienia')) %}
+      {% if g.user.role == 'ekspert' %}{% set _ = nav.append(('/ekspert', 'Pytania do mnie')) %}{% endif %}
+      {% if g.user.role == 'admin' %}{% set _ = nav.append(('/admin', 'Panel Hubu')) %}{% endif %}
+    {% endif %}
+    {% set nav_items = [] %}
+    {% for href, text in nav %}{% set _ = nav_items.append((href, text, request.path == href or (href != '/' and request.path.startswith(href)), g.unread if href == '/powiadomienia' else 0)) %}{% endfor %}
+    <nav aria-label="Główne menu" class="site-nav">
+      {{ compact_nav(nav_items, 'Menu') }}
     </nav>
   </div>
 </header>
 
-<main id="tresc" tabindex="-1" class="wrap">
+<main id="tresc" tabindex="-1" class="wrap {% block main_class %}{% endblock %}">
   {% with msgs = get_flashed_messages(with_categories=true) %}
   {% if msgs %}
   <div class="flashes">

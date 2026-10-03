@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from "_macros.html" import csrf, field, icon %}
 {% block title %}Twój problem nie zostaje sam{% endblock %}
+{% block main_class %}home{% endblock %}
 {% block content %}
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero__text">
@@ -8,6 +9,7 @@
     <h1 id="hero-title">Twój problem nie&nbsp;zostaje sam</h1>
     <p class="lead">Opisz, co jest trudne, własnymi słowami. Pokażemy, co już działa w Małopolsce,
       kto może pomóc i skąd wziąć pieniądze. Odpowie Ci też człowiek z Hubu Innowacji Społecznych.</p>
+    <p class="hero__cta"><a class="btn btn--primary btn--large" href="#ask-title">Opisz sytuację</a> <span class="meta">bez logowania, ok. minuty</span></p>
   </div>
   <figure class="hero__art">
     <svg viewBox="0 0 360 230" role="img" aria-labelledby="art-t art-d" class="weave">
@@ -40,7 +42,10 @@
     {{ field('powiat', 'Powiat, którego to dotyczy', options=powiaty|pairs, hint='wadowicki. Pomoże Hubowi zobaczyć, gdzie problem jest częsty.') }}
     <p class="privacy-note">{{ icon('tarcza') }} Nie musisz podawać diagnozy ani danych osobowych.
       Jeśli przez przypadek wpiszesz PESEL, telefon, e-mail, adres albo imię dziecka – ukryjemy je, zanim cokolwiek zapiszemy.</p>
-    <button type="submit" class="btn btn--primary btn--large">Znajdź rozwiązania</button>
+    <p class="actions">
+      <button type="submit" class="btn btn--primary btn--large">Znajdź rozwiązania</button>
+      <span class="meta">Najpierw tylko szukamy. Zgłoszenie zapiszesz dopiero w następnym kroku – jeśli zechcesz.</span>
+    </p>
   </form>
 </section>
 
@@ -50,7 +55,7 @@
     <h2 id="razem-title">Razem z ZD – dla osób z zespołem Downa i ich rodzin</h2>
     <p>Plan na każdy etap życia, wizyty u specjalistów, prawa, rodzic-przewodnik, chwila wytchnienia – i strona w prostym języku dla dorosłych osób z ZD.</p>
   </div>
-  <p><a class="btn btn--primary btn--large" href="/razem">Otwórz „Razem z ZD”</a></p>
+  <p><a class="btn btn--primary" href="/razem">Otwórz „Razem z ZD”</a></p>
 </section>
 
 <section aria-labelledby="how-title" class="how">

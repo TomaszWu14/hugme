@@ -6,9 +6,10 @@
 {% block content %}
 {{ module_nav() }}
 <nav aria-label="Etapy życia" class="stage-tabs">
-  <ol class="nav">{% for st in stages %}<li><a href="/razem/etap/{{ st.slug }}" {% if st.slug == s.slug %}aria-current="page"{% endif %}>{{ st.name }}</a></li>{% endfor %}</ol>
+  <p class="stage-tabs__label" id="stage-tabs-h">Etap:</p>
+  <ol class="nav nav--small" aria-labelledby="stage-tabs-h">{% for st in stages %}<li><a href="/razem/etap/{{ st.slug }}" {% if st.slug == s.slug %}aria-current="page"{% endif %}>{{ st.name }}</a></li>{% endfor %}</ol>
 </nav>
-<header class="card card--thread thread--rodziny-zd">
+<header class="card card--thread thread--rodziny-zd razem-hero">
   <p class="eyebrow">Plan rodziny · {{ s.age }}</p>
   <h1>{{ icon(s.icon) }} {{ s.name }}</h1>
   <p class="etr" lang="pl"><strong>Łatwy tekst:</strong> {{ s.etr }}</p>
@@ -53,7 +54,7 @@
       {% if g.user %}
       <form method="post" action="/razem/prosba/dzien-specjalistow">
         {{ csrf() }}<input type="hidden" name="wroc" value="{{ request.path }}">
-        <input type="hidden" name="alias" value="{{ g.user.name.split(' – ')[0] }}">
+        <input type="hidden" name="alias" value="Rodzic">
         <div class="field"><label for="f-dzien-powiat">Powiat</label>
           <select id="f-dzien-powiat" name="powiat"><option value="">— wybierz —</option>{% for p in powiaty %}<option value="{{ p }}">{{ p }}</option>{% endfor %}</select></div>
         <button type="submit" class="btn btn--primary">Chcę Dzień Specjalistów</button>
