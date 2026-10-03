@@ -32,6 +32,12 @@ Cennik: **1 USD za milion tokenów wejścia, 5 USD za milion tokenów wyjścia**
 Skala całego regionu (×10): ok. **55 USD (ok. 230 zł)** miesięcznie.
 Cache odpowiedzi w aplikacji i limit 8 s na zapytanie ograniczają koszt awarii i powtórzeń.
 
+**Sufit kosztu jest wpisany w kod.** Zmienna `AI_DAILY_LIMIT` (domyślnie 300 zapytań na dobę) zatrzymuje AI po
+wyczerpaniu puli – platforma działa dalej na szablonach, a powtórzone pytania z pamięci podręcznej nie zużywają limitu.
+Nawet gdyby każde zapytanie było najdroższym (karta usługi, ok. 0,0068 USD), koszt nie przekroczy **ok. 2 USD
+dziennie, ok. 61 USD (ok. 250 zł) miesięcznie**. Drugą zaporą jest miesięczny limit kwotowy w konsoli Anthropic.
+Dla ROPS oznacza to przewidywalny budżet: limit ustawia się jedną liczbą, bez zmian w kodzie.
+
 ## 3. Ludzie: koszt, który naprawdę się liczy
 
 Technologia jest tania. Wartość platformy zależy od tego, czy **ktoś odpowiada ludziom**.

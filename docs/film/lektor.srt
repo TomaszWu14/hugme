@@ -1,0 +1,131 @@
+1
+00:00:00,000 --> 00:00:02,618
+HugMe – platforma dla HubMi.pl.
+
+2
+00:00:02,618 --> 00:00:07,769
+Hub plus Mi, Małopolska, czyta się jak hug me – przytul mnie.
+
+3
+00:00:07,769 --> 00:00:11,484
+Bo z problemem nikt nie powinien zostać sam.
+
+4
+00:00:11,634 --> 00:00:18,656
+Mama dziecka z zespołem Downa opisuje własnymi słowami,
+
+5
+00:00:18,656 --> 00:00:24,146
+jak męczące są wizyty u wielu specjalistów.
+
+6
+00:00:24,146 --> 00:00:28,104
+Nie musi znać urzędowych pojęć.
+
+7
+00:00:28,254 --> 00:00:32,411
+Imię i telefon zostały ukryte, zanim cokolwiek trafiło do bazy.
+
+8
+00:00:32,411 --> 00:00:36,040
+Platforma znalazła rozwiązanie z Biblioteki Innowacji –
+
+9
+00:00:36,040 --> 00:00:40,791
+tu przykładowe: Asystenta zdrowia rodziny – i wyjaśnia, dlaczego pasuje.
+
+10
+00:00:40,791 --> 00:00:46,267
+To dopasowanie nie potrzebuje sztucznej inteligencji – każdy wynik da się wyjaśnić.
+
+11
+00:00:46,267 --> 00:00:48,049
+AI może je tylko wzbogacić.
+
+12
+00:00:48,199 --> 00:00:55,187
+Jednym kliknięciem zapisuje zgłoszenie.
+
+13
+00:00:55,187 --> 00:01:02,176
+Jej ocena to dla Hubu pomiar trafności.
+
+14
+00:01:02,326 --> 00:01:11,459
+Koordynatorka Hubu widzi zgłoszenie w skrzynce,
+
+15
+00:01:11,459 --> 00:01:20,787
+łączy rodzinę z autorami rozwiązania i odpisuje.
+
+16
+00:01:20,787 --> 00:01:26,034
+Mama dostaje powiadomienie.
+
+17
+00:01:26,184 --> 00:01:30,572
+Dla rodzin osób z zespołem Downa jest osobna przestrzeń: plan na każdy etap życia,
+
+18
+00:01:30,572 --> 00:01:34,585
+wizyty zapisane tylko na telefonie i rodzic-przewodnik z tej samej okolicy.
+
+19
+00:01:34,735 --> 00:01:43,480
+Osoby z zespołem Downa nie tylko dostają pomoc – też jej udzielają.
+
+20
+00:01:43,480 --> 00:01:53,400
+W programie „Jestem potrzebny” dorosła osoba z ZD sama wybiera obrazek: psy.
+
+21
+00:01:53,400 --> 00:02:03,189
+Hub łączy ją ze schroniskiem, zawsze z opiekunem, i potwierdza każdą misję.
+
+22
+00:02:03,189 --> 00:02:10,628
+W dzienniczku rośnie liczba odznak, a po pięciu misjach –
+
+23
+00:02:10,628 --> 00:02:14,283
+lista umiejętności do pracy.
+
+24
+00:02:14,433 --> 00:02:18,790
+Mapa pokazuje, gdzie w Polsce naprawdę pracują osoby z zespołem Downa –
+
+25
+00:02:18,790 --> 00:02:20,324
+każde miejsce ze źródłem.
+
+26
+00:02:20,474 --> 00:02:30,809
+Gmina, która chce wdrożyć podobną usługę, dostaje od Pośrednika kartę: zespół,
+
+27
+00:02:30,809 --> 00:02:34,917
+kroki, partnerzy, finansowanie.
+
+28
+00:02:35,067 --> 00:02:41,561
+Hub widzi, gdzie potrzeby rosną i gdzie brakuje rozwiązań.
+
+29
+00:02:41,561 --> 00:02:46,152
+Luki stają się tematami nowych konkursów.
+
+30
+00:02:46,302 --> 00:02:49,180
+Duży tekst, wysoki kontrast, klawiatura –
+
+31
+00:02:49,180 --> 00:02:52,759
+136 widoków bez naruszeń wykrywanych automatycznie.
+
+32
+00:02:52,909 --> 00:02:53,927
+HugMe.
+
+33
+00:02:53,927 --> 00:02:58,850
+Twój problem nie zostaje sam.

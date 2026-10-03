@@ -444,3 +444,20 @@ Jak odpowiadać: wpisz po `ODP:`.
 ## Twoje dodatkowe uwagi / pomysły
 
 -
+
+---
+
+## Decyzje przed oddaniem (3.10.2026 wieczorem, 50 pytań)
+
+1. Przekaz: **obywatel → dopasowanie** („opisz po swojemu → co działa, kto pomoże, skąd pieniądze”); Hub i luki jako drugie zdanie.
+2. **AI włączone na demo**, ale z zaporami: maskowanie danych w jednym miejscu dla każdego zapytania, dzienny limit
+   `AI_DAILY_LIMIT=300`, limit kwotowy w konsoli; film celowo bez AI – dopasowanie działa i jest wyjaśnialne bez niego.
+3. Dane o zdrowiu po maskowaniu nadal są danymi o zdrowiu – w pilotażu o AI decyduje ROPS po DPIA (wariant bez AI pełny).
+4. **Publiczne demo (`DEMO_MODE=1`)**: konta z paska demo nie do zablokowania, ramka „Oglądasz demo?” dla jury,
+   odnawianie bazy co godzinę, ale tylko po 20 min bez nowych wpisów.
+5. Moderacja po publikacji: Hub może **ukryć i przywrócić** pomysł lub wiadomość (z wpisem w dzienniku).
+6. Uczciwość materiałów: plakietki PRZYKŁAD, „Typowa sytuacja” zamiast niesprawdzonych liczb, „bez naruszeń
+   **wykrywanych automatycznie**” zamiast „zgodne z WCAG”, nagłówek „Rozwiązania z Biblioteki Innowacji”.
+7. Audyt dostępności w CI blokuje scalenie; dodatkowo kontrola układu na telefonie z A+ na każdym widoku.
+8. Film: napisy PL wtopione w obraz, plansza końcowa z adresami, lektor z syntezatora.
+9. Bez pliku LICENSE do decyzji właściciela praw; docelowo EUPL 1.2.
