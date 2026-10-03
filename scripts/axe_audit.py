@@ -102,7 +102,14 @@ CHECKS_JS = """() => {
     .filter(el => el.offsetParent !== null)
     .filter(el => { const r = el.getBoundingClientRect(); return r.height < 24 || (el.matches('.btn, button, .nav a') && r.height < 44); })
     .map(el => (el.textContent || el.name || el.tagName).trim().slice(0, 40));
-  return {hscroll: doc.scrollWidth > doc.clientWidth + 1, small};
+  // tekst karty z paskiem obszaru nie może wchodzić pod pasek ani wychodzić poza kartę
+  const clipped = [...document.querySelectorAll('.card--thread')].filter(c => c.offsetParent).flatMap(c => {
+    const r = c.getBoundingClientRect(), left = r.left + 8;
+    return [...c.querySelectorAll('h2, h3, p')].filter(e => e.offsetParent && e.textContent.trim())
+      .filter(e => { const q = e.getBoundingClientRect(); return q.left < left || q.right > r.right + 1; })
+      .slice(0, 1).map(e => e.textContent.trim().slice(0, 40));
+  });
+  return {hscroll: doc.scrollWidth > doc.clientWidth + 1, small, clipped};
 }"""
 
 
@@ -156,10 +163,10 @@ def main(screens=False):
         browser.close()
     server.shutdown()
     write_report(results)
-    bad = [r for r in results if r["violations"] or r["hscroll"]]
+    bad = [r for r in results if r["violations"] or r["hscroll"] or r["clipped"]]
     print(f"Widoków sprawdzonych: {len(results)}; z problemami: {len(bad)}")
     for r in bad:
-        print(f"  [{r['vp']}] {r['role']} {r['url']}: {r['violations']} hscroll={r['hscroll']}")
+        print(f"  [{r['vp']}] {r['role']} {r['url']}: {r['violations']} hscroll={r['hscroll']} clipped={r['clipped']}")
     return 1 if bad else 0
 
 
