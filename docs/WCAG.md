@@ -5,10 +5,10 @@ a nie poprawką na końcu.
 
 ## Wynik audytu automatycznego
 
-`python scripts/axe_audit.py`: axe-core 4.10 (reguły WCAG 2.0/2.1 A i AA) przez Playwright, na **34 widokach**
+`python scripts/axe_audit.py`: axe-core 4.10 (reguły WCAG 2.0/2.1 A i AA) przez Playwright, na **51 widokach**
 (wszystkie ekrany i role) × **desktop 1280 px i telefon 320 px**, plus tryb wysokiego kontrastu i A+.
 
-**72/72 widoków bez naruszeń, bez przewijania w poziomie na 320 px.** Szczegóły: [WCAG_RAPORT.md](WCAG_RAPORT.md).
+**106/106 widoków bez naruszeń, bez przewijania w poziomie na 320 px.** Szczegóły: [WCAG_RAPORT.md](WCAG_RAPORT.md).
 
 Audyt znalazł i pomógł naprawić: tabele przewijane w poziomie niedostępne z klawiatury (dodane `role="region"`
 i `tabindex="0"`), tekst dla czytników ekranu rozpychający stronę na telefonie, listę ról za szeroką w trybie A+.
@@ -36,6 +36,7 @@ i `tabindex="0"`), tekst dla czytników ekranu rozpychający stronę na telefoni
 | Ruch | brak animacji; respektujemy `prefers-reduced-motion` | 2.3.3 |
 | Filmy | YouTube bez śledzenia, z tytułem iframe i opisem tekstowym | 1.2.1 (częściowo) |
 | Czytelna czcionka | Atkinson Hyperlegible (projekt dla osób słabowidzących), 18 px bazowo | – |
+| Tekst łatwy do czytania (ETR) | „Strona dla mnie” w module Razem z ZD: krótkie zdania, piktogramy z podpisem, wybór obrazkiem, „Przeczytaj na głos” | 3.1.5 (AAA, cel) |
 | Prosty język | piszemy do mieszkańca, krótkie formularze, przykład pod każdym polem | 3.1.5 (AAA, cel) |
 
 ## Co dalej

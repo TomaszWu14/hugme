@@ -33,3 +33,7 @@
 13. Czy możemy skonsultować treść ścieżki rodziny (diagnoza → zdrowie → szkoła → dorosłość) z organizacją
     rodziców osób z zespołem Downa?
 14. Które gminy lub CUS-y byłyby gotowe przetestować Pośrednika innowacji?
+15. Czy organizacja rodziców osób z zespołem Downa (np. stowarzyszenie z Małopolski) zweryfikuje treści modułu „Razem z ZD”:
+    listę „o co zapytać lekarza” wg etapu, kreator praw i wzory pism?
+16. Czy osoby z ZD mogą przetestować „Stronę dla mnie” (tekst łatwy do czytania wymaga testerów z grupy docelowej)?
+17. Kto w ROPS lub NGO może koordynować sieć rodziców-przewodników?

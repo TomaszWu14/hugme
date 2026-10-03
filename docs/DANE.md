@@ -13,6 +13,7 @@ i oznaczone w interfejsie plakietką **PRZYKŁAD**:
 | Nabory | 3 | 2 otwarte, 1 zamknięty |
 | Użytkownicy | 11 | 5 kont demo i 6 ekspertów do dopasowań |
 | Pomysły | 2 | z kanwą i wątkiem pytań do ekspertów |
+| Razem z ZD | 24 prośby + 4 wydarzenia | 7 miejsc, 4 ogłoszenia sprzętu, 5 przewodników/rodzin, wytchnienie, 6 głosów na Dzień Specjalistów – pseudonimy, opisy bez danych dziecka |
 
 Źródło: `data/seed_data.py`. Ładowanie: automatycznie do pustej bazy (`data/seed.py`).
 
@@ -64,6 +65,14 @@ zajmuje jeden słownik (`IMPORT_COLUMNS` w `app/views/admin.py`).
   brak klucza).
 - **Prawa osób**: dostęp, sprostowanie i usunięcie przez koordynatora Hubu; docelowo przycisk „usuń moje dane”.
 - **DPIA** przed produkcją: ryzyko wpisania danych o zdrowiu, łagodzone maskowaniem i moderacją.
+
+## Moduł „Razem z ZD” – zasady danych
+
+- **Wizyty u specjalistów** zapisują się tylko w przeglądarce (localStorage) – na serwer nie trafia nic o zdrowiu.
+- **Etap życia** (np. „przedszkole”) w ciasteczku zamiast daty urodzenia; brak danych dziecka.
+- **Pisma** wypełniane formularzem POST i drukowane – niczego nie zapisujemy; do AI trafia tylko zamaskowane uzasadnienie.
+- **Prośby** (przewodnik, wytchnienie, miejsca, sprzęt) pod pseudonimem, maskowane; publiczne dopiero po zatwierdzeniu przez Hub;
+  kontakt między rodzinami wyłącznie przez koordynatora.
 
 ## Ograniczenia maskowania
 
