@@ -7,6 +7,13 @@
 Prototyp platformy dla **Małopolskiego Hubu Innowacji Społecznych** (Regionalny Ośrodek Polityki Społecznej
 w Krakowie), przygotowany na **HackYeah 2026**, zadanie **HubMi.pl**.
 
+**Zobacz:** [działające demo – hugme.twapp.pl](https://hugme.twapp.pl) · [film (MP4, do 3 min)](docs/film/hugme-przeklikanie.mp4) ·
+[prezentacja PDF](docs/HugMe_prezentacja.pdf) · [opisy zgłoszenia](docs/HACKTRIBE.md).
+Konta demo nie mają haseł – rolę (mieszkanka, organizacja, gmina, ekspert, koordynatorka Hubu) wybierasz w pasku
+u góry albo w ramce „Oglądasz demo?” na stronie startowej. Demo odnawia się samo po 20 minutach bez nowych wpisów.
+
+![Strona startowa HugMe: pole „Co jest trudne? Kogo to dotyczy?” i ilustracja splotu](docs/zrzuty/01-start-desktop.png)
+
 ## Gra słów
 
 **Hub + Mi**(łopolska) czyta się jak angielskie ***hug me*** – „przytul mnie”. Tak ma działać platforma:
@@ -55,7 +62,8 @@ ekspert, koordynatorka ROPS. Docelowe logowanie przez **login.gov.pl** albo link
   Treści od AI są zawsze oznaczone w interfejsie.
 - **Prywatność**: PESEL, telefon, e-mail, adres, kod pocztowy, imię po „syn/córka” i nazwisko po „dr” są maskowane
   **przed** zapisem i przed AI. Wszystkie dane są fikcyjne i oznaczone jako „PRZYKŁAD”.
-- **Dostępność (WCAG 2.1 AA)**: audyt axe-core 136/136 widoków bez naruszeń (desktop i 320 px),
+- **Dostępność (WCAG 2.1 AA)**: 136/136 widoków bez naruszeń wykrywanych automatycznie (axe-core, desktop i 320 px), układ bez przewijania
+  w bok także na telefonie z A+ (66 widoków); audyt w CI blokuje scalenie zmiany, która psuje dostępność;
   przyciski A+ i wysokiego kontrastu działają bez JS, cele dotykowe mają co najmniej 44 px.
 - **Bezpieczeństwo**: CSRF, CSP bez zewnętrznych skryptów i bez stylów inline, ciasteczka HttpOnly/SameSite,
   walidacja i role sprawdzane na serwerze.
@@ -80,7 +88,7 @@ Reset danych: usuń plik bazy. AI włączysz zmienną `ANTHROPIC_API_KEY` (przyk
 **Testy i audyt:**
 
 ```bash
-pytest                                   # 204 testów: ścieżki, role, CSRF, prywatność, trafność
+pytest                                   # 211 testów: ścieżki, role, CSRF, prywatność, trafność
 python -m playwright install chromium
 python scripts/axe_audit.py --zrzuty     # raport docs/WCAG_RAPORT.md + docs/zrzuty/
 ```
@@ -98,6 +106,9 @@ repozytorium (build z `Dockerfile`), ustawić `SECRET_KEY` i opcjonalnie `ANTHRO
 `claude/**` scala się sam po zielonym CI (squash), a push do `main` wyzwala wdrożenie w Coolify przez webhook.
 
 ## Scenariusz demo (5 minut)
+
+To także ściąga do pokazu na żywo. Plan B bez internetu: aplikacja lokalnie (`flask --app app:create_app run`, fonty i style są
+w repo, bez CDN); plan C: [film](docs/film/hugme-przeklikanie.mp4).
 
 1. **Start, gość.** Pole „Co jest trudne? Kogo to dotyczy?” ma już wpisany przykład o wizytach u wielu specjalistów.
    Dopisz „mój syn Kacper, tel. 600 123 456” i kliknij **Znajdź rozwiązania**.
@@ -130,6 +141,22 @@ repozytorium (build z `Dockerfile`), ustawić `SECRET_KEY` i opcjonalnie `ANTHRO
 Python 3.12, Flask, Jinja, SQLite (schemat zgodny z PostgreSQL), bez frameworków JS, Docker. Jedyne zależności
 produkcyjne: `flask`, `gunicorn`, `anthropic`.
 
+## Jak powstało
+
+Projekt zrobiłem sam w czasie HackYeah 2026. Decyzje produktowe zapadały w ustrukturyzowanych sesjach pytań
+(100 decyzji w [BRAINSTORM.md](BRAINSTORM.md), specyfikacje i plany w [docs/superpowers/](docs/superpowers/)).
+Kod pisałem z **Claude Code** jako asystentem programisty – decyzje, dane, testy i weryfikacja są moje, a każdy
+commit ma jawny dopisek `Co-Authored-By: Claude`. Zmiany przechodzą przez PR, testy i audyt dostępności w CI,
+a po scaleniu wdrażają się same (webhook do Coolify).
+
+## Prawa
+
+Wszelkie prawa zastrzeżone do czasu decyzji właściciela praw zgodnie z regulaminem HackYeah (przeniesienie
+autorskich praw majątkowych na organizatora i Województwo Małopolskie). Preferowana licencja docelowa:
+**EUPL 1.2** (licencja Komisji Europejskiej, zalecana dla administracji) – patrz
+[docs/PYTANIA_DO_MENTOROW.md](docs/PYTANIA_DO_MENTOROW.md).
+
 ---
-Wszystkie osoby, organizacje, innowacje i zgłoszenia w prototypie są **fikcyjne**. Licencja zostanie dodana
-po decyzji o przeniesieniu praw (patrz [docs/PYTANIA_DO_MENTOROW.md](docs/PYTANIA_DO_MENTOROW.md)).
+Wszystkie osoby, organizacje, innowacje i zgłoszenia w prototypie są **fikcyjne** i oznaczone plakietką PRZYKŁAD;
+prawdziwe są tylko miejsca pracy i statystyki w module „Praca” (każde ze źródłem). Import prawdziwej Biblioteki
+Innowacji ROPS działa z panelu Hubu (CSV/JSON).

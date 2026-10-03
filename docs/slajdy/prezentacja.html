@@ -31,6 +31,9 @@
   .big { font-size: 64px; font-weight: 700; color: var(--coral); line-height: 1; }
   .stat { background: #fff; border-radius: 14px; padding: 18px 22px; }
   .stat p { font-size: 20px; margin: 6px 0 0; }
+  .stat .src { font-size: 14px; color: var(--soft); }
+  .links { font-size: 18px; margin-top: 22px; }
+  .links a { color: var(--ink); }
   .ai { background: var(--mintbg); border: 2px solid #1F8566; border-radius: 14px; padding: 14px 20px; font-size: 21px; }
   .lead { font-size: 30px; color: var(--soft); max-width: 900px; }
   table { border-collapse: collapse; font-size: 22px; width: 100%; background: #fff; border-radius: 14px; overflow: hidden; }
@@ -50,6 +53,7 @@
       <p style="font-size:44px;font-weight:700;margin:28px 0">Twój problem nie zostaje sam.</p>
       <p><b>Hub + Mi</b>(łopolska) czyta się jak <i lang="en">hug me</i> – „przytul mnie”. Mieszkaniec z problemem
         nie trafia do urzędu, tylko do kogoś, kto go obejmuje i łączy z rozwiązaniem i ludźmi.</p>
+      <p class="links"><b>Demo:</b> <a href="https://hugme.twapp.pl">hugme.twapp.pl</a> · <b>Kod:</b> <a href="https://github.com/TomaszWu14/hugme">github.com/TomaszWu14/hugme</a> · konta demo bez haseł</p>
     </div>
     <div style="width:360px">
       <svg viewBox="0 0 48 48" width="340" height="340" role="img" aria-label="Logo: dwie nici splecione w serce">
@@ -68,15 +72,16 @@
   <div class="row">
     <div class="col">
       <ul>
-        <li>Rodzice dziecka z zespołem Downa jeżdżą do 5 specjalistów w 5 różnych dni – a w sąsiednim powiecie
-          działa już <b>asystent zdrowia rodziny</b>.</li>
-        <li>Gmina szuka sposobu na dojazd seniorów do lekarza – inna gmina ma <b>bus na telefon</b>.</li>
+        <li><b>Typowa sytuacja:</b> rodzice dziecka z zespołem Downa jeżdżą do kilku specjalistów w różne dni – a gdzie
+          indziej w regionie podobny problem ktoś już rozwiązał, np. <b>koordynacją wizyt</b>.</li>
+        <li><b>Typowa sytuacja:</b> gmina szuka sposobu na dojazd seniorów do lekarza – inna próbuje <b>transportu na telefon</b>.</li>
         <li>Hub Innowacji Społecznych nie widzi, <b>gdzie potrzeby rosną</b> i gdzie brakuje rozwiązań.</li>
       </ul>
     </div>
     <div class="col" style="flex:.8">
       <div class="stat"><span class="big">7</span><p>obszarów wyzwań Małopolski – pilotaż: rodziny osób z zespołem Downa</p></div>
-      <div class="stat" style="margin-top:16px"><span class="big">22</span><p>powiaty – potrzeby rozproszone, wiedza w silosach</p></div>
+      <div class="stat" style="margin-top:16px"><span class="big">32,5%</span><p>wskaźnik zatrudnienia osób z niepełnosprawnością
+        (II kw. 2024) – o blisko 50 pkt. mniej niż osób sprawnych</p><p class="src">Źródło: GUS BAEL, niepelnosprawni.gov.pl</p></div>
     </div>
   </div>
 </section>
@@ -106,11 +111,11 @@
     <div class="col" style="flex:.9">
       <ul>
         <li><b>BM25 + polski stemming + słownik pojęć</b> (lekarz, wizyta, kardiolog → „zdrowie”).</li>
-        <li>Każdy wynik: etykieta słowna, trafność i <b>„dlaczego pasuje”</b> – wspólne słowa i tematy.</li>
-        <li>Autor ocenia „pomocne / niepomocne” → <b>pomiar trafności</b> w panelu.</li>
-        <li>Test trafności: <b>11/11 w top 3</b>.</li>
+        <li>Każdy wynik: trafność i <b>„dlaczego pasuje”</b>; ocena „pomocne” mierzy trafność.</li>
+        <li><b>11/11 w top 3</b> na danych przykładowych.</li>
+        <li>Demo: przykłady z plakietką – <b>import Biblioteki ROPS</b> już działa (CSV/JSON).</li>
       </ul>
-      <p class="ai" style="margin-top:18px">✦ Claude Haiku tylko wzbogaca (analiza opisu) – zawsze oznaczony. Bez klucza działa wersja regułowa.</p>
+      <p class="ai" style="margin-top:14px">✦ AI (Claude Haiku) tylko wzbogaca, zawsze oznaczone; bez klucza – wersja regułowa.</p>
     </div>
     <div class="col"><img class="shot" src="../zrzuty/02-wyniki-desktop.png" alt="Wyniki dopasowania z uzasadnieniem"></div>
   </div>
@@ -130,7 +135,7 @@
     <div class="card"><b>Panel ROPS</b>skrzynka, statusy, edycja i import Biblioteki, nabory, luki, CSV, konta i role</div>
     <div class="card"><b>Pośrednik innowacji</b>karta usługi dla gminy, CUS i NGO – koszty bez wymyślonych kwot</div>
   </div>
-  <p style="margin-top:22px">5 ról demo · API JSON dla bazy grantowej · <b>204 testów automatycznych</b> (ścieżki, role, CSRF, prywatność)</p>
+  <p style="margin-top:22px">5 ról demo · API JSON dla bazy grantowej · <b>211 testów automatycznych</b> (ścieżki, role, CSRF, prywatność)</p>
 </section>
 
 <section class="s" data-n="6">
@@ -174,7 +179,7 @@
   <h2>Dla każdego – także dla seniorów</h2>
   <div class="row">
     <div class="col">
-      <div class="stat"><span class="big">136/136</span><p>widoków bez naruszeń WCAG 2.1 AA (axe-core) – desktop i telefon 320 px</p></div>
+      <div class="stat"><span class="big">136/136</span><p>widoków bez naruszeń WCAG 2.1 AA wykrywanych automatycznie (axe-core) – desktop i telefon 320 px, audyt w CI</p></div>
       <ul style="margin-top:18px">
         <li>A+ i wysoki kontrast bez JavaScriptu, cele ≥ 44 px</li>
         <li>Atkinson Hyperlegible, 18 px, prosty język, przykład pod polem</li>
@@ -216,8 +221,10 @@
       </ul>
     </div>
     <div style="width:420px;text-align:center;align-self:center">
-      <p style="font-size:56px;font-weight:700;line-height:1.1">HugMe</p>
-      <p style="font-size:30px">Twój problem<br>nie zostaje sam.</p>
+      <img src="qr-demo.svg" alt="Kod QR do demo: hugme.twapp.pl" width="200" height="200">
+      <p style="font-size:44px;font-weight:700;line-height:1.1;margin:12px 0 6px">HugMe</p>
+      <p style="font-size:24px;margin:0 0 10px">Twój problem nie zostaje sam.</p>
+      <p class="links"><b>Demo:</b> <a href="https://hugme.twapp.pl">hugme.twapp.pl</a><br><b>Kod:</b> <a href="https://github.com/TomaszWu14/hugme">github.com/TomaszWu14/hugme</a></p>
     </div>
   </div>
 </section>

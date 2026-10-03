@@ -55,6 +55,12 @@ zajmuje jeden słownik (`IMPORT_COLUMNS` w `app/views/admin.py`).
    dopiero po zatwierdzeniu przez Hub. Pomysły są publiczne z założenia, co mówi komunikat przy fiszce.
 5. **Trendy** są zagregowane (obszar, powiat, miesiąc), bez treści i autorów, i widoczne tylko dla admina.
 6. **API** zwraca tekst po maskowaniu i listę rodzajów ukrytych danych.
+7. **AI to zewnętrzny model (Claude, Anthropic)** i dostaje wyłącznie tekst po maskowaniu. Maskowanie jest wbudowane
+   w jedno miejsce (`core/ai.wrap_data`), przez które przechodzi każde zapytanie – nowa funkcja nie może go „zapomnieć”.
+   Przy każdym przycisku AI użytkownik widzi zdanie, dokąd trafia tekst. **Ograniczenie:** maskowanie usuwa
+   identyfikatory, ale nie treść o zdrowiu – zdanie „dziecko z zespołem Downa i wadą serca” bez imienia nadal dotyczy
+   zdrowia. Dlatego w pilotażu o użyciu AI decyduje ROPS po ocenie skutków dla ochrony danych (DPIA); wariant bez AI
+   ma pełną funkcjonalność (`AI_DISABLED=1`), a dzienny limit (`AI_DAILY_LIMIT`) ogranicza też ilość przesyłanych danych.
 
 ## RODO (docelowo)
 

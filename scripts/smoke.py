@@ -21,7 +21,7 @@ def main():
                 if page.goto(BASE + path).status != 200:
                     fails.append(f"{width}px {path}: status")
             page.goto(BASE + "/")
-            page.click("text=Znajdź rozwiązania")
+            page.click("button:has-text(\"Znajdź rozwiązania\")")
             page.wait_for_url("**/wyniki")
             if page.locator(".card--thread").count() < 3:
                 fails.append(f"{width}px /wyniki: mniej niż 3 dopasowania")

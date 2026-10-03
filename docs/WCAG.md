@@ -5,10 +5,13 @@ a nie poprawką na końcu.
 
 ## Wynik audytu automatycznego
 
-`python scripts/axe_audit.py`: axe-core 4.10 (reguły WCAG 2.0/2.1 A i AA) przez Playwright, na **51 widokach**
-(wszystkie ekrany i role) × **desktop 1280 px i telefon 320 px**, plus tryb wysokiego kontrastu i A+.
+`python scripts/axe_audit.py`: axe-core 4.10 (reguły WCAG 2.0/2.1 A i AA) przez Playwright, na **66 widokach**
+(wszystkie ekrany i role) × **desktop 1280 px i telefon 320 px**, plus tryb wysokiego kontrastu i A+; dodatkowo
+kontrola układu (przewijanie w bok, tekst poza kartą) na wszystkich widokach na telefonie z A+.
 
-**128/128 widoków bez naruszeń, bez przewijania w poziomie na 320 px.** Szczegóły: [WCAG_RAPORT.md](WCAG_RAPORT.md).
+**136/136 widoków bez naruszeń wykrywanych automatycznie, bez przewijania w poziomie na 320 px – także z A+.**
+Automaty wykrywają tylko część problemów, dlatego wynik uzupełnia przegląd ręczny (klawiatura, czytnik ekranu) poniżej.
+Audyt działa w CI (job `a11y`) i blokuje scalenie zmiany, która wprowadza naruszenie. Szczegóły: [WCAG_RAPORT.md](WCAG_RAPORT.md).
 
 Audyt znalazł i pomógł naprawić: tabele przewijane w poziomie niedostępne z klawiatury (dodane `role="region"`
 i `tabindex="0"`), tekst dla czytników ekranu rozpychający stronę na telefonie, listę ról za szeroką w trybie A+.

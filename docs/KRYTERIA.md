@@ -32,12 +32,12 @@ statystyki GUS/PFRON, „Poznaj ZD” dla pracodawców i instytucji.
 - **Koszt**: ok. 75 zł miesięcznie technologii z AI, a bez AI pełna funkcjonalność ([KOSZTY](KOSZTY.md)).
 - **Skalowalność i elastyczność**: dowolne obszary i powiaty (konfiguracja w `core/domain.py`), słownik pojęć
   edytowalny bez programowania, import Biblioteki ROPS, API JSON dla bazy grantowej.
-- **Gotowość**: Docker + Coolify, healthcheck, 204 testów automatycznych, audyt dostępności jako skrypt.
+- **Gotowość**: Docker + Coolify, healthcheck, 211 testów automatycznych, audyt dostępności w CI (blokuje scalenie zmian).
 - **Ścieżka do produkcji**: login.gov.pl, RODO, DPIA opisane w [ARCHITEKTURA](ARCHITEKTURA.md) i [DANE](DANE.md).
 
 ## Dostępność i intuicyjność (20%)
 
-- WCAG 2.1 AA: **136/136 widoków bez naruszeń axe** (desktop i 320 px, tryb kontrastu i A+) – [WCAG](WCAG.md).
+- WCAG 2.1 AA: **136/136 widoków bez naruszeń wykrywanych automatycznie** (axe-core, desktop i 320 px, tryb kontrastu i A+), układ telefonu z A+ na wszystkich 66 widokach – [WCAG](WCAG.md).
 - Dla seniorów: 18 px bazowo, Atkinson Hyperlegible, A+, wysoki kontrast, cele ≥ 44 px, działanie bez JS.
 - Prosty język: pole „Co jest trudne? Kogo to dotyczy?” od razu na stronie startowej, z przykładem;
   krótkie formularze z przykładem pod każdym polem; komunikaty błędów słowami.
