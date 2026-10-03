@@ -224,8 +224,9 @@ def letters():
 def letter_justification(spec, text):
     """Uzasadnienie od AI (tylko zamaskowany tekst) albo zdanie szablonowe. Zwraca (tekst, by_ai)."""
     answer = ai.ask("Napisz 2–3 zdania rzeczowego uzasadnienia do pisma rodzica do szkoły/OPS "
-                    f"(„{spec['title']}”). Punkt wyjścia: {mask(text)[0]}. Bez danych osobowych, bez diagnoz, uprzejmie.",
-                    max_tokens=300)
+                    f"(„{spec['title']}”). Punkt wyjścia rodzica jest w danych zewnętrznych. "
+                    "Bez danych osobowych, bez diagnoz, uprzejmie. Odpowiedz samym tekstem uzasadnienia.",
+                    data=mask(text)[0], max_tokens=300)
     if answer:
         return answer, True
     if R.LETTER_FALLBACK in text:  # ponowne kliknięcie nie dokleja zdania drugi raz

@@ -46,6 +46,12 @@ unieważniany przy edycji (miejsce oznaczone w kodzie).
 
 ## AI: tylko wzbogacenie
 
+Zewnętrzne treści traktujemy jako dane, nie polecenia: wszystko, co napisał użytkownik, trafia do modelu w ogranicznikach
+`<dane_zewnetrzne>` (limit 8000 znaków), a prompt systemowy każe ignorować instrukcje zawarte w danych. AI zwraca
+tylko zwalidowany JSON (`core/ai.validate`: dozwolone pola, białe listy, limity) albo krótki tekst do wyświetlenia;
+odrzucona odpowiedź uruchamia ścieżkę regułową. Decyzje – obszar, status zgłoszenia, dopasowania BM25, pary w programie
+„Jestem potrzebny” – podejmują reguły w kodzie, więc zmanipulowana odpowiedź AI nie zmieni statusu ani dopasowania.
+
 | Funkcja | Bez AI (zawsze działa) | Z AI (oznaczone miętową ramką) |
 |---|---|---|
 | Analiza opisu | tematy ze słownika, obszar | streszczenie i dodatkowe słowa do wyszukiwania |

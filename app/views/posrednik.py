@@ -75,23 +75,22 @@ def rule_card(ctx, best):
 
 
 def ai_card(ctx, best):
+    text_keys, list_keys = ("opis", "odbiorcy", "zespol"), ("kroki", "partnerzy", "koszty", "finansowanie", "mierniki", "ryzyka")
     data = ai.ask_json(
-        "Przygotuj kartę usługi społecznej do wdrożenia w Małopolsce.\n"
-        f"Instytucja: {INSTITUTIONS[ctx['institution']]}\nGrupa: {ctx['audience']}\nSkala: {SCALES[ctx['scale']]}\n"
-        f"Budżet: {BUDGETS[ctx['budget']]}\nPowiat: {ctx['powiat'] or 'nie podano'}\nProblem: {ctx['problem']}\n"
-        + (f"Wzorcowa innowacja z Biblioteki: {best['title']} – {best['summary']} ({best['org']})\n" if best else "")
-        + "\nZasady: NIE podawaj żadnych kwot pieniędzy (tylko rodzaje kosztów). Źródła finansowania podawaj ogólnie "
-          "(np. Fundusze Europejskie dla Małopolski, konkursy ROPS) z dopiskiem, by sprawdzić aktualne nabory.\n"
-          "Zwróć JSON z kluczami: opis (tekst), odbiorcy (tekst), zespol (tekst), kroki (lista 5), partnerzy (lista), "
-          "koszty (lista), finansowanie (lista), mierniki (lista), ryzyka (lista).",
-        max_tokens=1400)
-    if not data or not all(k in data for k in CARD_KEYS):
+        "Przygotuj kartę usługi społecznej do wdrożenia w Małopolsce (kontekst instytucji jest w danych zewnętrznych).\n"
+        "Zasady: NIE podawaj żadnych kwot pieniędzy (tylko rodzaje kosztów). Źródła finansowania podawaj ogólnie "
+        "(np. Fundusze Europejskie dla Małopolski, konkursy ROPS) z dopiskiem, by sprawdzić aktualne nabory.\n"
+        "Zwróć JSON z kluczami: opis (tekst), odbiorcy (tekst), zespol (tekst), kroki (lista 5), partnerzy (lista), "
+        "koszty (lista), finansowanie (lista), mierniki (lista), ryzyka (lista).",
+        data=f"Instytucja: {INSTITUTIONS[ctx['institution']]}\nGrupa: {ctx['audience']}\nSkala: {SCALES[ctx['scale']]}\n"
+             f"Budżet: {BUDGETS[ctx['budget']]}\nPowiat: {ctx['powiat'] or 'nie podano'}\nProblem: {ctx['problem']}\n"
+             + (f"Wzorcowa innowacja z Biblioteki: {best['title']} – {best['summary']} ({best['org']})" if best else ""),
+        schema={**{k: ("str", 1200) for k in text_keys}, **{k: ("list", 12, 300) for k in list_keys}},
+        required=CARD_KEYS, max_tokens=1400)
+    if not data:
         return None
-    card = {}
-    for k in CARD_KEYS:
-        v = data[k]
-        card[k] = [no_amounts(x)[:300] for x in v][:12] if isinstance(v, list) else no_amounts(v)[:1200]
-    return card
+    # Kwoty wycinane także z odpowiedzi AI – decyzja o kosztach „bez kwot” jest w kodzie, nie w prompcie.
+    return {k: [no_amounts(x) for x in data[k]] if k in list_keys else no_amounts(data[k]) for k in CARD_KEYS}
 
 
 @bp.route("/posrednik", methods=["GET", "POST"])

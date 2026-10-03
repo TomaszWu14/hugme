@@ -139,17 +139,17 @@ def rule_assistant(idea, canvas):
 
 def ai_assistant(idea, canvas):
     data = ai.ask_json(
-        "Pomóż rozwinąć pomysł na innowację społeczną w Małopolsce.\n"
-        f"Tytuł: {idea['title']}\nIstota: {idea['essence']}\nDla kogo: {idea['audience']}\nEtap: {idea['stage']}\n"
-        f"Kanwa: {json.dumps(canvas, ensure_ascii=False)}\n\n"
+        "Pomóż rozwinąć pomysł na innowację społeczną w Małopolsce (pomysł i kanwa są w danych zewnętrznych).\n"
         "Zwróć JSON: {\"mocne_strony\": [3 punkty], \"pytania\": [4 pytania rozwijające], "
         "\"kierunki\": [3 nieoczywiste kierunki rozwoju], \"prototyp\": \"opis szkicu prototypu w 3–4 zdaniach\"}",
-        max_tokens=900)
+        data=f"Tytuł: {idea['title']}\nIstota: {idea['essence']}\nDla kogo: {idea['audience']}\nEtap: {idea['stage']}\n"
+             f"Kanwa: {json.dumps(canvas, ensure_ascii=False)}",
+        schema={"mocne_strony": ("list", 5, 300), "pytania": ("list", 5, 300), "kierunki": ("list", 5, 300),
+                "prototyp": ("str", 900)}, max_tokens=900)
     if not data:
         return None
-    lst = lambda k: [str(x)[:300] for x in data.get(k, []) if x][:5]
-    out = {"strengths": lst("mocne_strony"), "questions": lst("pytania"), "directions": lst("kierunki"),
-           "prototype": str(data.get("prototyp", ""))[:900], "by_ai": True}
+    out = {"strengths": data.get("mocne_strony", []), "questions": data.get("pytania", []),
+           "directions": data.get("kierunki", []), "prototype": data.get("prototyp", ""), "by_ai": True}
     return out if out["strengths"] or out["questions"] else None
 
 
@@ -190,9 +190,10 @@ def application(iid, cid):
         action = request.form.get("akcja")
         if action == "ai":
             suggestion = ai.ask_json(
-                "Na podstawie pól wniosku zaproponuj lepsze, konkretne opisy pól 'dzialania' i 'rezultaty' "
-                "(bez kwot pieniędzy, prostym językiem).\n" + json.dumps(fields, ensure_ascii=False) +
-                "\nZwróć JSON: {\"dzialania\": \"...\", \"rezultaty\": \"...\"}", max_tokens=700)
+                "Na podstawie pól wniosku (w danych zewnętrznych) zaproponuj lepsze, konkretne opisy pól 'dzialania' "
+                "i 'rezultaty' (bez kwot pieniędzy, prostym językiem).\nZwróć JSON: {\"dzialania\": \"...\", \"rezultaty\": \"...\"}",
+                data=json.dumps(fields, ensure_ascii=False), schema={"dzialania": ("str", 2000), "rezultaty": ("str", 2000)},
+                required=("dzialania", "rezultaty"), max_tokens=700)
             if not suggestion:
                 flash("Asystent AI jest teraz niedostępny – wniosek możesz dokończyć samodzielnie.", "info")
         else:

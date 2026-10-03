@@ -42,17 +42,17 @@ def analyze(text):
     topics = [TOPICS[t][0] for t, _ in topics_of(text).most_common(4)]
     result = {"area": detect_area(text), "topics": topics, "summary": None, "keywords": [], "by_ai": False}
     data = ai.ask_json(
-        "Mieszkaniec opisał problem społeczny (dane osobowe są już ukryte):\n"
-        f"<opis>{text}</opis>\n\n"
+        "Mieszkaniec opisał problem społeczny (dane osobowe są już ukryte) – opis jest w danych zewnętrznych.\n"
         "Zwróć JSON: {\"podsumowanie\": \"1–2 zdania, czego potrzebuje ta grupa\", "
         "\"slowa\": [\"do 8 słów kluczowych, także synonimów, które pomogą znaleźć rozwiązania\"], "
         f"\"obszar\": \"jeden z: {', '.join(AREAS)}\"}}",
-        max_tokens=400,
+        data=text, max_tokens=400,
+        schema={"podsumowanie": ("str", 400), "slowa": ("list", 8, 40), "obszar": ("enum", list(AREAS))},
     )
     if data:
-        result["summary"] = str(data.get("podsumowanie", ""))[:400] or None
-        result["keywords"] = [str(w)[:40] for w in data.get("slowa", [])][:8]
-        if data.get("obszar") in AREAS and not result["area"]:
+        result["summary"] = data.get("podsumowanie") or None
+        result["keywords"] = data.get("slowa", [])
+        if data.get("obszar") and not result["area"]:  # obszar z reguł ma pierwszeństwo; AI tylko uzupełnia brak
             result["area"] = data["obszar"]
         result["by_ai"] = bool(result["summary"] or result["keywords"])
     return result
