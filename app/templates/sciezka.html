@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Ścieżka rodziny{% endblock %}
+{% block content %}
+<p><a href="/wiedza">← Wiedza</a></p>
+<h1>Ścieżka rodziny: od diagnozy do dorosłości</h1>
+<p class="lead">Dla rodzin osób z zespołem Downa. Każda rodzina idzie swoją drogą – to tylko mapa,
+  która podpowiada, o co zapytać i co już działa w Małopolsce.</p>
+<p class="notice"><strong>PRZYKŁAD.</strong> To ogólny przewodnik, nie porada medyczna. O zdrowiu dziecka zawsze rozmawiaj z lekarzem.</p>
+
+<ol class="path thread--rodziny-zd">
+  {% for s in steps %}
+  <li id="{{ s.key }}">
+    <span class="path__num" aria-hidden="true">{{ loop.index }}</span>
+    <h2><span class="sr-only">Etap {{ loop.index }} z {{ steps|length }}: </span>{{ s.title }}</h2>
+    <p>{{ s.text }}</p>
+    <h3>Warto zapytać</h3>
+    <ul>{% for q in s.ask %}<li>{{ q }}</li>{% endfor %}</ul>
+    {% if s.innovations %}
+    <h3>Co już działa</h3>
+    <ul>{% for t in s.innovations if t in inn %}<li><a href="/biblioteka/{{ inn[t].id }}">{{ t }}</a> – {{ inn[t].summary }}</li>{% endfor %}</ul>
+    {% endif %}
+    {% if s.materials %}
+    <h3>Poradnik</h3>
+    <ul>{% for t in s.materials if t in mats %}<li><a href="/wiedza/material/{{ mats[t].id }}">{{ t }}</a></li>{% endfor %}</ul>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ol>
+<p><a class="btn btn--primary" href="/">Coś jest trudne? Opisz to – pomożemy znaleźć rozwiązanie</a></p>
+{% endblock %}

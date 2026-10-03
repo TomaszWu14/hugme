@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf %}
+{% from "_cards.html" import innovation_card %}
+{% block title %}{{ a.name }}{% endblock %}
+{% block content %}
+<p><a href="/wiedza">← Wiedza</a></p>
+<div class="card card--thread thread--{{ slug }}">
+  <h1>{{ a.name }}</h1>
+  {% if a.pilot %}<p class="badge badge--pilot">Obszar pilotażowy</p>{% endif %}
+  <p class="lead">{{ a.challenge }}</p>
+  <p class="meta">Zgłoszeń mieszkańców w tym obszarze: {{ report_count }}</p>
+  <div class="actions">
+    {% if g.user %}
+    <form method="post" action="/obserwuj/{{ slug }}">{{ csrf() }}<input type="hidden" name="next" value="{{ request.path }}">
+      <button type="submit" class="btn" aria-pressed="{{ 'true' if following else 'false' }}">{{ 'Obserwujesz ✔' if following else 'Obserwuj ten obszar' }}</button>
+    </form>
+    {% else %}<a class="btn" href="/konto?next={{ request.path }}">Obserwuj ten obszar</a>{% endif %}
+    <a class="btn btn--primary" href="/">Opisz problem z tego obszaru</a>
+    {% if a.pilot %}<a class="btn" href="/wiedza/sciezka-rodziny">Ścieżka rodziny</a>{% endif %}
+  </div>
+  <p class="meta">Obserwujący dostają powiadomienie o nowych innowacjach i naborach.</p>
+</div>
+
+{% if calls %}
+<section aria-labelledby="calls-h">
+  <h2 id="calls-h">Otwarte nabory</h2>
+  <ul class="list-plain">{% for c in calls %}<li><strong>{{ c.title }}</strong> <span class="badge badge--open">● Otwarty do {{ c.deadline }}</span><br>{{ c.description }}</li>{% endfor %}</ul>
+  <p><a href="/pomysly/nowy">Masz pomysł? Zapisz go w Kreatorze i złóż wniosek.</a></p>
+</section>
+{% endif %}
+
+<section aria-labelledby="inn-h">
+  <h2 id="inn-h">Innowacje w tym obszarze</h2>
+  {% if innovations %}
+  <ul class="grid">{% for i in innovations %}<li>{{ innovation_card(i) }}</li>{% endfor %}</ul>
+  {% else %}<p>Jeszcze brak innowacji. To dobry temat na nowy konkurs.</p>{% endif %}
+</section>
+
+{% if materials %}
+<section aria-labelledby="mat-h">
+  <h2 id="mat-h">Poradniki</h2>
+  <ul class="list-plain">{% for m in materials %}<li><a href="/wiedza/material/{{ m.id }}">{{ m.title }}</a> – {{ m.summary }}</li>{% endfor %}</ul>
+</section>
+{% endif %}
+{% endblock %}

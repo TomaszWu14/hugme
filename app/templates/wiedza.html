@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% from "_macros.html" import area_tag %}
+{% block title %}Wiedza{% endblock %}
+{% block content %}
+<h1>Zasobnik wiedzy</h1>
+<p class="lead">Wyzwania regionu, sprawdzone pomysły i poradniki – w jednym miejscu, prostym językiem.</p>
+
+<section aria-labelledby="path-h" class="card card--raised card--thread thread--rodziny-zd">
+  <h2 id="path-h">Ścieżka rodziny: od diagnozy do dorosłości</h2>
+  <p>Dla rodzin osób z zespołem Downa: cztery etapy – diagnoza, zdrowie, szkoła, dorosłość. Na każdym etapie
+    podpowiadamy, o co zapytać i co już działa w Małopolsce.</p>
+  <p><a class="btn btn--primary" href="/wiedza/sciezka-rodziny">Zobacz ścieżkę rodziny</a></p>
+</section>
+
+<section aria-labelledby="ch-h">
+  <h2 id="ch-h">Wyzwania Małopolski</h2>
+  <ul class="grid grid--areas">
+    {% for slug, a in AREAS.items() %}
+    <li class="card card--thread thread--{{ slug }}">
+      <h3><a href="/wiedza/obszar/{{ slug }}">{{ a.name }}</a></h3>
+      {% if a.pilot %}<p class="badge badge--pilot">Obszar pilotażowy</p>{% endif %}
+      <p>{{ a.challenge }}</p>
+      <p class="meta">Innowacje w bibliotece: {{ counts.get(slug, 0) }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section aria-labelledby="mat-h">
+  <h2 id="mat-h">Materiały edukacyjne</h2>
+  <ul class="grid">
+    {% for m in materials %}
+    <li class="card card--thread thread--{{ m.area }}">
+      <h3><a href="/wiedza/material/{{ m.id }}">{{ m.title }}</a></h3>
+      <p class="meta">{{ area_tag(m.area) }} <span>{{ m.kind }}</span></p>
+      <p>{{ m.summary }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

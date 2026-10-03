@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from "_macros.html" import area_tag, example %}
+{% block title %}{{ m.title }}{% endblock %}
+{% block content %}
+<p><a href="/wiedza">← Wiedza</a></p>
+<article class="card card--thread thread--{{ m.area }}">
+  <h1>{{ m.title }}</h1>
+  <p class="meta">{{ area_tag(m.area) }} <span>{{ m.kind }}</span> {{ example() }}</p>
+  <p class="lead">{{ m.summary }}</p>
+  {% for para in m.body.split('\n\n') %}<p>{{ para|replace('\n', ' · ') }}</p>{% endfor %}
+  {% if is_path %}<p><a class="btn btn--primary" href="/wiedza/sciezka-rodziny">Otwórz ścieżkę rodziny</a></p>{% endif %}
+</article>
+<div class="actions no-print">
+  <a class="btn" href="/">Opisz swój problem</a>
+</div>
+{% endblock %}

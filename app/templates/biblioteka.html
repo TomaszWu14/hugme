@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field %}
+{% from "_cards.html" import innovation_card %}
+{% block title %}Biblioteka innowacji{% endblock %}
+{% block content %}
+<h1>Biblioteka innowacji</h1>
+<p class="lead">Sprawdzone pomysły z Małopolski. Każdy można przenieść do swojej gminy – zapytaj autorów w rozmowie przy innowacji.</p>
+
+<form method="get" action="/biblioteka" class="filters" role="search" aria-label="Filtruj bibliotekę">
+  {% set area_opts = [] %}{% for slug, a in AREAS.items() %}{% set _ = area_opts.append((slug, a.short)) %}{% endfor %}
+  {{ field('q', 'Szukaj słowami', value=f.q, type='search', optional_text=false, hint='transport, samotność') }}
+  {{ field('obszar', 'Obszar', options=area_opts, value=f.obszar, optional_text=false) }}
+  {{ field('powiat', 'Powiat', options=powiaty|pairs, value=f.powiat, optional_text=false) }}
+  {{ field('etap', 'Etap', options=stages|pairs, value=f.etap, optional_text=false) }}
+  {{ field('grupa', 'Dla kogo', options=audiences|pairs, value=f.grupa, optional_text=false) }}
+  <div class="actions">
+    <button type="submit" class="btn btn--primary">Pokaż</button>
+    <a class="btn btn--ghost" href="/biblioteka">Wyczyść</a>
+  </div>
+</form>
+
+<h2>Znaleziono: {{ rows|length }}</h2>
+{% if rows %}
+<ul class="grid">
+  {% for i in rows %}
+  <li>
+    {{ innovation_card(i) }}
+    {% set r = ratings.get(i.id) %}
+    {% if r %}<p class="meta">Ocena testujących: <strong>{{ r.avg }}/5</strong> ({{ r.n }} {{ 'ocena' if r.n == 1 else 'oceny' }})</p>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="notice">Nic nie pasuje do wybranych filtrów. Spróbuj usunąć któryś z nich albo <a href="/">opisz swój problem</a>.</p>
+{% endif %}
+{% endblock %}
