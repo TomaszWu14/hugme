@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, field, csrf %}
+{% from "razem/_razem.html" import module_nav %}
+{% from "potrzebny/_form.html" import error_summary, err, choices, submit_or_login %}
+{% set as_parent = source == 'rodzic' %}
+{% block title %}{{ 'Proponuję miejsce' if as_parent else 'Oferta miejsca' }} – Jestem potrzebny{% endblock %}
+{% block content %}
+{{ module_nav() }}
+{% if as_parent %}
+<h1>{{ icon('dom') }} Znam miejsce, które mogłoby przyjąć pomoc</h1>
+<p class="lead">Schronisko, DPS, świetlica, biblioteka – Hub zadzwoni tam i zapyta, czy przyjmą uczestnika programu.
+  Nie musisz nic ustalać sam.</p>
+{% else %}
+<h1>{{ icon('dom') }} Nasze miejsce potrzebuje pomocy</h1>
+<p class="lead">Dla schronisk, hospicjów, DPS, świetlic, przedszkoli i bibliotek. Napisz zwyczajnie, co trzeba zrobić –
+  i dopisz wersję w łatwym tekście, żeby osoba z ZD sama zrozumiała misję. Hub sprawdzi ofertę przed publikacją.</p>
+{% endif %}
+<form method="post" action="/razem/jestem-potrzebny/oferta{{ '?jako=rodzic' if as_parent }}" class="card" novalidate>
+  {{ csrf() }}
+  {{ error_summary(errors) }}
+  {{ field('institution', 'Nazwa miejsca', hint='Schronisko dla zwierząt w Wadowicach', value=form.get('institution', ''), error=errors.get('institution'), required=true) }}
+  {{ choices('mission_kind', 'Rodzaj pomocy', P.MISSION_LABELS.items()|list, form, errors, type='radio') }}
+  {{ field('title', 'Co trzeba zrobić – jednym zdaniem', hint='Spacery z psami w sobotnie przedpołudnia', value=form.get('title', ''), error=errors.get('title'), required=true) }}
+  {{ field('body', 'Opis misji', rows=4, hint='Co dokładnie robi uczestnik, jak długo, kto z miejsca jest obok.', plain_hint=true, value=form.get('body', ''), error=errors.get('body'), required=true) }}
+  {{ field('powiat', 'Powiat', options=powiaty|pairs, value=form.get('powiat', ''), error=errors.get('powiat'), required=true) }}
+  {% if not as_parent %}
+  <div class="field">
+    <label for="f-body_easy">Łatwy tekst dla uczestnika <span class="optional">(możesz poprosić AI)</span></label>
+    <p class="hint hint--plain" id="h-body_easy">{{ P.EASY_HINTS|join(' ') }}</p>
+    <textarea id="f-body_easy" name="body_easy" rows="3" aria-describedby="h-body_easy">{{ form.get('body_easy', '') }}</textarea>
+    <input type="hidden" name="easy_by_ai" value="{{ form.get('easy_by_ai', '0') }}">
+    <p class="actions">
+      <button type="submit" name="action" value="uprosc" class="btn btn--ai btn--small" formnovalidate>✦ Uprość tekst (AI)</button>
+      {% if easy_info %}<span class="meta" role="status">{{ easy_info }}</span>
+      {% elif not ai_on %}<span class="meta">W tym demo AI jest wyłączone – napisz łatwy tekst według wskazówek.</span>{% endif %}
+    </p>
+    {% if form.get('easy_by_ai') == '1' and form.get('body_easy') %}<p class="ai-box__label"><span aria-hidden="true">✦</span> Wygenerowane przez AI – sprawdź, zanim wyślesz</p>{% endif %}
+  </div>
+  {{ choices('days', 'Kiedy?', P.DAYS.items()|list + P.TIMES.items()|list, form, errors, required=false) }}
+  {{ field('slots', 'Ile osób naraz?', type='number', value=form.get('slots', '2'), optional_text=false) }}
+  {{ choices('for_whom', 'Kogo zapraszacie?', P.AGE_GROUPS.items()|list, form, errors) }}
+  {{ choices('provides', 'Co zapewnia miejsce?', P.PROVIDES.items()|list, form, errors, required=false) }}
+  {{ field('requirements', 'Wymagania', hint='od 16 lat, spokój przy psach', value=form.get('requirements', ''), error=errors.get('requirements')) }}
+  {% endif %}
+  {{ submit_or_login('Wyślij propozycję' if as_parent else 'Wyślij ofertę do Hubu') }}
+</form>
+{% endblock %}

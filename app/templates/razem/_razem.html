@@ -5,6 +5,7 @@
 {% for href, text in [('/razem', 'Plan rodziny'), ('/razem/wizyty', 'Wizyty'), ('/razem/prawa', 'Prawa'),
                       ('/razem/przewodnik', 'Rodzic-przewodnik'), ('/razem/wytchnienie', 'Wytchnienie'),
                       ('/razem/miejsca', 'Przyjazne miejsca'), ('/razem/wydarzenia', 'Wydarzenia'),
+                      ('/razem/jestem-potrzebny', 'Jestem potrzebny'), ('/razem/praca', 'Praca'),
                       ('/razem/moje-sprawy', 'Strona dla mnie (łatwy tekst)')] %}
 {% set _ = items.append((href, text, request.path == href or (href != '/razem' and request.path.startswith(href)))) %}
 {% endfor %}

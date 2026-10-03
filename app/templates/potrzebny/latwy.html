@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, csrf %}
+{% from "razem/_razem.html" import module_nav %}
+{% from "potrzebny/_form.html" import error_summary, err, pictos, submit_or_login %}
+{% block title %}Ja chcę pomagać – Jestem potrzebny{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<div class="etr-page">
+  <h1>{{ icon('serce') }} Ja chcę pomagać</h1>
+  <p class="etr-line">Możesz pomagać psom, starszym osobom albo dzieciom.</p>
+  <p class="etr-line">Zawsze idzie z Tobą opiekun.</p>
+  <p class="etr-line">Wybierz obrazki. Potem naciśnij „Wyślij”.</p>
+  <form method="post" action="/razem/jestem-potrzebny/latwy" class="card" novalidate>
+    {{ csrf() }}
+    {{ error_summary(errors) }}
+    {{ pictos('interests', 'Co lubisz?', P.INTERESTS, form, errors) }}
+    {% set when = {'rano': ('rano', 'glosnik'), 'popoludnie': ('po południu', 'kalendarz'), 'sb': ('sobota', 'kalendarz'), 'nd': ('niedziela', 'kalendarz'),
+                   'pn': ('poniedziałek', 'kalendarz'), 'sr': ('środa', 'kalendarz'), 'pt': ('piątek', 'kalendarz')} %}
+    {{ pictos('days', 'Kiedy możesz?', when, form, errors, small=true) }}
+    {% set who = {'rodzic': ('mama, tata lub opiekun', 'przyjaciele'), 'asystent': ('mój asystent', 'przyjaciele'), 'buddy': ('ktoś z Hubu', 'serce')} %}
+    {{ pictos('companion', 'Kto idzie z Tobą?', who, form, errors, type='radio', small=true) }}
+    <div class="field {{ 'field--error' if errors.get('alias') }}">
+      <label for="f-alias">Jak mamy do Ciebie mówić?</label>
+      <p class="hint" id="h-alias">Ania</p>
+      {{ err(errors, 'alias') }}
+      <input id="f-alias" name="alias" type="text" value="{{ form.get('alias', '') }}" aria-describedby="h-alias{% if errors.get('alias') %} e-alias{% endif %}">
+    </div>
+    <div class="field {{ 'field--error' if errors.get('powiat') }}">
+      <label for="f-powiat">Gdzie mieszkasz?</label>
+      {{ err(errors, 'powiat') }}
+      <select id="f-powiat" name="powiat" {% if errors.get('powiat') %}aria-describedby="e-powiat"{% endif %}>
+        <option value="">— wybierz powiat —</option>
+        {% for p in powiaty %}<option value="{{ p }}" {% if p == form.get('powiat') %}selected{% endif %}>{{ p }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="field {{ 'field--error' if errors.get('phone') }}">
+      <label for="f-phone">Telefon do Ciebie albo do opiekuna <span class="optional">(nie musisz)</span></label>
+      {{ err(errors, 'phone') }}
+      <input id="f-phone" name="phone" type="text" value="{{ form.get('phone', '') }}" {% if errors.get('phone') %}aria-describedby="e-phone"{% endif %}>
+    </div>
+    <div class="field {{ 'field--error' if errors.get('consent') }}">
+      {{ err(errors, 'consent') }}
+      <label class="choice" for="f-consent"><input type="checkbox" id="f-consent" name="consent" value="1" {% if form.get('consent') %}checked{% endif %}>
+        Zgadzam się. Mój opiekun wie.</label>
+    </div>
+    <p class="etr-line">Nie musisz pisać, jak się nazywasz naprawdę.</p>
+    {{ submit_or_login('Wyślij') }}
+  </form>
+  <p class="etr-line"><a href="/razem/jestem-potrzebny/zasady">Zasady – łatwy tekst</a></p>
+</div>
+{% endblock %}

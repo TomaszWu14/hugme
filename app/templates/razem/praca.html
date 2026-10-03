@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, field, csrf %}
+{% from "razem/_razem.html" import module_nav %}
+{% block title %}Praca – gdzie pracują osoby z zespołem Downa{% endblock %}
+
+{% macro region_map(viewbox, regions, param, label, caption) -%}
+<div class="map-wrap">
+  <svg class="map" viewBox="{{ viewbox }}" role="group" aria-label="{{ label }}">
+    <title>{{ label }}</title>
+    {% for slug, name, path, cx, cy, n, lvl in regions %}
+    <a href="/razem/praca?{{ param }}={{ slug if param == 'woj' else name }}" aria-label="{{ name }}: {{ n }} {{ 'miejsce' if n == 1 else ('miejsca' if n in (2, 3, 4) else 'miejsc') }}">
+      <path class="map__r mf-{{ lvl }}" d="{{ path }}"/>
+      <text class="map__n {{ 'map__n--light' if lvl >= 3 }}" x="{{ cx }}" y="{{ cy }}" text-anchor="middle">{{ n if n else '' }}</text>
+    </a>
+    {% endfor %}
+  </svg>
+  <div class="table-wrap" tabindex="0" role="region" aria-label="{{ caption }} – tabela">
+    <table>
+      <caption>{{ caption }}</caption>
+      <thead><tr><th scope="col">Region</th><th scope="col">Miejsca</th></tr></thead>
+      <tbody>{% for slug, name, path, cx, cy, n, lvl in regions %}
+        <tr><th scope="row"><a href="/razem/praca?{{ param }}={{ slug if param == 'woj' else name }}">{{ name }}</a></th><td class="num">{{ n }}</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{%- endmacro %}
+
+{% block content %}
+{{ module_nav() }}
+<header class="card card--thread thread--rodziny-zd razem-hero">
+  <p class="eyebrow">Praca</p>
+  <h1>{{ icon('mapa') }} Gdzie pracują osoby z zespołem Downa</h1>
+  <p class="lead">Prawdziwe miejsca – kawiarnie, urzędy, zakłady aktywności zawodowej – każde z linkiem do źródła.
+    Mapa rośnie, gdy rodzice, pracodawcy i organizacje zgłaszają kolejne miejsca, a Hub je sprawdza.</p>
+  <p class="etr"><strong>Łatwy tekst:</strong> Osoby z zespołem Downa pracują. W kawiarni, w urzędzie, w zakładzie. Tu jest mapa tych miejsc.</p>
+</header>
+
+<ul class="stat-row stat-row--src" aria-label="Liczby ze źródłem">
+  {% for num, text, src, url in W.STATS %}
+  <li class="stat"><span class="stat__num">{{ num }}</span> {{ text }} <span class="stat__src"><a href="{{ url }}" rel="noopener">Źródło: {{ src }}</a></span></li>
+  {% endfor %}
+</ul>
+
+<section aria-labelledby="mapa-pl-h">
+  <h2 id="mapa-pl-h">Polska – {{ total }} miejsc na mapie</h2>
+  <p class="meta">Kliknij województwo, żeby zobaczyć listę. Ciemniej = więcej miejsc. Pod mapą ta sama lista jako tabela.</p>
+  {{ region_map(mapa.VIEWBOX_PL, regions_pl, 'woj', 'Mapa Polski: liczba miejsc pracy osób z zespołem Downa według województw', 'Miejsca według województw') }}
+</section>
+
+<section aria-labelledby="mapa-mp-h">
+  <h2 id="mapa-mp-h">Małopolska – powiaty</h2>
+  {{ region_map(mapa.VIEWBOX_MP, regions_mp, 'powiat', 'Mapa Małopolski: liczba miejsc pracy osób z zespołem Downa według powiatów', 'Miejsca według powiatów Małopolski') }}
+</section>
+
+<section aria-labelledby="lista-h">
+  <h2 id="lista-h">{% if powiat %}Powiat {{ powiat }}{% elif woj %}Województwo {{ W.VOIVODESHIPS[woj] }}{% else %}Wszystkie miejsca{% endif %} – {{ rows|length }}</h2>
+  {% if woj or powiat %}<p><a href="/razem/praca">Pokaż wszystkie miejsca</a></p>{% endif %}
+  <ul class="legend" aria-label="Rodzaje miejsc">
+    {% for slug, (label, desc, cls) in W.KINDS.items() %}<li class="{{ cls }}"><span class="legend__sw legend__sw--thread" aria-hidden="true"></span> <strong>{{ label }}</strong> – {{ desc }}</li>{% endfor %}
+  </ul>
+  {% if rows %}
+  <ul class="grid grid--two">
+    {% for r in rows %}
+    <li class="card card--thread {{ W.KINDS[r.kind][2] }}">
+      <h3>{{ r.name }}</h3>
+      <p class="meta"><span>{{ W.KIND_LABELS[r.kind] }}</span> <span>{{ r.city }}, {{ W.VOIVODESHIPS[r.voivodeship] }}</span>{% if r.powiat %} <span>powiat {{ r.powiat }}</span>{% endif %}</p>
+      <p>{{ r.note }}</p>
+      <p class="meta"><a href="{{ r.url }}" rel="noopener">Źródło: {{ r.url.split('/')[2] }}</a> <span>sprawdzono {{ r.checked_at|date }}</span></p>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}<p class="notice">Nie mamy jeszcze miejsca z tego regionu. Znasz takie? Zgłoś je poniżej.</p>{% endif %}
+</section>
+
+<section aria-labelledby="poznaj-h" class="poznaj">
+  <h2 id="poznaj-h">Poznaj ZD – zanim zatrudnisz albo zaprosisz</h2>
+  <h3 class="h3">Czego oczekują osoby z zespołem Downa</h3>
+  <ul class="grid grid--two">
+    {% for title, text, src, url in W.EXPECTATIONS %}
+    <li class="card"><h4>{{ title }}</h4><p>{{ text }}</p><p class="meta"><a href="{{ url }}" rel="noopener">Źródło: {{ src }}</a></p></li>
+    {% endfor %}
+  </ul>
+
+  <h3 class="h3">Co lubią uczestnicy programu „Jestem potrzebny”</h3>
+  <p class="meta">Liczone na żywo z deklaracji „co lubię” w zgłoszeniach (dane demo – PRZYKŁAD).</p>
+  <ol class="bars" aria-label="Zainteresowania uczestników">
+    {% for slug, label, n, pct in chart %}
+    <li><span>{{ label }}</span><span class="bars__track"><span class="bars__bar w-{{ (pct / 10)|round|int }}" aria-hidden="true"></span></span><span class="bars__n">{{ n }}</span></li>
+    {% endfor %}
+  </ol>
+  <p class="meta">{{ W.INTERESTS_NOTE[0] }} <a href="{{ W.INTERESTS_NOTE[2] }}" rel="noopener">Źródło: {{ W.INTERESTS_NOTE[1] }}</a></p>
+
+  <h3 class="h3">Mity i fakty</h3>
+  <dl class="myths">
+    {% for myth, fact, src, url in W.MYTHS %}
+    <dt><span class="badge badge--closed">Mit</span> {{ myth }}</dt>
+    <dd><span class="badge badge--open">Fakt</span> {{ fact }} <a class="meta" href="{{ url }}" rel="noopener">({{ src }})</a></dd>
+    {% endfor %}
+  </dl>
+
+  <h3 class="h3">Jak rozmawiać i jak zacząć współpracę</h3>
+  <ol class="steps steps--compact">{% for t in W.HOW_TO_TALK %}<li>{{ t }}</li>{% endfor %}</ol>
+  <p class="meta">Poradnik HugMe – zasady ogólne; o szczegółach zawsze decyduje osoba i jej trener pracy.</p>
+</section>
+
+<section aria-labelledby="zglos-h" id="zglos" class="card">
+  <h2 id="zglos-h">Zgłoś miejsce pracy</h2>
+  <p>Znasz firmę, urząd, kawiarnię albo zakład, w którym pracują osoby z zespołem Downa? Podaj link do artykułu lub strony –
+    Hub sprawdzi źródło i doda miejsce na mapę.</p>
+  <form method="post" action="/razem/praca/zglos" novalidate>
+    {{ csrf() }}
+    {{ field('name', 'Nazwa miejsca', hint='Kawiarnia „Dobra”', required=true) }}
+    {{ field('kind', 'Rodzaj', options=W.KIND_LABELS.items()|list, required=true) }}
+    {{ field('city', 'Miejscowość', hint='Poznań', required=true) }}
+    {{ field('voivodeship', 'Województwo', options=W.VOIVODESHIPS.items()|list, required=true) }}
+    {{ field('powiat', 'Powiat (tylko Małopolska)', options=powiaty|pairs) }}
+    {{ field('url', 'Link do źródła', type='url', hint='https://… artykuł prasowy albo strona miejsca', plain_hint=true, required=true) }}
+    {{ field('note', 'Co tam robią osoby z ZD?', rows=2, hint='obsługa gości, prace biurowe') }}
+    {% if g.user %}<button type="submit" class="btn btn--primary">Wyślij do Hubu</button>
+    {% else %}<p><a class="btn btn--primary" href="/konto?next=/razem/praca">Wybierz konto, żeby wysłać</a></p>{% endif %}
+  </form>
+</section>
+<p class="meta">{{ mapa.ATTRIBUTION }}. Liczby na mapie to miejsca z naszej listy, nie wszystkie miejsca w Polsce.</p>
+{% endblock %}

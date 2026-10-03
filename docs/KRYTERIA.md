@@ -20,18 +20,24 @@ kreator praw, wzory pism, rodzic-przewodnik łączony przez Hub, opieka wytchnie
 dla Hubu, przyjazne miejsca, wymiana sprzętu, wydarzenia, „Strona dla mnie” w tekście łatwym do czytania (ETR, piktogramy,
 czytanie na głos). Odpowiada na cztery główne problemy rodzin: wizyty, zmęczenie, formalności, dorosłość i „co po nas”.
 
+**Program „Jestem potrzebny”** (`/razem/jestem-potrzebny`): osoba z ZD jako dająca, nie tylko otrzymująca – misje w schronisku,
+hospicjum/DPS i świetlicy, zawsze z opiekunem (rodzic, asystent albo buddy z puli Hubu); Hub dobiera pary regułami
+(powiat, zainteresowania, wiek, wolne miejsca) i potwierdza misje; dzienniczek w łatwym tekście, odznaki, dyplom,
+umiejętności jako most do pracy. **Praca** (`/razem/praca`): mapa Polski i Małopolski z prawdziwymi miejscami ze źródłem,
+statystyki GUS/PFRON, „Poznaj ZD” dla pracodawców i instytucji.
+
 ## Potencjał wdrożeniowy (20%)
 
 - **Prostota utrzymania**: jeden kontener, 3 zależności, brak frameworka JS, SQLite → PostgreSQL bez zmian modelu.
 - **Koszt**: ok. 75 zł miesięcznie technologii z AI, a bez AI pełna funkcjonalność ([KOSZTY](KOSZTY.md)).
 - **Skalowalność i elastyczność**: dowolne obszary i powiaty (konfiguracja w `core/domain.py`), słownik pojęć
   edytowalny bez programowania, import Biblioteki ROPS, API JSON dla bazy grantowej.
-- **Gotowość**: Docker + Coolify, healthcheck, 152 testy automatyczne, audyt dostępności jako skrypt.
+- **Gotowość**: Docker + Coolify, healthcheck, 181 testów automatycznych, audyt dostępności jako skrypt.
 - **Ścieżka do produkcji**: login.gov.pl, RODO, DPIA opisane w [ARCHITEKTURA](ARCHITEKTURA.md) i [DANE](DANE.md).
 
 ## Dostępność i intuicyjność (20%)
 
-- WCAG 2.1 AA: **106/106 widoków bez naruszeń axe** (desktop i 320 px, tryb kontrastu i A+) – [WCAG](WCAG.md).
+- WCAG 2.1 AA: **128/128 widoków bez naruszeń axe** (desktop i 320 px, tryb kontrastu i A+) – [WCAG](WCAG.md).
 - Dla seniorów: 18 px bazowo, Atkinson Hyperlegible, A+, wysoki kontrast, cele ≥ 44 px, działanie bez JS.
 - Prosty język: pole „Co jest trudne? Kogo to dotyczy?” od razu na stronie startowej, z przykładem;
   krótkie formularze z przykładem pod każdym polem; komunikaty błędów słowami.

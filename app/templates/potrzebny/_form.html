@@ -1,0 +1,56 @@
+{% from "_macros.html" import icon %}
+
+{# Lista błędów z kotwicami do pól (jak w pozostałych formularzach HugMe). #}
+{% macro error_summary(errors, prefix='f') -%}
+{% if errors %}
+<div class="error-summary" role="alert" aria-labelledby="err-title">
+  <h2 id="err-title" class="h3">Popraw {{ errors|length }} {{ 'pole' if errors|length == 1 else 'pola' }}</h2>
+  <ul>{% for k, msg in errors.items() %}<li><a href="#{{ prefix }}-{{ k }}">{{ msg }}</a></li>{% endfor %}</ul>
+</div>
+{% endif %}
+{%- endmacro %}
+
+{% macro err(errors, name) -%}
+{% if errors.get(name) %}<p class="error-msg" id="e-{{ name }}"><span aria-hidden="true">⚠</span> {{ errors[name] }}</p>{% endif %}
+{%- endmacro %}
+
+{# Grupa pól wyboru (checkbox/radio) w <fieldset>; items = lista (wartość, etykieta). #}
+{% macro choices(name, legend, items, form, errors, type='checkbox', hint='', required=true) -%}
+<fieldset class="{{ 'field--error' if errors.get(name) }}" id="f-{{ name }}" {% if errors.get(name) %}aria-describedby="e-{{ name }}"{% endif %}>
+  <legend>{{ legend }}{% if not required %} <span class="optional">(nieobowiązkowe)</span>{% endif %}</legend>
+  {% if hint %}<p class="hint hint--plain">{{ hint }}</p>{% endif %}
+  {{ err(errors, name) }}
+  {% set picked = form.getlist(name) if form.getlist is defined else [] %}
+  <div class="choices">
+    {% for val, label in items %}
+    <label class="choice"><input type="{{ type }}" name="{{ name }}" value="{{ val }}" {% if val in picked %}checked{% endif %}> {{ label }}</label>
+    {% endfor %}
+  </div>
+</fieldset>
+{%- endmacro %}
+
+{# Piktogramy jako pola wyboru – „co lubię” (checkbox) albo wybór jednej opcji (radio). #}
+{% macro pictos(name, legend, items, form, errors, type='checkbox', hint='', small=false) -%}
+<fieldset class="{{ 'field--error' if errors.get(name) }}" id="f-{{ name }}" {% if errors.get(name) %}aria-describedby="e-{{ name }}"{% endif %}>
+  <legend>{{ legend }}</legend>
+  {% if hint %}<p class="hint hint--plain">{{ hint }}</p>{% endif %}
+  {{ err(errors, name) }}
+  {% set picked = form.getlist(name) if form.getlist is defined else [] %}
+  <div class="picto-grid {{ 'picto-grid--sm' if small }}">
+    {% for val, (label, ico) in items.items() %}
+    <label class="picto-choice">
+      <input type="{{ type }}" name="{{ name }}" value="{{ val }}" {% if val in picked %}checked{% endif %}>
+      <span class="picto-choice__box">{{ icon(ico) }}<span class="picto-choice__label">{{ label }}</span></span>
+    </label>
+    {% endfor %}
+  </div>
+</fieldset>
+{%- endmacro %}
+
+{% macro days_items(P) -%}{{ caller(P.DAYS.items()|list + P.TIMES.items()|list) }}{%- endmacro %}
+
+{% macro submit_or_login(label) -%}
+{% if g.user %}<button type="submit" class="btn btn--primary btn--large">{{ label }}</button>
+{% else %}<p><a class="btn btn--primary btn--large" href="/konto?next={{ request.path }}">Wybierz konto, żeby wysłać</a>
+  <span class="meta">W demo nie ma haseł – wybierasz rolę.</span></p>{% endif %}
+{%- endmacro %}

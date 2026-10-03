@@ -63,3 +63,11 @@ def ask_json(prompt, max_tokens=900):
     except json.JSONDecodeError:
         return None
     return data if isinstance(data, dict) else None
+
+
+def easy_text(text):
+    """Wersja w tekście łatwym do czytania (ETR): krótkie zdania, bez skrótów. None bez klucza/awarii."""
+    prompt = ("Przepisz poniższy opis na tekst łatwy do czytania dla dorosłej osoby z niepełnosprawnością intelektualną: "
+              "zdania do 8 słów, jedna myśl w zdaniu, czas teraźniejszy, forma „Ty”, bez skrótów i trudnych słów, "
+              "maksymalnie 5 zdań. Odpowiedz samym tekstem.")
+    return ask(prompt + chr(10) + chr(10) + text[:1500], max_tokens=300)

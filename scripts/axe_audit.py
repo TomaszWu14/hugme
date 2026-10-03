@@ -42,12 +42,19 @@ PAGES = [
     (None, "/razem/co-po-nas", None), (None, "/razem/miejsca", None), (None, "/razem/sprzet", None),
     (None, "/razem/wydarzenia", None), (None, "/razem/pisma", None), (None, "/razem/pisma/asystent", None),
     (None, "/razem/moje-sprawy", "18-razem-moje-sprawy"),
-    ("mieszkaniec", "/razem/przewodnik", "19-razem-przewodnik"), ("mieszkaniec", "/razem/wytchnienie", None),
+    (None, "/razem/jestem-potrzebny", "21-potrzebny-start"), (None, "/razem/jestem-potrzebny/latwy", "22-potrzebny-latwy"),
+    (None, "/razem/jestem-potrzebny/zglos", None), (None, "/razem/jestem-potrzebny/oferta", None),
+    (None, "/razem/jestem-potrzebny/buddy", None), (None, "/razem/jestem-potrzebny/zasady", None),
+    (None, "/razem/praca#mapa-pl-h", "23-praca-mapa"), (None, "/razem/praca?woj=malopolskie", None),
+    ("mieszkaniec", "/razem/przewodnik", "19-razem-przewodnik"),
+    ("mieszkaniec", "/razem/jestem-potrzebny/dzienniczek", "24-potrzebny-dzienniczek"),
+    ("mieszkaniec", "/razem/jestem-potrzebny/dzienniczek/dyplom/1", None), ("mieszkaniec", "/razem/wytchnienie", None),
     ("mieszkaniec", "/razem/wydarzenia", None),
     ("admin", "/admin", "12-panel-hubu"), ("admin", "/admin/watki", None), ("admin", "/admin/luki", "13-luki"),
     ("admin", "/admin/trendy", "14-trendy"), ("admin", "/admin/biblioteka", None), ("admin", "/admin/biblioteka/1", None),
     ("admin", "/admin/import", None), ("admin", "/admin/nabory", None), ("admin", "/admin/poczta", None),
     ("admin", "/zgloszenie/1", "04-decyzja-hubu"), ("admin", "/admin/razem", "20-razem-panel"),
+    ("admin", "/admin/potrzebny", "25-potrzebny-panel"),
 ]
 ROLE_INDEX = {"mieszkaniec": 0, "ngo": 1, "gmina": 2, "ekspert": 3, "admin": 4}
 

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% from "razem/_razem.html" import module_nav %}
+{% block title %}Zasady programu – Jestem potrzebny{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<h1>{{ icon('tarcza') }} Zasady programu „Jestem potrzebny”</h1>
+<p class="lead">Sześć zasad, które chronią uczestników, buddy i miejsca. Krótko – bo mają być pamiętane.</p>
+<ol class="steps">
+  {% for title, text in P.RULES %}<li><strong>{{ title }}.</strong> {{ text }}</li>{% endfor %}
+</ol>
+<section aria-labelledby="etr-h" class="card">
+  <h2 id="etr-h" class="h3">Zasady – łatwy tekst</h2>
+  <div class="etr-page">
+    <p class="etr-line">Na misję idziesz z opiekunem.</p>
+    <p class="etr-line">Hub sprawdza każde miejsce.</p>
+    <p class="etr-line">Misja trwa 1 lub 2 godziny.</p>
+    <p class="etr-line">Jeśli coś jest nie tak – mówisz opiekunowi.</p>
+    <p class="etr-line">Możesz przestać, kiedy chcesz.</p>
+  </div>
+</section>
+<p><a href="/razem/jestem-potrzebny">Wróć do programu</a></p>
+{% endblock %}

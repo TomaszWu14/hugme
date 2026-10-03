@@ -173,6 +173,65 @@ CREATE TABLE IF NOT EXISTS event_signups (
     created_at TIMESTAMP NOT NULL,
     PRIMARY KEY (event_id, user_id)
 );
+-- Program „Jestem potrzebny” (uczestnicy i buddy w jednej tabeli, rola w polu role) i mapa pracy.
+CREATE TABLE IF NOT EXISTS volunteers (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    role TEXT NOT NULL CHECK (role IN ('uczestnik','buddy')),
+    alias TEXT NOT NULL,
+    powiat TEXT NOT NULL,
+    age_group TEXT NOT NULL DEFAULT '',
+    interests TEXT NOT NULL DEFAULT '',
+    days TEXT NOT NULL DEFAULT '',
+    companion TEXT NOT NULL DEFAULT '',
+    phone TEXT NOT NULL DEFAULT '',
+    consent INTEGER NOT NULL DEFAULT 0,
+    source TEXT NOT NULL DEFAULT 'rodzic',
+    status TEXT NOT NULL DEFAULT 'nowe' CHECK (status IN ('nowe','polaczone','zamkniete')),
+    created_at TIMESTAMP NOT NULL
+);
+CREATE TABLE IF NOT EXISTS offers (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    source TEXT NOT NULL DEFAULT 'instytucja' CHECK (source IN ('instytucja','rodzic')),
+    institution TEXT NOT NULL,
+    mission_kind TEXT NOT NULL CHECK (mission_kind IN ('psy','hospicjum','dzieci','inne')),
+    title TEXT NOT NULL,
+    body TEXT NOT NULL DEFAULT '',
+    body_easy TEXT NOT NULL DEFAULT '',
+    easy_by_ai INTEGER NOT NULL DEFAULT 0,
+    powiat TEXT NOT NULL,
+    days TEXT NOT NULL DEFAULT '',
+    slots INTEGER NOT NULL DEFAULT 1,
+    for_whom TEXT NOT NULL DEFAULT '',
+    provides TEXT NOT NULL DEFAULT '',
+    requirements TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'nowe' CHECK (status IN ('nowe','zatwierdzone','odrzucone','zamkniete')),
+    created_at TIMESTAMP NOT NULL
+);
+CREATE TABLE IF NOT EXISTS missions (
+    id INTEGER PRIMARY KEY,
+    volunteer_id INTEGER NOT NULL REFERENCES volunteers(id),
+    offer_id INTEGER NOT NULL REFERENCES offers(id),
+    buddy_id INTEGER REFERENCES volunteers(id),
+    done INTEGER NOT NULL DEFAULT 0,
+    status TEXT NOT NULL DEFAULT 'polaczone' CHECK (status IN ('polaczone','zamkniete')),
+    created_at TIMESTAMP NOT NULL
+);
+CREATE TABLE IF NOT EXISTS workplaces (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    kind TEXT NOT NULL CHECK (kind IN ('otwarty','spoleczne','zaz','wtz')),
+    city TEXT NOT NULL,
+    voivodeship TEXT NOT NULL,
+    powiat TEXT,
+    url TEXT NOT NULL,
+    note TEXT NOT NULL DEFAULT '',
+    checked_at TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'nowe' CHECK (status IN ('nowe','zatwierdzone','odrzucone')),
+    user_id INTEGER REFERENCES users(id),
+    created_at TIMESTAMP NOT NULL
+);
 CREATE INDEX IF NOT EXISTS ix_reports_created ON reports(created_at);
 CREATE INDEX IF NOT EXISTS ix_notifications_user ON notifications(user_id, is_read);
 CREATE INDEX IF NOT EXISTS ix_messages_thread ON messages(thread_id);

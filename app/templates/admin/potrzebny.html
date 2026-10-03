@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf, icon %}
+{% block title %}Jestem potrzebny – panel{% endblock %}
+{% block content %}
+<h1>Jestem potrzebny – panel Hubu</h1>
+{% include "admin/_nav.html" %}
+<ul class="stat-row" aria-label="Program w liczbach">
+  <li class="stat"><span class="stat__num">{{ stats.vols }}</span> uczestników</li>
+  <li class="stat"><span class="stat__num">{{ stats.buddies }}</span> buddy</li>
+  <li class="stat"><span class="stat__num">{{ stats.offers }}</span> ofert opublikowanych</li>
+  <li class="stat"><span class="stat__num">{{ stats.done }}</span> misji odbytych</li>
+  <li class="stat"><span class="stat__num">{{ stats.places }}</span> miejsc pracy na mapie</li>
+</ul>
+<p class="lead">Kolejność pracy: połącz pary, sprawdź nowe oferty i miejsca, po misji kliknij „Misja odbyła się”.</p>
+
+<section aria-labelledby="pary-h">
+  <h2 id="pary-h">1. Propozycje par: uczestnik ↔ miejsce <span class="h-count">{{ pairs|length }}</span></h2>
+  <p>Ten sam powiat, rodzaj misji wśród zainteresowań, wiek pasuje, wolne miejsca. Wyżej pary z większą liczbą wspólnych dni.
+    Połącz dopiero po rozmowie telefonicznej z obiema stronami.</p>
+  {% if pairs %}
+  <ul class="list-plain list-plain--cards">
+    {% for v, o, common, buddy in pairs %}
+    <li class="actions">
+      <span><strong>{{ v.alias }}</strong> ({{ P.AGE_GROUPS[v.age_group] }}, {{ v.powiat }}; lubi: {{ v.interests.replace(',', ', ') }};
+        {{ P.COMPANIONS[v.companion] }}{% if v.source == 'latwy-tekst' %}; zgłoszenie własne{% endif %})
+        ↔ <strong>{{ o.institution }}</strong> – {{ o.title }}
+        <span class="badge badge--open">{{ common }} wspólne dni</span>
+        {% if v.companion == 'buddy' %}{% if buddy %}<span class="badge badge--pilot">buddy: {{ buddy.alias }}</span>{% else %}<span class="badge badge--closed">brak buddy w powiecie</span>{% endif %}{% endif %}
+      </span>
+      <form method="post" action="/admin/potrzebny/polacz">{{ csrf() }}
+        <input type="hidden" name="volunteer_id" value="{{ v.id }}"><input type="hidden" name="offer_id" value="{{ o.id }}">
+        {% if buddy %}<input type="hidden" name="buddy_id" value="{{ buddy.id }}">{% endif %}
+        <button type="submit" class="btn btn--small btn--primary">Połącz<span class="sr-only"> {{ v.alias }} z {{ o.institution }}</span></button></form>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}<p>Brak par do połączenia.</p>{% endif %}
+</section>
+
+<section aria-labelledby="sprawdz-h">
+  <h2 id="sprawdz-h">2. Do sprawdzenia <span class="h-count">{{ pending_offers|length + pending_places|length }}</span></h2>
+  {% if pending_offers %}
+  <h3 class="h3">Oferty miejsc i propozycje rodziców</h3>
+  <ul class="list-plain list-plain--cards">
+    {% for o in pending_offers %}
+    <li><strong>{{ o.institution }}</strong> – {{ o.title }} <span class="meta">{{ o.powiat }} · {{ P.MISSION_LABELS[o.mission_kind] }} · {{ 'od instytucji' if o.source == 'instytucja' else 'propozycja rodzica' }} · {{ o.created_at|date }}</span><br>
+      {{ o.body }}{% if o.body_easy %}<br><span class="etr"><strong>Łatwy tekst{% if o.easy_by_ai %} (AI){% endif %}:</strong> {{ o.body_easy }}</span>{% endif %}
+      <div class="actions">
+        <form method="post" action="/admin/potrzebny/oferta/{{ o.id }}/status">{{ csrf() }}<input type="hidden" name="status" value="zatwierdzone">
+          <button type="submit" class="btn btn--small btn--primary">✔ Opublikuj<span class="sr-only"> {{ o.title }}</span></button></form>
+        <form method="post" action="/admin/potrzebny/oferta/{{ o.id }}/status">{{ csrf() }}<input type="hidden" name="status" value="odrzucone">
+          <button type="submit" class="btn btn--small">✖ Odrzuć<span class="sr-only"> {{ o.title }}</span></button></form>
+      </div></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% if pending_places %}
+  <h3 class="h3">Miejsca pracy na mapę</h3>
+  <ul class="list-plain list-plain--cards">
+    {% for w in pending_places %}
+    <li><strong>{{ w.name }}</strong> <span class="meta">{{ W.KIND_LABELS[w.kind] }} · {{ w.city }}, {{ W.VOIVODESHIPS[w.voivodeship] }}{% if w.powiat %} · {{ w.powiat }}{% endif %}</span><br>
+      {{ w.note }} <a href="{{ w.url }}" rel="noopener">Źródło</a>
+      <div class="actions">
+        <form method="post" action="/admin/potrzebny/miejsce/{{ w.id }}/status">{{ csrf() }}<input type="hidden" name="status" value="zatwierdzone">
+          <button type="submit" class="btn btn--small btn--primary">✔ Dodaj na mapę<span class="sr-only"> {{ w.name }}</span></button></form>
+        <form method="post" action="/admin/potrzebny/miejsce/{{ w.id }}/status">{{ csrf() }}<input type="hidden" name="status" value="odrzucone">
+          <button type="submit" class="btn btn--small">✖ Odrzuć<span class="sr-only"> {{ w.name }}</span></button></form>
+      </div></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% if not pending_offers and not pending_places %}<p><span aria-hidden="true">✔</span> Wszystko sprawdzone.</p>{% endif %}
+</section>
+
+<section aria-labelledby="misje-h">
+  <h2 id="misje-h">3. Pary połączone – potwierdzaj misje <span class="h-count">{{ active|length }}</span></h2>
+  <ul class="list-plain list-plain--cards">
+    {% for m in active %}
+    <li><strong>{{ m.alias }}</strong> ({{ m.powiat }}) ↔ <strong>{{ m.institution }}</strong> – {{ m.title }}{% if m.buddy %} · buddy: {{ m.buddy }}{% endif %}
+      <span class="badge badge--open">misji: {{ m.done }}</span>
+      <div class="actions">
+        <form method="post" action="/admin/potrzebny/misja/{{ m.id }}/odbyta">{{ csrf() }}
+          <button type="submit" class="btn btn--small btn--primary">✔ Misja odbyła się<span class="sr-only">: {{ m.alias }}</span></button></form>
+        <form method="post" action="/admin/potrzebny/misja/{{ m.id }}/zamknij">{{ csrf() }}
+          <button type="submit" class="btn btn--small">■ Zamknij parę<span class="sr-only">: {{ m.alias }}</span></button></form>
+      </div></li>
+    {% else %}<li>Brak połączonych par.</li>{% endfor %}
+  </ul>
+</section>
+
+<section aria-labelledby="liczby-h">
+  <h2 id="liczby-h">4. Misje wg powiatu i rodzaju</h2>
+  <div class="table-wrap" tabindex="0" role="region" aria-label="Misje wg powiatu – na małym ekranie przewiń w bok">
+  <table><caption>Odbyte misje</caption>
+    <thead><tr><th scope="col">Powiat</th><th scope="col">Rodzaj</th><th scope="col">Misji</th></tr></thead>
+    <tbody>{% for r in by_powiat %}<tr><th scope="row">{{ r.powiat }}</th><td>{{ P.MISSION_LABELS[r.mission_kind] }}</td><td>{{ r.n }}</td></tr>
+    {% else %}<tr><td colspan="3">Brak odbytych misji.</td></tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+{% endblock %}

@@ -8,7 +8,8 @@ Utrzymanie sprowadza się do jednego kontenera i jednego pliku bazy (docelowo Po
 
 ```
 przeglądarka ──HTTP──► gunicorn ─► Flask (app/)
-                                     │  widoki: public, wiedza, kreator, komunikacja, admin, posrednik, api
+                                     │  widoki: public, wiedza, kreator, komunikacja, admin, posrednik, api,
+                                     │          razem, potrzebny, praca, admin_potrzebny
                                      ▼
                                    core/
                                      ├─ privacy.py  maskowanie danych osobowych (przed DB i AI)
@@ -20,6 +21,9 @@ przeglądarka ──HTTP──► gunicorn ─► Flask (app/)
                                      └─ domain.py   obszary, powiaty, role, statusy
                                    data/
                                      ├─ seed.py, seed_data.py  dane przykładowe (fikcyjne)
+                                     ├─ razem.py, potrzebny.py  treści modułu Razem z ZD i programu Jestem potrzebny
+                                     ├─ praca.py    prawdziwe miejsca pracy osób z ZD (ze źródłem) + statystyki
+                                     ├─ mapa.py     kontury województw i powiatów jako ścieżki SVG (scripts/mapa_svg.py)
                                      └─ slownik.py  słownik pojęć – edytowalny bez programowania
 ```
 

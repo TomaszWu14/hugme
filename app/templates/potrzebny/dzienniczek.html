@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% from "razem/_razem.html" import module_nav %}
+{% block title %}Mój dzienniczek – Jestem potrzebny{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<div class="etr-page">
+  <h1>{{ icon('odznaka') }} Mój dzienniczek</h1>
+  {% if not entries %}
+  <p class="etr-line">Nie masz jeszcze zgłoszenia.</p>
+  <p><a class="btn btn--primary" href="/razem/jestem-potrzebny/latwy">Ja chcę pomagać</a> <a class="btn" href="/razem/jestem-potrzebny/zglos">Zgłaszam uczestnika</a></p>
+  {% endif %}
+  {% for e in entries %}
+  <section class="card" aria-labelledby="dz-{{ e.v.id }}">
+    <h2 id="dz-{{ e.v.id }}">{{ e.v.alias }}</h2>
+    {% if e.v.status == 'nowe' %}
+    <p class="etr-line">Hub szuka dla Ciebie miejsca.</p>
+    <p class="etr-line">Ktoś z Hubu zadzwoni.</p>
+    {% endif %}
+    {% if e.missions %}
+    <h3 class="h3">Moje misje</h3>
+    <ul class="list-plain">
+      {% for m in e.missions %}
+      <li>{{ icon(P.MISSION_KINDS[m.mission_kind][1]) }} <strong>{{ m.institution }}</strong> – {{ m.title }}.
+        <span class="etr-line">{% if m.done %}Misje: {{ m.done }}.{% else %}Pierwsza misja już wkrótce.{% endif %}
+        {% if m.buddy %}Idzie ze mną {{ m.buddy }}.{% endif %}{% if m.status == 'zamkniete' %} (zakończone){% endif %}</span>
+        {% if m.body_easy %}<span class="etr"><strong>Co robię:</strong> {{ m.body_easy }}</span>{% endif %}</li>
+      {% endfor %}
+    </ul>
+    <p class="etr-line"><strong>Razem: {{ e.total }} {{ 'misja' if e.total == 1 else ('misje' if e.total in (2, 3, 4) else 'misji') }}.</strong></p>
+    {% endif %}
+    <h3 class="h3">Moje odznaki</h3>
+    {% if e.badges %}
+    <ul class="badges">
+      {% for slug, name, text in e.badges %}
+      <li class="badge-card">{{ icon('odznaka') }}<span>{{ name }}</span><span class="etr-line badge-card__text">{{ text }}</span></li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="etr-line">Pierwszą odznakę dostaniesz po pierwszej misji.</p>
+    <p class="meta">Odznaki: {% for lim, slug, name, _ in P.BADGES %}{{ name }} ({{ lim }}){{ ', ' if not loop.last }}{% endfor %}; po 3 misjach jednego rodzaju – odznaka tematyczna.</p>
+    {% endif %}
+    {% if e.skills %}
+    <h3 class="h3">Umiem</h3>
+    <ul class="checklist">{% for s in e.skills %}<li class="checked">{{ s }}</li>{% endfor %}</ul>
+    <p class="etr-line">To są umiejętności do pracy.</p>
+    <p><a class="btn btn--primary" href="/razem/praca">{{ icon('mapa') }} Zobacz, gdzie pracują osoby z zespołem Downa</a></p>
+    {% elif e.total %}
+    <p class="meta">Po {{ P.SKILLS_FROM }} misjach pokażemy tu umiejętności, które zdobywasz – przydadzą się przy szukaniu pracy.</p>
+    {% endif %}
+    {% if e.total %}<p><a class="btn" href="/razem/jestem-potrzebny/dzienniczek/dyplom/{{ e.v.id }}">Dyplom do wydruku</a></p>{% endif %}
+  </section>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -8,7 +8,7 @@ a nie poprawką na końcu.
 `python scripts/axe_audit.py`: axe-core 4.10 (reguły WCAG 2.0/2.1 A i AA) przez Playwright, na **51 widokach**
 (wszystkie ekrany i role) × **desktop 1280 px i telefon 320 px**, plus tryb wysokiego kontrastu i A+.
 
-**106/106 widoków bez naruszeń, bez przewijania w poziomie na 320 px.** Szczegóły: [WCAG_RAPORT.md](WCAG_RAPORT.md).
+**128/128 widoków bez naruszeń, bez przewijania w poziomie na 320 px.** Szczegóły: [WCAG_RAPORT.md](WCAG_RAPORT.md).
 
 Audyt znalazł i pomógł naprawić: tabele przewijane w poziomie niedostępne z klawiatury (dodane `role="region"`
 i `tabindex="0"`), tekst dla czytników ekranu rozpychający stronę na telefonie, listę ról za szeroką w trybie A+.

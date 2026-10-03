@@ -40,7 +40,7 @@ def create_app(test_config=None):
     _template_globals(app)
 
     from app import auth
-    from app.views import admin, api, komunikacja, kreator, posrednik, public, razem, wiedza
+    from app.views import admin, admin_potrzebny, api, komunikacja, kreator, posrednik, potrzebny, praca, public, razem, wiedza
     app.register_blueprint(auth.bp)
     app.register_blueprint(public.bp)
     app.register_blueprint(komunikacja.bp)
@@ -50,6 +50,9 @@ def create_app(test_config=None):
     app.register_blueprint(posrednik.bp)
     app.register_blueprint(api.bp)
     app.register_blueprint(razem.bp)
+    app.register_blueprint(potrzebny.bp)
+    app.register_blueprint(praca.bp)
+    app.register_blueprint(admin_potrzebny.bp)
     auth.init(app)
 
     for code in ERRORS:

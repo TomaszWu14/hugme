@@ -36,6 +36,8 @@ oraz współpraca międzysektorowa.
 | **Panel administratora (ROPS)** | `/admin`: skrzynka, wątki bez odpowiedzi, statusy, edycja i import Biblioteki, nabory, luki, poczta, eksport CSV | `app/views/admin.py` |
 | **Pośrednik innowacji** (AI) | `/posrednik` → karta usługi (opis, odbiorcy, zespół, kroki, partnerzy, koszty bez kwot, finansowanie, mierniki, ryzyka) | `app/views/posrednik.py` |
 | **Razem z ZD** (pogłębienie pilotażu) | `/razem`: plan wg 6 etapów życia, wizyty (tylko w przeglądarce), prawa, wzory pism, rodzic-przewodnik, wytchnienie, Dzień Specjalistów, przyjazne miejsca, sprzęt, wydarzenia, „Strona dla mnie” w łatwym tekście; panel `/admin/razem` | `app/views/razem.py`, `data/razem.py` |
+| **„Jestem potrzebny”** (program pilotażowy) | `/razem/jestem-potrzebny`: osoby z ZD pomagają innym (psy ze schroniska, hospicjum/DPS, młodsze dzieci); zgłoszenie rodzica albo samej osoby w łatwym tekście, oferty miejsc, buddy, zasady; Hub łączy pary i potwierdza misje, dzienniczek z odznakami i dyplomem; panel `/admin/potrzebny` | `app/views/potrzebny.py`, `app/views/admin_potrzebny.py`, `data/potrzebny.py` |
+| **Praca** (mapa + „Poznaj ZD”) | `/razem/praca`: prawdziwe miejsca, w których pracują osoby z ZD (każde ze źródłem), mapa Polski wg województw i Małopolski wg powiatów (własny SVG, bez JS), statystyki ze źródłem, oczekiwania osób z ZD, mity i fakty, jak rozmawiać; zgłaszanie miejsc, Hub zatwierdza | `app/views/praca.py`, `data/praca.py`, `data/mapa.py`, `scripts/mapa_svg.py` |
 | API dla integracji | `POST /api/v1/dopasuj`, `GET /api/v1/innowacje` | `app/views/api.py` |
 
 Role demo, przełączane bez haseł w pasku „Tryb demo”: mieszkanka-rodzic, organizacja pozarządowa, gmina,
@@ -51,7 +53,7 @@ ekspert, koordynatorka ROPS. Docelowe logowanie przez **login.gov.pl** albo link
   Treści od AI są zawsze oznaczone w interfejsie.
 - **Prywatność**: PESEL, telefon, e-mail, adres, kod pocztowy, imię po „syn/córka” i nazwisko po „dr” są maskowane
   **przed** zapisem i przed AI. Wszystkie dane są fikcyjne i oznaczone jako „PRZYKŁAD”.
-- **Dostępność (WCAG 2.1 AA)**: audyt axe-core 106/106 widoków bez naruszeń (desktop i 320 px),
+- **Dostępność (WCAG 2.1 AA)**: audyt axe-core 128/128 widoków bez naruszeń (desktop i 320 px),
   przyciski A+ i wysokiego kontrastu działają bez JS, cele dotykowe mają co najmniej 44 px.
 - **Bezpieczeństwo**: CSRF, CSP bez zewnętrznych skryptów i bez stylów inline, ciasteczka HttpOnly/SameSite,
   walidacja i role sprawdzane na serwerze.
@@ -70,7 +72,7 @@ Reset danych: usuń plik bazy. AI włączysz zmienną `ANTHROPIC_API_KEY` (przyk
 **Testy i audyt:**
 
 ```bash
-pytest                                   # 152 testy: ścieżki, role, CSRF, prywatność, trafność
+pytest                                   # 181 testów: ścieżki, role, CSRF, prywatność, trafność
 python -m playwright install chromium
 python scripts/axe_audit.py --zrzuty     # raport docs/WCAG_RAPORT.md + docs/zrzuty/
 ```
@@ -100,7 +102,10 @@ repozytorium (build z `Dockerfile`), ustawić `SECRET_KEY` i opcjonalnie `ANTHRO
 7. **Admin, Trendy i Luki.** Mapa powiat × obszar, porównanie miesiąc do miesiąca, luki jako kandydaci na konkursy,
    eksport CSV.
 8. **Razem z ZD.** Mieszkanka: `/razem` → etap „Przedszkole” → plan; „Rodzic-przewodnik” → zgłoszenie. Admin: `/admin/razem` → „Połącz” parę z powiatu wadowickiego. Dorosła osoba z ZD: „Strona dla mnie” → obrazek „Praca” + jedno zdanie.
-9. **Dostępność.** Włącz **A+** i **Wysoki kontrast**, przejdź stronę klawiszem Tab od linku „Przejdź do treści”.
+9. **Jestem potrzebny.** Gość: `/razem/jestem-potrzebny/latwy` → obrazek „psy” → „Wyślij” (wybór konta mieszkanki).
+   Admin: `/admin/potrzebny` → „Połącz” Tomka ze schroniskiem w Wadowicach → „Misja odbyła się”. Mieszkanka:
+   `/razem/jestem-potrzebny/dzienniczek` → odznaki i dyplom. `/razem/praca` → klik „małopolskie” na mapie.
+10. **Dostępność.** Włącz **A+** i **Wysoki kontrast**, przejdź stronę klawiszem Tab od linku „Przejdź do treści”.
 
 ## Dokumentacja
 

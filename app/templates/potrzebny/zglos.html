@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, field, csrf %}
+{% from "razem/_razem.html" import module_nav %}
+{% from "potrzebny/_form.html" import error_summary, err, choices, pictos, submit_or_login %}
+{% block title %}Zgłoszenie uczestnika – Jestem potrzebny{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<h1>{{ icon('przyjaciele') }} Zgłaszam uczestnika</h1>
+<p class="lead">Dla rodziców i opiekunów. Nie pytamy o diagnozę ani datę urodzenia – wystarczy, co lubi i kiedy może.
+  Dorosła osoba z ZD może zgłosić się sama na <a href="/razem/jestem-potrzebny/latwy">stronie w łatwym tekście</a>.</p>
+<form method="post" action="/razem/jestem-potrzebny/zglos" class="card" novalidate>
+  {{ csrf() }}
+  {{ error_summary(errors) }}
+  {{ field('alias', 'Pseudonim uczestnika', hint='Ania – nie musi to być prawdziwe imię', value=form.get('alias', ''), error=errors.get('alias'), required=true) }}
+  {{ field('powiat', 'Powiat', options=powiaty|pairs, value=form.get('powiat', ''), error=errors.get('powiat'), required=true) }}
+  {{ choices('age_group', 'Kim jest uczestnik?', P.AGE_GROUPS.items()|list, form, errors, type='radio') }}
+  {{ pictos('interests', 'Co lubi? Zaznacz wszystko, co pasuje.', P.INTERESTS, form, errors, small=true,
+            hint='Na tej podstawie Hub dobierze rodzaj misji: psy → schronisko, starsze osoby → hospicjum lub DPS, dzieci → świetlica.') }}
+  {{ choices('days', 'Kiedy możecie?', P.DAYS.items()|list + P.TIMES.items()|list, form, errors) }}
+  {{ choices('companion', 'Kto będzie towarzyszyć w misji?', P.COMPANIONS.items()|list, form, errors, type='radio',
+             hint='Nikt nie idzie sam. Jeśli nie możesz, Hub dobierze wolontariusza-buddy z Waszej okolicy.') }}
+  {{ field('phone', 'Telefon do opiekuna', type='text', hint='600 000 000 – widzi go tylko koordynatorka Hubu', value=form.get('phone', ''), error=errors.get('phone')) }}
+  <div class="field {{ 'field--error' if errors.get('consent') }}">
+    {{ err(errors, 'consent') }}
+    <label class="choice" for="f-consent"><input type="checkbox" id="f-consent" name="consent" value="1" {% if form.get('consent') %}checked{% endif %} {% if errors.get('consent') %}aria-describedby="e-consent"{% endif %}>
+      Jestem opiekunem uczestnika albo mam zgodę opiekuna. Znam <a href="/razem/jestem-potrzebny/zasady">zasady programu</a>.</label>
+  </div>
+  {{ submit_or_login('Wyślij zgłoszenie') }}
+</form>
+{% endblock %}

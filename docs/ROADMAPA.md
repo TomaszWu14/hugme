@@ -12,6 +12,8 @@
 - Logowanie przez **login.gov.pl** i linkiem e-mail.
 - PostgreSQL, kopie zapasowe, monitoring, wysyłka e-maili (SMTP) z kolejki.
 - Pilotaż w 2–3 powiatach w obszarze rodzin osób z zespołem Downa, z koordynatorką Hubu.
+- Program „Jestem potrzebny”: umowy ze schroniskiem, hospicjum i świetlicą w jednym powiecie, ubezpieczenie NNW,
+  10 pierwszych par; mapa pracy uzupełniana z organizacjami rodziców (cel: 50 miejsc ze źródłem).
 - Mierniki: czas pierwszej odpowiedzi Hubu (cel ≤ 3 dni robocze), odsetek dopasowań „pomocnych”
   (punkt startowy z danych przykładowych: 60%, cel ≥ 75%), liczba połączeń „problem → innowacja”,
   liczba luk zamienionych na tematy naborów.

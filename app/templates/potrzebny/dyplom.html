@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Dyplom – Jestem potrzebny{% endblock %}
+{% block content %}
+<p class="no-print"><a href="/razem/jestem-potrzebny/dzienniczek">← Wróć do dzienniczka</a> · Wydrukuj tę stronę (Ctrl+P). Wersja demonstracyjna – PRZYKŁAD.</p>
+<article class="card diploma" aria-labelledby="dyp-h">
+  <p class="eyebrow">Hub Innowacji Społecznych · program „Jestem potrzebny”</p>
+  <h1 id="dyp-h">Dyplom</h1>
+  <p class="diploma__for">dla <strong>{{ e.v.alias }}</strong></p>
+  <p class="lead">za {{ e.total }} {{ 'misję' if e.total == 1 else ('misje' if e.total in (2, 3, 4) else 'misji') }} pomagania innym:
+    {% for k, n in e.by_kind.items() if n %}{{ P.MISSION_LABELS[k].lower() }} ({{ n }}){{ ', ' if not loop.last }}{% endfor %}.</p>
+  {% if e.badges %}
+  <ul class="badges">{% for slug, name, text in e.badges %}<li class="badge-card">{{ icon('odznaka') }}<span>{{ name }}</span></li>{% endfor %}</ul>
+  {% endif %}
+  {% if e.skills %}<p><strong>Umiejętności:</strong> {{ e.skills|join(', ') }}.</p>{% endif %}
+  <p class="meta">Potwierdza koordynatorka Hubu Innowacji Społecznych ROPS w Krakowie · {{ e.v.powiat }} · {{ e.missions[-1].created_at|date if e.missions else '' }}</p>
+</article>
+{% endblock %}

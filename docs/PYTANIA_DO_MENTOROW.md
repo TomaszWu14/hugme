@@ -37,3 +37,9 @@
     listę „o co zapytać lekarza” wg etapu, kreator praw i wzory pism?
 16. Czy osoby z ZD mogą przetestować „Stronę dla mnie” (tekst łatwy do czytania wymaga testerów z grupy docelowej)?
 17. Kto w ROPS lub NGO może koordynować sieć rodziców-przewodników?
+18. Program „Jestem potrzebny”: kto ubezpiecza uczestników (NNW) – organizator (ROPS), gmina czy miejsce misji?
+    Jaka forma zgody opiekuna wystarczy (checkbox w aplikacji, podpis przy pierwszej misji)?
+19. Czy schroniska (Kraków, Wadowice), hospicja i DPS w Małopolsce są gotowe przyjąć osoby z ZD jako wolontariuszy –
+    i jakie warunki stawiają (szkolenie, opiekun, limit osób)?
+20. Mapa pracy: czy Urząd Marszałkowski potwierdzi i uzupełni listę miejsc zatrudniających osoby z ZD (ZAZ, firmy,
+    urzędy)? Czy można publikować nazwy pracodawców na podstawie artykułów prasowych?

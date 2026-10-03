@@ -83,6 +83,14 @@ def panel():
         for r in db.query("SELECT * FROM family_requests WHERE status = 'nowe' ORDER BY created_at DESC"):
             items.append(("razem", r["created_at"], f"{REQUEST_KINDS[r['kind']]} – {r['alias']} ({r['powiat']})",
                           "/admin/razem", r))
+    if kind in ("", "potrzebny"):
+        for v in db.query("SELECT * FROM volunteers WHERE status = 'nowe' ORDER BY created_at DESC"):
+            items.append(("potrzebny", v["created_at"],
+                          f"{'Buddy' if v['role'] == 'buddy' else 'Uczestnik'} – {v['alias']} ({v['powiat']})", "/admin/potrzebny", v))
+        for o in db.query("SELECT * FROM offers WHERE status = 'nowe' ORDER BY created_at DESC"):
+            items.append(("potrzebny", o["created_at"], f"Oferta – {o['institution']}: {o['title']}", "/admin/potrzebny", o))
+        for w in db.query("SELECT * FROM workplaces WHERE status = 'nowe' ORDER BY created_at DESC"):
+            items.append(("potrzebny", w["created_at"], f"Miejsce pracy – {w['name']} ({w['city']})", "/admin/potrzebny", w))
     items.sort(key=lambda x: x[1], reverse=True)
     rate, rated = helpful_rate()
     stats = {

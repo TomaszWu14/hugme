@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, example %}
+{% from "razem/_razem.html" import module_nav %}
+{% block title %}Jestem potrzebny – Razem z ZD{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<header class="card card--thread thread--rodziny-zd razem-hero">
+  <p class="eyebrow">Program pilotażowy</p>
+  <h1>{{ icon('serce') }} Jestem potrzebny / potrzebna</h1>
+  <p class="lead">Osoby z zespołem Downa – dzieci, młodzież i dorośli – pomagają innym: wyprowadzają psy ze schroniska,
+    odwiedzają osoby w hospicjach, czytają bajki młodszym dzieciom. Zawsze z opiekunem. Hub dobiera miejsce i potwierdza
+    każdą misję, a uczestnik zbiera odznaki.</p>
+  <p class="etr"><strong>Łatwy tekst:</strong> Możesz pomagać. Psom, starszym osobom, dzieciom. Idzie z Tobą opiekun. Hub Ci pomoże.</p>
+</header>
+
+<ul class="stat-row" aria-label="Program w liczbach">
+  <li class="stat"><span class="stat__num">{{ stats.vols }}</span> uczestników</li>
+  <li class="stat"><span class="stat__num">{{ stats.offers }}</span> miejsc, które czekają na pomoc</li>
+  <li class="stat"><span class="stat__num">{{ stats.done }}</span> odbytych misji</li>
+</ul>
+
+<section aria-labelledby="wejscia-h">
+  <h2 id="wejscia-h">Chcę pomagać</h2>
+  <ul class="grid grid--needs">
+    <li class="card card--raised"><h3><a href="/razem/jestem-potrzebny/latwy">{{ icon('serce') }} Ja chcę pomagać</a></h3>
+      <p class="etr-line">Dla dorosłych osób z zespołem Downa. Krótkie zdania i obrazki.</p></li>
+    <li class="card"><h3><a href="/razem/jestem-potrzebny/zglos">{{ icon('przyjaciele') }} Zgłaszam dziecko lub podopiecznego</a></h3>
+      <p>Dla rodziców i opiekunów: zainteresowania, kiedy możecie, kto będzie towarzyszyć.</p></li>
+    <li class="card"><h3><a href="/razem/jestem-potrzebny/oferta">{{ icon('dom') }} Nasze miejsce potrzebuje pomocy</a></h3>
+      <p>Schronisko, hospicjum, DPS, świetlica, biblioteka – wystaw ofertę, Hub ją sprawdzi.</p></li>
+    <li class="card"><h3><a href="/razem/jestem-potrzebny/buddy">{{ icon('praca') }} Chcę być buddy</a></h3>
+      <p>Student, sąsiad, senior – towarzyszysz w misji, gdy rodzic nie może.</p></li>
+  </ul>
+  <p class="meta"><a href="/razem/jestem-potrzebny/zasady">Zasady programu</a> · <a href="/razem/jestem-potrzebny/oferta?jako=rodzic">Znam miejsce, które mogłoby przyjąć pomoc</a>
+    {% if mine %}· <a href="/razem/jestem-potrzebny/dzienniczek">Mój dzienniczek i odznaki</a>{% endif %}</p>
+</section>
+
+<section aria-labelledby="misje-h">
+  <h2 id="misje-h">Rodzaje misji</h2>
+  <ul class="grid stage-grid mission-kinds">
+    {% for slug, (label, ico, _) in P.MISSION_KINDS.items() %}
+    <li class="stage-btn stage-btn--static">{{ icon(ico) }}<span class="stage-btn__name">{{ label }}</span></li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section aria-labelledby="oferty-h">
+  <h2 id="oferty-h">Miejsca, które czekają na pomoc{% if powiat %} – powiat {{ powiat }}{% endif %}</h2>
+  <form method="get" action="/razem/jestem-potrzebny" class="actions" aria-label="Filtr powiatu">
+    <label for="f-powiat-filtr">Powiat:</label>
+    <select id="f-powiat-filtr" name="powiat" class="select-inline">
+      <option value="">wszystkie</option>
+      {% for p in powiaty %}<option value="{{ p }}" {% if p == powiat %}selected{% endif %}>{{ p }}</option>{% endfor %}
+    </select>
+    <button type="submit" class="btn btn--small">Pokaż</button>
+  </form>
+  {% if offers %}
+  <ul class="grid grid--two">
+    {% for o in offers %}
+    <li class="card card--thread thread--rodziny-zd offer">
+      <h3>{{ icon(P.MISSION_KINDS[o.mission_kind][1]) }} {{ o.title }}</h3>
+      <p class="meta"><span>{{ o.institution }}</span> <span>powiat {{ o.powiat }}</span> {{ example() }}</p>
+      <p>{{ o.body }}</p>
+      {% if o.body_easy %}<p class="etr"><strong>Łatwy tekst:</strong> {{ o.body_easy }}</p>{% endif %}
+      <p class="meta">
+        <span>Dla kogo: {% for a in o.for_whom.split(',') if a %}{{ P.AGE_GROUPS[a] }}{{ ', ' if not loop.last }}{% endfor %}</span>
+        <span>Kiedy: {% for d in o.days.split(',') if d %}{{ P.DAYS.get(d) or P.TIMES.get(d) }}{{ ', ' if not loop.last }}{% endfor %}</span>
+        <span>Wolne miejsca: {{ o.free }} z {{ o.slots }}</span>
+      </p>
+      {% if o.provides %}<p class="meta"><span>Miejsce zapewnia: {% for p in o.provides.split(',') if p %}{{ P.PROVIDES[p] }}{{ ', ' if not loop.last }}{% endfor %}</span></p>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}<p class="notice">Brak ofert{% if powiat %} w tym powiecie{% endif %}. Zgłoś się mimo to – Hub szuka miejsc także poza listą.</p>{% endif %}
+</section>
+
+<section aria-labelledby="jak-h">
+  <h2 id="jak-h">Jak to działa</h2>
+  <ol class="steps">
+    <li><strong>Zgłoszenie</strong> – rodzic albo sama osoba z ZD: co lubię, kiedy mogę, kto idzie ze mną.</li>
+    <li><strong>Hub dobiera miejsce</strong> – ten sam powiat, pasujące zainteresowania i wiek; dzwoni do obu stron.</li>
+    <li><strong>Misja i odznaka</strong> – po każdej misji Hub potwierdza ją w dzienniczku; po 5 misjach widać umiejętności.</li>
+  </ol>
+</section>
+{% endblock %}

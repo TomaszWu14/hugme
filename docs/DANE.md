@@ -13,6 +13,8 @@ i oznaczone w interfejsie plakietką **PRZYKŁAD**:
 | Nabory | 3 | 2 otwarte, 1 zamknięty |
 | Użytkownicy | 11 | 5 kont demo i 6 ekspertów do dopasowań |
 | Pomysły | 2 | z kanwą i wątkiem pytań do ekspertów |
+| Jestem potrzebny | 7 ofert, 8 uczestników/buddy, 2 pary | fikcyjne schroniska, hospicjum, DPS, świetlica, przedszkole, biblioteka (PRZYKŁAD); pseudonimy, bez diagnozy |
+| Praca (mapa) | 17 miejsc | **PRAWDZIWE** miejsca ze źródłem (artykuł prasowy, strona, wykaz ZAZ BIP Małopolska) – żadnych danych osobowych pracowników |
 | Razem z ZD | 24 prośby + 4 wydarzenia | 7 miejsc, 4 ogłoszenia sprzętu, 5 przewodników/rodzin, wytchnienie, 6 głosów na Dzień Specjalistów – pseudonimy, opisy bez danych dziecka |
 
 Źródło: `data/seed_data.py`. Ładowanie: automatycznie do pustej bazy (`data/seed.py`).
@@ -73,6 +75,17 @@ zajmuje jeden słownik (`IMPORT_COLUMNS` w `app/views/admin.py`).
 - **Pisma** wypełniane formularzem POST i drukowane – niczego nie zapisujemy; do AI trafia tylko zamaskowane uzasadnienie.
 - **Prośby** (przewodnik, wytchnienie, miejsca, sprzęt) pod pseudonimem, maskowane; publiczne dopiero po zatwierdzeniu przez Hub;
   kontakt między rodzinami wyłącznie przez koordynatora.
+
+## Program „Jestem potrzebny” i mapa pracy – zasady danych
+
+- **Uczestnik**: pseudonim, powiat, grupa wieku (bez daty urodzenia), zainteresowania, dostępność, kto towarzyszy;
+  telefon widzi tylko Hub; zgoda opiekuna jako checkbox. Zero diagnoz – nie prosimy nawet o potwierdzenie ZD.
+- **Misje** liczone na serwerze pod pseudonimem (Hub klika „misja odbyła się”) – to podstawa odznak i dyplomu.
+- **Mapa pracy**: tylko miejsca publicznie opisane w prasie, na stronach organizacji lub w wykazach urzędowych;
+  każdy wpis ma `url` źródła i datę sprawdzenia. Propozycje użytkowników są publikowane po sprawdzeniu źródła przez Hub.
+  Statystyki (liczba osób z ZD, wskaźnik zatrudnienia BAEL, liczba ZAZ/WTZ) mają linki do GUS/PFRON/gov.pl.
+- **Kontury map** z otwartego repozytorium polska-geojson (OSM/GUGiK) – przeliczone raz skryptem `scripts/mapa_svg.py`
+  do `data/mapa.py`; w runtime zero zapytań zewnętrznych (CSP bez wyjątków).
 
 ## Ograniczenia maskowania
 

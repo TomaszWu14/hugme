@@ -4,6 +4,8 @@ import random
 from datetime import datetime, timedelta, timezone
 
 from core.match import Index, innovation_text
+from data import potrzebny as PO
+from data import praca as PR
 from data import seed_data as D
 
 
@@ -103,6 +105,8 @@ def run(con):
         con.execute("INSERT INTO events (title, powiat, date, place, body, created_at) VALUES (?,?,?,?,?,?)",
                     (title, powiat, date, place, body, ago(10)))
 
+    seed_potrzebny(con, uid)
+
     for ui, body, link, days in [
         (0, "Hub odpowiedział na Twoje zgłoszenie „informacja o terapiach i turnusach”.", f"/zgloszenie/{report_ids[1]}", 8),
         (0, "Nowa innowacja w obszarze, który obserwujesz: „Mapa Wsparcia Rodzin”.", f"/biblioteka/{inno['Mapa Wsparcia Rodzin']}", 30),
@@ -112,3 +116,28 @@ def run(con):
         con.execute("INSERT INTO notifications (user_id, body, link, created_at) VALUES (?,?,?,?)",
                     (uid[ui], body, link, ago(days)))
     con.commit()
+
+
+def seed_potrzebny(con, uid):
+    """Program „Jestem potrzebny” (FIKCYJNE) i mapa pracy (PRAWDZIWE miejsca ze źródłem)."""
+    offer_ids = []
+    for ui, source, inst, kind, title, body, easy, powiat, days, slots, for_whom, provides, req, status, d in PO.OFFERS:
+        cur = con.execute(
+            "INSERT INTO offers (user_id, source, institution, mission_kind, title, body, body_easy, powiat, days, slots, "
+            "for_whom, provides, requirements, status, created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (uid[ui], source, inst, kind, title, body, easy, powiat, days, slots, for_whom, provides, req, status, ago(d)))
+        offer_ids.append(cur.lastrowid)
+    vol_ids = []
+    for ui, role, alias, powiat, age, interests, days, companion, source, status, d in PO.VOLUNTEERS:
+        cur = con.execute(
+            "INSERT INTO volunteers (user_id, role, alias, powiat, age_group, interests, days, companion, phone, consent, "
+            "source, status, created_at) VALUES (?,?,?,?,?,?,?,?,'',1,?,?,?)",
+            (uid[ui], role, alias, powiat, age, interests, days, companion, source, status, ago(d)))
+        vol_ids.append(cur.lastrowid)
+    for vi, oi, bi, done, d in PO.MISSIONS:
+        con.execute("INSERT INTO missions (volunteer_id, offer_id, buddy_id, done, created_at) VALUES (?,?,?,?,?)",
+                    (vol_ids[vi], offer_ids[oi], vol_ids[bi] if bi is not None else None, done, ago(d)))
+    for name, kind, city, woj, powiat, url, note, checked in PR.WORKPLACES:
+        con.execute("INSERT INTO workplaces (name, kind, city, voivodeship, powiat, url, note, checked_at, status, "
+                    "created_at) VALUES (?,?,?,?,?,?,?,?, 'zatwierdzone', ?)",
+                    (name, kind, city, woj, powiat, url, note, checked, ago(1)))

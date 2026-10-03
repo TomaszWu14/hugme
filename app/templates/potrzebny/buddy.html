@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, field, csrf %}
+{% from "razem/_razem.html" import module_nav %}
+{% from "potrzebny/_form.html" import error_summary, err, choices, submit_or_login %}
+{% block title %}Chcę być buddy – Jestem potrzebny{% endblock %}
+{% block content %}
+{{ module_nav() }}
+<h1>{{ icon('praca') }} Chcę być buddy</h1>
+<p class="lead">Buddy towarzyszy uczestnikowi w misji, gdy rodzic nie może: idzie razem na spacer z psem albo do DPS.
+  Studenci, sąsiedzi, emeryci, harcerze. Hub dzwoni, zanim dobierze Cię do pary.</p>
+<form method="post" action="/razem/jestem-potrzebny/buddy" class="card" novalidate>
+  {{ csrf() }}
+  {{ error_summary(errors) }}
+  {{ field('alias', 'Jak mamy Cię przedstawiać?', hint='Kasia – studentka', value=form.get('alias', ''), error=errors.get('alias'), required=true) }}
+  {{ field('powiat', 'Powiat', options=powiaty|pairs, value=form.get('powiat', ''), error=errors.get('powiat'), required=true) }}
+  {{ choices('days', 'Kiedy możesz?', P.DAYS.items()|list + P.TIMES.items()|list, form, errors) }}
+  {{ field('phone', 'Telefon', hint='600 000 000 – widzi go tylko koordynatorka Hubu', value=form.get('phone', ''), error=errors.get('phone')) }}
+  <div class="field {{ 'field--error' if errors.get('consent') }}">
+    {{ err(errors, 'consent') }}
+    <label class="choice" for="f-consent"><input type="checkbox" id="f-consent" name="consent" value="1" {% if form.get('consent') %}checked{% endif %}>
+      Mam ukończone 18 lat i znam <a href="/razem/jestem-potrzebny/zasady">zasady programu</a>.</label>
+  </div>
+  {{ submit_or_login('Zgłaszam się') }}
+</form>
+{% endblock %}

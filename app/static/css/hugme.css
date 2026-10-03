@@ -398,3 +398,54 @@ code { background: var(--sand); padding: 0 .25rem; border-radius: 4px; }
   .lead { font-size: 1.05rem; }
   .btn--large { font-size: 1.05rem; padding: .7rem 1.3rem; }
 }
+
+/* ── „Jestem potrzebny” i „Praca” ──────────────────────────────────────── */
+.choices { display: flex; flex-wrap: wrap; gap: .1rem 1.2rem; }
+.picto-grid--sm { grid-template-columns: repeat(auto-fill, minmax(min(100%, 6rem), 1fr)); gap: .5rem; }
+.picto-grid--sm .picto-choice__box { min-height: 5.5rem; padding: .6rem .3rem; font-size: .9rem; }
+.picto-grid--sm .picto-choice__box .ico { width: 2rem; height: 2rem; }
+.stage-btn--static { cursor: default; border-color: var(--line); min-height: 6rem; }
+.stage-btn--static:hover { border-color: var(--line); }
+.mission-kinds { margin-bottom: 1rem; }
+.offer .etr { font-size: 1rem; }
+.badges { display: flex; flex-wrap: wrap; gap: .8rem; list-style: none; padding: 0; margin: 0 0 1rem; }
+.badge-card { display: flex; flex-direction: column; align-items: center; gap: .2rem; width: 10rem; padding: .8rem .5rem; text-align: center;
+  border: 2px solid var(--coral); border-radius: var(--radius); background: var(--coral-soft); font-weight: 700; }
+.badge-card .ico { width: 2.6rem; height: 2.6rem; color: var(--coral-dark); }
+.badge-card__text { font-weight: 400; font-size: .95rem; margin: 0; }
+.checklist li.checked::before { content: "☑"; }
+.diploma { max-width: 44rem; margin: 1rem auto; text-align: center; border: 6px double var(--coral); padding: 2rem; }
+.diploma h1 { margin: .2em 0; }
+.diploma__for { font-size: 1.4rem; margin: 0 0 .5rem; }
+.diploma .badges { justify-content: center; }
+@media print { .diploma { border-color: #000; } }
+/* Mapa pracy – własny SVG, regiony jako linki */
+.map-wrap { display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr) minmax(0, 16rem); align-items: start; margin-bottom: 1.5rem; }
+@media (max-width: 52em) { .map-wrap { grid-template-columns: minmax(0, 1fr); } }
+.map { width: 100%; height: auto; max-width: 40rem; }
+.map__r { stroke: var(--paper); stroke-width: 1.5; }
+.mf-0 { fill: #ECE4D4; } .mf-1 { fill: #B9C4DB; } .mf-2 { fill: #7F91B8; } .mf-3 { fill: #4A5F8C; } .mf-4 { fill: #1B2540; }
+html.a11y-contrast .mf-0 { fill: #fff; } html.a11y-contrast .map__r { stroke: #000; }
+.map a:hover .map__r, .map a:focus .map__r { stroke: var(--coral); stroke-width: 3; }
+.map a:focus { outline: none; }
+.map__n { font: 700 14px "Atkinson", sans-serif; fill: var(--ink); pointer-events: none; }
+.map__n--light { fill: #fff; }
+.map-wrap .table-wrap { max-height: 24rem; overflow: auto; margin: 0; }
+.map-wrap td.num { text-align: right; font-weight: 700; }
+.legend__sw--thread { background: var(--thread); border-color: var(--thread); }
+.wp--otwarty { --thread: #1B2540; } .wp--spoleczne { --thread: #B8432F; } .wp--zaz { --thread: #7A3E9D; } .wp--wtz { --thread: #1F8566; }
+.stat__src { display: block; font-size: .8rem; margin-top: .3rem; }
+/* Wykres słupkowy zainteresowań (CSS) */
+.bars { list-style: none; padding: 0; margin: 0 0 .5rem; max-width: 36rem; }
+.bars li { display: grid; grid-template-columns: 7rem minmax(0, 1fr) 2rem; align-items: center; gap: .6rem; margin: .25rem 0; }
+.bars__track { display: block; background: var(--sand); border-radius: 999px; height: 1rem; overflow: hidden; }
+.bars__bar { display: block; height: 100%; background: var(--ink); border-radius: 999px; }
+.bars__n { font-weight: 700; text-align: right; }
+.myths dt { font-weight: 700; margin-top: 1rem; }
+.myths dd { margin: .2rem 0 0; }
+.poznaj h4 { margin: 0 0 .3rem; font-size: 1.05rem; }
+/* Liczby ze źródłem (strona Praca): dłuższe wartości – jedna kolumna na telefonie, łamanie słów */
+.stat-row--src { grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); }
+.stat-row--src .stat__num { font-size: 1.6rem; overflow-wrap: anywhere; }
+.stat-row--src .stat, .stat__src a { overflow-wrap: anywhere; min-width: 0; }
+@media (max-width: 40em) { .stat-row--src { grid-template-columns: 1fr; } }
