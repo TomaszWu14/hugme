@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% from "_macros.html" import area_tag %}
+{% block title %}Pytania do mnie{% endblock %}
+{% block content %}
+<h1>Pytania do mnie</h1>
+<p class="lead">Rozmowy z Twoich obszarów, w których ktoś czeka na odpowiedź eksperta.</p>
+<h2>Czekają na odpowiedź ({{ waiting|length }})</h2>
+{% if waiting %}
+<ul class="list-plain">
+  {% for t in waiting %}<li><a href="{{ link(t.subject_type, t.subject_id) }}#watek">{{ t.title }}</a><br>
+    <span class="meta">{{ area_tag(t.area) }} <span>Ostatnia wiadomość: {{ t.last_at|date }}</span></span></li>{% endfor %}
+</ul>
+{% else %}<p><span aria-hidden="true">✔</span> Wszystko odpowiedziane.</p>{% endif %}
+<h2>Pozostałe rozmowy</h2>
+{% if others %}
+<ul class="list-plain">{% for t in others %}<li><a href="{{ link(t.subject_type, t.subject_id) }}#watek">{{ t.title }}</a></li>{% endfor %}</ul>
+{% else %}<p>Brak.</p>{% endif %}
+{% endblock %}

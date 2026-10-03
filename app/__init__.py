@@ -8,6 +8,7 @@ from flask import Flask, abort, render_template, request, session
 
 from core import db
 from core.domain import AREAS, REPORT_STATUSES, ROLES
+from core.match import label as score_label
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -39,9 +40,10 @@ def create_app(test_config=None):
     _template_globals(app)
 
     from app import auth
-    from app.views import public
+    from app.views import komunikacja, public
     app.register_blueprint(auth.bp)
     app.register_blueprint(public.bp)
+    app.register_blueprint(komunikacja.bp)
     auth.init(app)
 
     for code in ERRORS:
@@ -104,6 +106,8 @@ def _security(app):
 
 
 def _template_globals(app):
+    app.jinja_env.filters["pairs"] = lambda xs: [(x, x) for x in xs]
+    app.jinja_env.filters["date"] = lambda s: f"{s[8:10]}.{s[5:7]}.{s[:4]}" if s else ""
     app.jinja_env.globals.update(
-        csrf_token=csrf_token, AREAS=AREAS, ROLES=ROLES, REPORT_STATUSES=REPORT_STATUSES,
+        csrf_token=csrf_token, score_label=score_label, AREAS=AREAS, ROLES=ROLES, REPORT_STATUSES=REPORT_STATUSES,
     )

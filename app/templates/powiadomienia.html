@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf %}
+{% block title %}Powiadomienia{% endblock %}
+{% block content %}
+<h1>Powiadomienia</h1>
+{% if rows %}
+<form method="post" action="/powiadomienia/przeczytane" class="actions">{{ csrf() }}
+  <button type="submit" class="btn">Oznacz wszystkie jako przeczytane</button></form>
+<ul class="list-plain">
+  {% for n in rows %}
+  <li>{% if not n.is_read %}<strong><span aria-hidden="true">●</span> Nowe: </strong>{% endif %}<a href="{{ n.link }}">{{ n.body }}</a>
+    <br><span class="meta">{{ n.created_at|date }}</span></li>
+  {% endfor %}
+</ul>
+<p class="meta">Te same powiadomienia trafiają do kolejki e-mail (w prototypie bez wysyłki).</p>
+{% else %}<p>Nie masz powiadomień.</p>{% endif %}
+{% endblock %}

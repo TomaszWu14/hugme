@@ -76,4 +76,5 @@ jeszcze jestem jesteśmy już kiedy kto która które który których ku lub ma 
 można mój moja moje mu my na nad nam nas nasz nasza nasze naszej naszych naszym nawet nic nie niż no o od on ona
 one oni ono oraz po pod przez przy sa się sobie są ta tak tam te tego tej ten też to tu tylko tym u w we wiele
 więc wszystko z za ze że żeby bardziej często coraz każdy każda inaczej czasem trzeba chodzi jedna jeden
+wielu wiele różne różnych inny inna inne bardzo dużo mało nasi nasze nami swoje swoich
 """.split())

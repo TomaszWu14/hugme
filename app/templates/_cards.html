@@ -1,0 +1,57 @@
+{% from "_macros.html" import example, area_tag %}
+
+{% macro score_bar(score, label) -%}
+<p class="score"><span>{{ label }}</span>
+  <span class="score__bar" aria-hidden="true"><span class="score__fill w-{{ (score * 10)|round|int }}"></span></span>
+  <span>trafność {{ (score * 100)|round|int }}%</span></p>
+{%- endmacro %}
+
+{% macro why(res) -%}
+{% if res and (res.words or res.topics) %}
+<p class="why"><strong>Dlaczego pasuje:</strong>
+  {% if res.words %}wspólne słowa: {% for w in res.words %}<mark>{{ w }}</mark>{{ ", " if not loop.last }}{% endfor %}{% endif %}{% if res.words and res.topics %}; {% endif %}
+  {% if res.topics %}wspólne tematy: {{ res.topics|join(", ") }}{% endif %}.</p>
+{% endif %}
+{%- endmacro %}
+
+{% macro innovation_card(i, res=none, heading='h3') -%}
+<article class="card card--thread thread--{{ i.area }} match" aria-labelledby="inn-{{ i.id }}">
+  <{{ heading }} id="inn-{{ i.id }}"><a href="/biblioteka/{{ i.id }}">{{ i.title }}</a></{{ heading }}>
+  <p class="meta">{{ area_tag(i.area) }} <span>Powiat: {{ i.powiat }}</span> <span>Etap: {{ i.stage }}</span> {% if i.is_example %}{{ example() }}{% endif %}</p>
+  {% if res %}{{ score_bar(res.score, res.label) }}{% endif %}
+  <p>{{ i.summary }}</p>
+  {{ why(res) }}
+  <p class="meta"><span>Prowadzi: {{ i.org }}</span></p>
+</article>
+{%- endmacro %}
+
+{% macro thread_block(tv, can_post=true) -%}
+<section id="watek" aria-labelledby="watek-h" class="thread-section">
+  <h2 id="watek-h">Rozmowa{% if tv.subject_type == 'zgloszenie' %} z Hubem{% else %} i pytania do ekspertów{% endif %}</h2>
+  {% if tv.messages %}
+  <ol class="thread">
+    {% for m in tv.messages %}
+    <li class="msg {{ 'msg--hub' if m.role in ('admin', 'ekspert') }}">
+      <p class="msg__who">{{ m.name }} <span class="msg__when">· {{ ROLES[m.role] }} · {{ m.created_at|date }}</span></p>
+      <p>{{ m.body }}</p>
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+  <p>Nikt jeszcze nie napisał. Zadaj pierwsze pytanie – odpowie Hub albo ekspert z tego obszaru.</p>
+  {% endif %}
+  {% if g.user and can_post %}
+  <form method="post" action="/watek/{{ tv.subject_type }}/{{ tv.subject_id }}">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <div class="field">
+      <label for="f-tresc">Twoja wiadomość</label>
+      <p class="hint" id="h-tresc">„Czy ktoś testował to w małej gminie? Ile osób potrzeba do startu?”</p>
+      <textarea id="f-tresc" name="tresc" rows="3" required aria-describedby="h-tresc"></textarea>
+    </div>
+    <button type="submit" class="btn btn--primary">Wyślij</button>
+  </form>
+  {% elif not g.user %}
+  <p><a href="/konto?next={{ request.path }}">Wybierz konto</a>, żeby napisać.</p>
+  {% endif %}
+</section>
+{%- endmacro %}

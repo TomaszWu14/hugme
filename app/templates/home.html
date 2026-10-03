@@ -27,10 +27,17 @@
 
 <section class="ask card card--raised" aria-labelledby="ask-title">
   <h2 id="ask-title">Co jest trudne? Kogo to dotyczy?</h2>
+  {% if error %}
+  <div class="error-summary" role="alert" aria-labelledby="err-title">
+    <h2 id="err-title">Popraw jedną rzecz</h2>
+    <p><a href="#f-opis">{{ error }}</a></p>
+  </div>
+  {% endif %}
   <form method="post" action="/szukaj" novalidate>
     {{ csrf() }}
-    {{ field('opis', 'Opisz sytuację własnymi słowami', rows=5, required=true, value=example,
-             hint='Przykład jest już wpisany – możesz go zmienić. Pisz o sytuacji grupy, np. „rodzice dzieci w naszej gminie…”.') }}
+    {{ field('opis', 'Opisz sytuację własnymi słowami', rows=5, required=true, value=example, error=error,
+             hint='Przykład jest już wpisany – możesz go zmienić. Pisz o sytuacji grupy: „rodzice dzieci w naszej gminie…”.', plain_hint=true) }}
+    {{ field('powiat', 'Powiat, którego to dotyczy', options=powiaty|pairs, hint='wadowicki. Pomoże Hubowi zobaczyć, gdzie problem jest częsty.') }}
     <p class="privacy-note"><span aria-hidden="true">🛡</span> Nie musisz podawać diagnozy ani danych osobowych.
       Jeśli przez przypadek wpiszesz PESEL, telefon, e-mail, adres albo imię dziecka – ukryjemy je, zanim cokolwiek zapiszemy.</p>
     <button type="submit" class="btn btn--primary btn--large">Znajdź rozwiązania</button>

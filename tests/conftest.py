@@ -5,6 +5,11 @@ import pytest
 from app import create_app
 
 
+@pytest.fixture(autouse=True)
+def no_ai(monkeypatch):
+    monkeypatch.setenv("AI_DISABLED", "1")
+
+
 @pytest.fixture
 def app(tmp_path):
     return create_app({"TESTING": True, "DATABASE": str(tmp_path / "test.db"), "SECRET_KEY": "test"})

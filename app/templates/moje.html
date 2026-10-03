@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% from "_macros.html" import area_tag, status, csrf %}
+{% block title %}Moje sprawy{% endblock %}
+{% block content %}
+<h1>Moje sprawy</h1>
+<section aria-labelledby="z-h">
+  <h2 id="z-h">Moje zgłoszenia</h2>
+  {% if reports %}
+  <ul class="list-plain">
+    {% for r in reports %}
+    <li><a href="/zgloszenie/{{ r.id }}">{{ r.body|truncate(100) }}</a><br>
+      <span class="meta">{{ status(r.status) }} {{ area_tag(r.area) }} <span>{{ r.created_at|date }}</span></span></li>
+    {% endfor %}
+  </ul>
+  {% else %}<p>Nie masz jeszcze zgłoszeń. <a href="/">Opisz problem</a> – zajmie to minutę.</p>{% endif %}
+</section>
+<section aria-labelledby="p-h">
+  <h2 id="p-h">Moje pomysły</h2>
+  {% if ideas %}
+  <ul class="list-plain">{% for i in ideas %}<li><a href="/pomysly/{{ i.id }}">{{ i.title }}</a> <span class="meta">etap: {{ i.stage }}</span></li>{% endfor %}</ul>
+  {% else %}<p>Brak pomysłów. <a href="/pomysly/nowy">Zapisz pierwszy pomysł</a>.</p>{% endif %}
+</section>
+<section aria-labelledby="t-h">
+  <h2 id="t-h">Moje testy i oceny innowacji</h2>
+  {% if tests %}
+  <ul class="list-plain">{% for t in tests %}<li><a href="/biblioteka/{{ t.innovation_id }}">{{ t.title }}</a> – {{ {'zgloszenie': 'zgłoszenie do testu', 'ocena': 'ocena', 'usprawnienie': 'propozycja usprawnienia'}[t.kind] }}{% if t.rating %} ({{ t.rating }}/5){% endif %}</li>{% endfor %}</ul>
+  {% else %}<p>Brak.</p>{% endif %}
+</section>
+<section aria-labelledby="o-h">
+  <h2 id="o-h">Obserwowane obszary</h2>
+  <p>O nowych innowacjach i naborach w tych obszarach dostaniesz powiadomienie.</p>
+  <ul class="list-plain">
+    {% for slug, a in AREAS.items() %}
+    <li class="actions">{{ area_tag(slug) }}
+      <form method="post" action="/obserwuj/{{ slug }}" class="inline-form">{{ csrf() }}<input type="hidden" name="next" value="/moje">
+        <button type="submit" class="btn btn--small" aria-pressed="{{ 'true' if slug in follows else 'false' }}">{{ 'Obserwujesz ✔' if slug in follows else 'Obserwuj' }}<span class="sr-only"> obszar {{ a.name }}</span></button>
+      </form></li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

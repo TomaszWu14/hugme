@@ -23,10 +23,10 @@
 {%- endmacro %}
 
 {# Pole formularza: etykieta, przykład pod polem, komunikat błędu powiązany przez aria-describedby #}
-{% macro field(name, label, hint='', error='', value='', type='text', required=false, rows=0, options=none, optional_text=true) -%}
+{% macro field(name, label, hint='', error='', value='', type='text', required=false, rows=0, options=none, optional_text=true, plain_hint=false) -%}
 <div class="field {% if error %}field--error{% endif %}">
   <label for="f-{{ name }}">{{ label }}{% if not required and optional_text %} <span class="optional">(nieobowiązkowe)</span>{% endif %}</label>
-  {% if hint %}<p class="hint" id="h-{{ name }}">{{ hint }}</p>{% endif %}
+  {% if hint %}<p class="hint {{ 'hint--plain' if plain_hint }}" id="h-{{ name }}">{{ hint }}</p>{% endif %}
   {% if error %}<p class="error-msg" id="e-{{ name }}"><span aria-hidden="true">⚠</span> {{ error }}</p>{% endif %}
   {% set described = [('h-' ~ name) if hint else '', ('e-' ~ name) if error else '']|select|join(' ') %}
   {% if options is not none %}

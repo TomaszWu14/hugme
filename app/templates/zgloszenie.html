@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf, example, area_tag, status %}
+{% from "_cards.html" import score_bar, thread_block %}
+{% block title %}Zgłoszenie{% endblock %}
+{% block content %}
+<p><a href="{{ '/moje' if is_author else '/' }}">← {{ 'Moje sprawy' if is_author else 'Start' }}</a></p>
+<h1>Zgłoszenie</h1>
+<div class="card">
+  <p class="meta">{{ status(r.status) }} {{ area_tag(r.area) }} {% if r.powiat %}<span>Powiat: {{ r.powiat }}</span>{% endif %}
+    <span>Dodano: {{ r.created_at|date }}</span> {% if r.is_example %}{{ example() }}{% endif %}</p>
+  <p class="lead">{{ r.body }}</p>
+  {% if not r.approved %}<p class="notice">To zgłoszenie widzisz tylko Ty, Hub i eksperci. Gdy Hub je zatwierdzi, pomoże też innym.</p>{% endif %}
+</div>
+
+<section aria-labelledby="dop-h">
+  <h2 id="dop-h">Dopasowane rozwiązania</h2>
+  {% if is_author %}<p>Oceń, czy propozycja Ci pomaga. To dla nas najlepszy sprawdzian trafności.</p>{% endif %}
+  {% if matches %}
+  <ol class="list-plain">
+    {% for m in matches %}
+    <li id="dop-{{ m.id }}" class="card card--thread thread--{{ m.area }}">
+      <h3><a href="/biblioteka/{{ m.id }}">{{ m.title }}</a></h3>
+      {{ score_bar(m.score, score_label(m.score)) }}
+      <p>{{ m.summary }}</p>
+      {% if is_author %}
+      <form method="post" action="/zgloszenie/{{ r.id }}/ocena" class="feedback">
+        {{ csrf() }}<input type="hidden" name="innovation_id" value="{{ m.id }}">
+        <span id="fb-{{ m.id }}">Czy to pomocne?</span>
+        <button type="submit" name="ocena" value="pomocne" class="btn btn--small" aria-pressed="{{ 'true' if m.feedback == 1 else 'false' }}" aria-describedby="fb-{{ m.id }}"><span aria-hidden="true">👍</span> Pomocne</button>
+        <button type="submit" name="ocena" value="niepomocne" class="btn btn--small" aria-pressed="{{ 'true' if m.feedback == -1 else 'false' }}" aria-describedby="fb-{{ m.id }}"><span aria-hidden="true">👎</span> Niepomocne</button>
+        {% if m.feedback %}<span class="meta">Twoja ocena: {{ 'pomocne' if m.feedback == 1 else 'niepomocne' }}</span>{% endif %}
+      </form>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}<p>Brak dopasowań – Hub poszuka rozwiązania ręcznie.</p>{% endif %}
+</section>
+
+{% if thread %}{{ thread_block(thread) }}{% endif %}
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf, field, example, ai_box, area_tag %}
+{% from "_cards.html" import innovation_card, score_bar, why %}
+{% block title %}Co może pomóc{% endblock %}
+{% block content %}
+<h1>Oto, co może pomóc</h1>
+
+<section aria-labelledby="opis-h" class="card">
+  <h2 id="opis-h" class="h3">Twój opis</h2>
+  <p class="masked">{{ draft.opis }}</p>
+  {% if masked_info %}
+  <p class="notice" role="status"><span aria-hidden="true">🛡</span> Dla Twojego bezpieczeństwa ukryliśmy: <strong>{{ masked_info }}</strong>.
+    Nie musisz podawać takich danych ani diagnozy – wystarczy opis sytuacji.</p>
+  {% endif %}
+  <p><a href="/">Zmień opis</a></p>
+</section>
+
+{% if analysis.by_ai %}
+{% call ai_box(true, 'Jak rozumiemy Twoją sytuację') %}
+  {% if analysis.summary %}<p>{{ analysis.summary }}</p>{% endif %}
+  {% if analysis.keywords %}<p>Szukaliśmy też po słowach: {{ analysis.keywords|join(", ") }}.</p>{% endif %}
+{% endcall %}
+{% elif analysis.topics %}
+{% call ai_box(false) %}
+  <p>Rozpoznane tematy: <strong>{{ analysis.topics|join(", ") }}</strong>.</p>
+{% endcall %}
+{% endif %}
+
+<div class="two-col">
+  <section aria-labelledby="inn-h">
+    <h2 id="inn-h">Sprawdzone rozwiązania z Małopolski</h2>
+    {% if innovations %}
+    <p>Ułożone od najlepiej pasujących. Przy każdym piszemy, <em>dlaczego</em> pasuje.</p>
+    <ol class="list-plain">
+      {% for i, res in innovations %}<li>{{ innovation_card(i, res) }}</li>{% endfor %}
+    </ol>
+    {% else %}
+    <p class="notice">Nie znaleźliśmy jeszcze rozwiązania, które pasuje. To też ważna informacja –
+      zapisz zgłoszenie, a Hub poszuka pomocy i zaproponuje temat na nowy konkurs.</p>
+    {% endif %}
+  </section>
+
+  <aside aria-label="Podobne sprawy, poradniki i ludzie">
+    <section aria-labelledby="rep-h">
+      <h2 id="rep-h" class="h3">Inni mieli podobnie</h2>
+      {% if reports %}
+      <ul class="list-plain">
+        {% for r, res in reports %}
+        <li><a href="/zgloszenie/{{ r.id }}">{{ r.body|truncate(110) }}</a><br>
+          <span class="meta">{{ area_tag(r.area) }} <span>{{ r.powiat }}</span> {% if r.is_example %}{{ example() }}{% endif %}</span></li>
+        {% endfor %}
+      </ul>
+      {% else %}<p>Brak podobnych zgłoszeń.</p>{% endif %}
+    </section>
+    <section aria-labelledby="mat-h">
+      <h2 id="mat-h" class="h3">Poradniki</h2>
+      {% if materials %}
+      <ul class="list-plain">
+        {% for m, res in materials %}<li><a href="/wiedza/material/{{ m.id }}">{{ m.title }}</a><br><span class="meta">{{ m.kind }}</span></li>{% endfor %}
+      </ul>
+      {% else %}<p>Brak poradników na ten temat.</p>{% endif %}
+    </section>
+    <section aria-labelledby="exp-h">
+      <h2 id="exp-h" class="h3">Eksperci, którzy mogą pomóc</h2>
+      {% if experts %}
+      <ul class="list-plain">
+        {% for e, res in experts %}<li><strong>{{ e.name }}</strong> {{ example() }}<br><span class="meta">{{ e.bio|truncate(120) }}</span></li>{% endfor %}
+      </ul>
+      <p class="meta">Pytanie do eksperta zadasz w rozmowie przy zgłoszeniu.</p>
+      {% else %}<p>Brak ekspertów w tym temacie.</p>{% endif %}
+    </section>
+  </aside>
+</div>
+
+<section aria-labelledby="save-h" class="card card--raised">
+  <h2 id="save-h">Zapisz zgłoszenie – Hub odpowie</h2>
+  <p>Twoje zgłoszenie trafi do koordynatorki Hubu w ROPS. Odpisze Ci, połączy z ludźmi z dopasowanych inicjatyw
+    i dopilnuje, żeby problem nie został sam.{% if not g.user %} <strong>Najpierw wybierzesz konto – opis zostanie zachowany.</strong>{% endif %}</p>
+  <form method="post" action="/zgloszenie">
+    {{ csrf() }}
+    <input type="hidden" name="opis" value="{{ draft.opis }}">
+    {% set area_opts = [] %}{% for slug, a in AREAS.items() %}{% set _ = area_opts.append((slug, a.name)) %}{% endfor %}
+    {{ field('area', 'Obszar', options=area_opts, value=analysis.area or '', hint='rozpoznaliśmy go z opisu – popraw, jeśli trzeba.') }}
+    {{ field('powiat', 'Powiat', options=powiaty|pairs, value=draft.powiat, hint='nowotarski.') }}
+    <button type="submit" class="btn btn--primary btn--large">Zapisz zgłoszenie</button>
+  </form>
+</section>
+{% endblock %}
