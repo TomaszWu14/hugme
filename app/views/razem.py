@@ -125,6 +125,8 @@ def create_request(kind):
                                   ("powiat", "stage", "alias", "title", "body", "category")}}
         flash("Wybierz konto – Twój formularz poczeka.", "info")
         return redirect(url_for("auth.demo", next=url_for(f"razem.{page}")))
+    if g.user["role"] != "mieszkaniec":  # prośby rodzin wysyła rodzic/opiekun; instytucje mają własne formularze
+        abort(403)
     back = request.form.get("wroc", "")
     back = back if back.startswith("/razem") and not back.startswith("//") else url_for(f"razem.{page}")
     rid, errors = save_request(kind, request.form)

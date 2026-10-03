@@ -217,3 +217,38 @@ def test_map_counts_match_list(client, app):
     assert f"Polska – {total} miejsc na mapie" in html
     assert f'aria-label="małopolskie: {mp} miejsc"' in html
     assert html.count("<path class=\"map__r") == 16 + 22
+
+
+# ── Role: kto może wysłać który formularz ─────────────────────────────────────
+@pytest.mark.parametrize("role,path,data_fn,ok", [
+    ("gmina", "/razem/jestem-potrzebny/zglos", signup_data, False),
+    ("ngo", "/razem/jestem-potrzebny/latwy", signup_data, False),
+    ("admin", "/razem/jestem-potrzebny/buddy", lambda t: {"_csrf": t, "alias": "Hub", "powiat": "Kraków", "days": ["sb"], "consent": "1"}, False),
+    ("mieszkaniec", "/razem/jestem-potrzebny/oferta", offer_data, False),
+    ("gmina", "/razem/jestem-potrzebny/oferta", offer_data, True),
+    ("mieszkaniec", "/razem/jestem-potrzebny/zglos", signup_data, True),
+])
+def test_only_matching_role_can_submit(client, role, path, data_fn, ok):
+    token = login(client, role)
+    r = client.post(path, data=data_fn(token))
+    assert (r.status_code == 302) if ok else (r.status_code == 403)
+
+
+def test_wrong_role_sees_hint_instead_of_submit(client):
+    login(client, "gmina")
+    html = client.get("/razem/jestem-potrzebny/zglos").get_data(as_text=True)
+    assert "zmień konto" in html and "Wyślij zgłoszenie" not in html
+    login(client, "mieszkaniec")
+    html = client.get("/razem/jestem-potrzebny/oferta").get_data(as_text=True)
+    assert "konto organizacji albo gminy" in html and "Wyślij ofertę do Hubu" not in html
+
+
+def test_double_connect_creates_one_mission(client, app):
+    token = login(client, "admin")
+    with app.app_context():
+        v = db.one("SELECT id FROM volunteers WHERE alias = 'Tomek'")
+        o = db.one("SELECT id FROM offers WHERE institution LIKE 'Schronisko dla zwierząt w Wadowicach%'")
+    data = {"_csrf": token, "volunteer_id": v["id"], "offer_id": o["id"]}
+    assert client.post("/admin/potrzebny/polacz", data=data).status_code == 302
+    assert client.post("/admin/potrzebny/polacz", data=data).status_code == 400
+    assert count(app, "SELECT COUNT(*) FROM missions WHERE volunteer_id = ?", (v["id"],)) == 1

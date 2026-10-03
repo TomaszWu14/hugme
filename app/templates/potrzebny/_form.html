@@ -49,8 +49,10 @@
 
 {% macro days_items(P) -%}{{ caller(P.DAYS.items()|list + P.TIMES.items()|list) }}{%- endmacro %}
 
-{% macro submit_or_login(label) -%}
-{% if g.user %}<button type="submit" class="btn btn--primary btn--large">{{ label }}</button>
+{% macro submit_or_login(label, allowed=true, hint='') -%}
+{% if g.user and not allowed %}<p class="notice" role="status">{{ hint }} Jesteś teraz na koncie „{{ ROLES[g.user.role] }}” –
+  <a href="/konto?next={{ request.path }}">zmień konto</a>, żeby wysłać.</p>
+{% elif g.user %}<button type="submit" class="btn btn--primary btn--large">{{ label }}</button>
 {% else %}<p><a class="btn btn--primary btn--large" href="/konto?next={{ request.path }}">Wybierz konto, żeby wysłać</a>
   <span class="meta">W demo nie ma haseł – wybierasz rolę.</span></p>{% endif %}
 {%- endmacro %}

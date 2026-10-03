@@ -25,6 +25,6 @@
     <label class="choice" for="f-consent"><input type="checkbox" id="f-consent" name="consent" value="1" {% if form.get('consent') %}checked{% endif %} {% if errors.get('consent') %}aria-describedby="e-consent"{% endif %}>
       Jestem opiekunem uczestnika albo mam zgodę opiekuna. Znam <a href="/razem/jestem-potrzebny/zasady">zasady programu</a>.</label>
   </div>
-  {{ submit_or_login('Wyślij zgłoszenie') }}
+  {{ submit_or_login('Wyślij zgłoszenie', allowed, hint) }}
 </form>
 {% endblock %}

@@ -298,3 +298,12 @@ def test_admin_can_close_family_request(client, app):
     assert "Zamknij – sprawa załatwiona" in client.get("/admin/razem").get_data(as_text=True)
     client.post(f"/admin/razem/{rid}/status", data={"_csrf": token, "status": "zamkniete"})
     assert count(app, "SELECT COUNT(*) FROM family_requests WHERE id=? AND status='zamkniete'", (rid,)) == 1
+
+
+def test_family_requests_only_from_resident_account(client):
+    token = login(client, "gmina")
+    r = client.post("/razem/prosba/wytchnienie", data={"_csrf": token, "alias": "Urząd", "powiat": "Kraków", "title": "sobota",
+                                                       "body": "Prośba testowa z konta gminy – nie powinna przejść."})
+    assert r.status_code == 403
+    html = client.get("/razem/wytchnienie").get_data(as_text=True)
+    assert "zmień konto" in html and 'name="body"' not in html.split("zmień konto")[0][-200:] or "Wyślij prośbę" not in html

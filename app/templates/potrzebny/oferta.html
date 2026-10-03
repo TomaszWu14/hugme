@@ -42,6 +42,6 @@
   {{ choices('provides', 'Co zapewnia miejsce?', P.PROVIDES.items()|list, form, errors, required=false) }}
   {{ field('requirements', 'Wymagania', hint='od 16 lat, spokój przy psach', value=form.get('requirements', ''), error=errors.get('requirements')) }}
   {% endif %}
-  {{ submit_or_login('Wyślij propozycję' if as_parent else 'Wyślij ofertę do Hubu') }}
+  {{ submit_or_login('Wyślij propozycję' if as_parent else 'Wyślij ofertę do Hubu', allowed, hint) }}
 </form>
 {% endblock %}

@@ -78,9 +78,12 @@ def pair():
     if v is None or o is None or (bid and b is None):
         abort(400)
     con = db.get_db()
+    # Najpierw warunkowy UPDATE: drugie kliknięcie „Połącz” (albo równoległe) nie utworzy drugiej misji.
+    if con.execute("UPDATE volunteers SET status = 'polaczone' WHERE id = ? AND status = 'nowe'", (v["id"],)).rowcount != 1:
+        con.rollback()
+        abort(400)
     con.execute("INSERT INTO missions (volunteer_id, offer_id, buddy_id, created_at) VALUES (?,?,?,?)",
                 (v["id"], o["id"], b["id"] if b else None, db.now()))
-    con.execute("UPDATE volunteers SET status = 'polaczone' WHERE id = ?", (v["id"],))
     if b:
         con.execute("UPDATE volunteers SET status = 'polaczone' WHERE id = ?", (b["id"],))
     con.commit()

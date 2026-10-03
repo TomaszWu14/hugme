@@ -14,6 +14,26 @@ from data import potrzebny as P
 
 bp = Blueprint("potrzebny", __name__, url_prefix="/razem/jestem-potrzebny")
 RE_PHONE = re.compile(r"^\+?[\d\s-]{7,16}$")
+# Kto może wysłać który formularz: uczestnika zgłasza rodzic/osoba z ZD (konto mieszkańca), ofertę – instytucja,
+# propozycję miejsca – rodzic, buddy – każda osoba poza Hubem. Gość widzi formularz i wybiera konto przy wysyłce.
+ROLES_FOR = {"uczestnik": ("mieszkaniec",), "instytucja": ("ngo", "gmina"), "rodzic": ("mieszkaniec",),
+             "buddy": ("mieszkaniec", "ngo", "gmina", "ekspert")}
+ROLE_HINTS = {"uczestnik": "Zgłoszenie uczestnika wysyła rodzic, opiekun albo sama osoba z zespołem Downa – konto mieszkańca.",
+              "instytucja": "Ofertę miejsca wystawia instytucja – konto organizacji albo gminy.",
+              "rodzic": "Miejsce proponuje rodzic lub opiekun – konto mieszkańca.",
+              "buddy": "Buddy to osoba prywatna – koordynatorka Hubu nie zgłasza się sama."}
+
+
+def allowed(kind):
+    """True dla gościa (wybierze konto przy wysyłce) i dla roli z listy; False dla zalogowanej złej roli."""
+    return g.user is None or g.user["role"] in ROLES_FOR[kind]
+
+
+def require(kind):
+    if g.user is None:
+        return redirect(url_for("auth.demo", next=request.full_path))
+    if not allowed(kind):
+        abort(403)
 
 
 def _csv(form, name, allowed):
@@ -76,7 +96,7 @@ def _offers(powiat=""):
 
 
 def _ctx(**extra):
-    return dict(P=P, powiaty=POWIATY, **extra)
+    return dict(P=P, powiaty=POWIATY, ROLE_HINTS=ROLE_HINTS, **extra)
 
 
 @bp.route("")
@@ -99,14 +119,15 @@ def rules():
 def signup():
     errors, form = {}, {}
     if request.method == "POST":
-        if g.user is None:
-            return redirect(url_for("auth.demo", next=request.path))
+        if (resp := require("uczestnik")) is not None:
+            return resp
         vid, errors = save_volunteer(request.form, "uczestnik", "rodzic")
         if not errors:
             flash(P.THANKS["uczestnik"], "success")
             return redirect(url_for("potrzebny.diary"))
         form = request.form
-    return render_template("potrzebny/zglos.html", **_ctx(errors=errors, form=form)), (422 if errors else 200)
+    return render_template("potrzebny/zglos.html", **_ctx(errors=errors, form=form, allowed=allowed("uczestnik"),
+                                                         hint=ROLE_HINTS["uczestnik"])), (422 if errors else 200)
 
 
 @bp.route("/latwy", methods=["GET", "POST"])
@@ -114,8 +135,8 @@ def easy_signup():
     """Zgłoszenie w tekście łatwym do czytania – dorosła osoba z ZD zgłasza się sama."""
     errors, form = {}, {}
     if request.method == "POST":
-        if g.user is None:
-            return redirect(url_for("auth.demo", next=request.path))
+        if (resp := require("uczestnik")) is not None:
+            return resp
         data = request.form.copy()
         data["age_group"] = "dorosly"
         vid, errors = save_volunteer(data, "uczestnik", "latwy-tekst")
@@ -123,21 +144,23 @@ def easy_signup():
             flash(P.THANKS["latwy"], "success")
             return redirect(url_for("potrzebny.diary"))
         form = request.form
-    return render_template("potrzebny/latwy.html", **_ctx(errors=errors, form=form)), (422 if errors else 200)
+    return render_template("potrzebny/latwy.html", **_ctx(errors=errors, form=form, allowed=allowed("uczestnik"),
+                                                         hint=ROLE_HINTS["uczestnik"])), (422 if errors else 200)
 
 
 @bp.route("/buddy", methods=["GET", "POST"])
 def buddy():
     errors, form = {}, {}
     if request.method == "POST":
-        if g.user is None:
-            return redirect(url_for("auth.demo", next=request.path))
+        if (resp := require("buddy")) is not None:
+            return resp
         vid, errors = save_volunteer(request.form, "buddy", "buddy")
         if not errors:
             flash(P.THANKS["buddy"], "success")
             return redirect(url_for("potrzebny.start"))
         form = request.form
-    return render_template("potrzebny/buddy.html", **_ctx(errors=errors, form=form)), (422 if errors else 200)
+    return render_template("potrzebny/buddy.html", **_ctx(errors=errors, form=form, allowed=allowed("buddy"),
+                                                         hint=ROLE_HINTS["buddy"])), (422 if errors else 200)
 
 
 def save_offer(form, source):
@@ -178,8 +201,8 @@ def offer():
     source = "rodzic" if request.values.get("jako") == "rodzic" else "instytucja"
     errors, form, easy_info = {}, {}, ""
     if request.method == "POST":
-        if g.user is None:
-            return redirect(url_for("auth.demo", next=request.full_path))
+        if (resp := require(source)) is not None:
+            return resp
         form = request.form.copy()
         if form.get("action") == "uprosc":
             # Opcjonalne AI: wersja w łatwym tekście do poprawienia przez instytucję i Hub.
@@ -195,7 +218,8 @@ def offer():
                 flash(P.THANKS[source], "success")
                 return redirect(url_for("potrzebny.start"))
     return render_template("potrzebny/oferta.html", **_ctx(errors=errors, form=form, source=source, easy_info=easy_info,
-                                                          ai_on=ai.enabled())), (422 if errors else 200)
+                                                          ai_on=ai.enabled(), allowed=allowed(source),
+                                                          hint=ROLE_HINTS[source])), (422 if errors else 200)
 
 
 def diary_for(user_id):

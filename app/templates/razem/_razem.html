@@ -59,7 +59,9 @@
     {% endif %}
   </div>
   {% endfor %}
-  {% if g.user %}<button type="submit" class="btn btn--primary">{{ button }}</button>
+  {% if g.user and g.user.role != 'mieszkaniec' %}<p class="notice" role="status">Prośby rodzin wysyła rodzic lub opiekun – konto mieszkańca.
+    Jesteś teraz na koncie „{{ ROLES[g.user.role] }}” – <a href="/konto?next={{ request.path }}">zmień konto</a>, żeby wysłać.</p>
+  {% elif g.user %}<button type="submit" class="btn btn--primary">{{ button }}</button>
   {% else %}<p><a class="btn btn--primary" href="/konto?next={{ request.path }}">Wybierz konto, żeby wysłać</a></p>{% endif %}
 </form>
 {%- endmacro %}

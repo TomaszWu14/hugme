@@ -20,6 +20,6 @@
     <label class="choice" for="f-consent"><input type="checkbox" id="f-consent" name="consent" value="1" {% if form.get('consent') %}checked{% endif %}>
       Mam ukończone 18 lat i znam <a href="/razem/jestem-potrzebny/zasady">zasady programu</a>.</label>
   </div>
-  {{ submit_or_login('Zgłaszam się') }}
+  {{ submit_or_login('Zgłaszam się', allowed, hint) }}
 </form>
 {% endblock %}

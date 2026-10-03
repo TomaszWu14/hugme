@@ -51,7 +51,8 @@
     <section aria-labelledby="dzien-h" class="card card--raised">
       <h2 id="dzien-h" class="h3">Dzień Specjalistów w Twoim powiecie</h2>
       <p>Kilku lekarzy jednego dnia, w jednym miejscu. Daj znać, że go potrzebujesz – Hub zbiera głosy z powiatów.</p>
-      {% if g.user %}
+      {% if g.user and g.user.role != 'mieszkaniec' %}<p class="meta">Głos oddaje rodzic – konto mieszkańca.</p>
+      {% elif g.user %}
       <form method="post" action="/razem/prosba/dzien-specjalistow">
         {{ csrf() }}<input type="hidden" name="wroc" value="{{ request.path }}">
         <input type="hidden" name="alias" value="Rodzic">
