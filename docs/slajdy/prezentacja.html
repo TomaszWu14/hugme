@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>HugMe – platforma dla HubMi.pl</title>
+<style>
+  @font-face { font-family: Atkinson; font-weight: 400; src: url("../../app/static/fonts/atkinson-latin-400.woff2"); }
+  @font-face { font-family: Atkinson; font-weight: 400; src: url("../../app/static/fonts/atkinson-400.woff2"); unicode-range: U+0100-024F; }
+  @font-face { font-family: Atkinson; font-weight: 700; src: url("../../app/static/fonts/atkinson-latin-700.woff2"); }
+  @font-face { font-family: Atkinson; font-weight: 700; src: url("../../app/static/fonts/atkinson-700.woff2"); unicode-range: U+0100-024F; }
+  @page { size: 1280px 720px; margin: 0; }
+  :root { --cream: #FBF6EE; --ink: #1B2540; --soft: #46506B; --coral: #B8432F; --mint: #1D6B52; --mintbg: #E1F4EB; --sand: #F3EADB; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Atkinson, "Segoe UI", sans-serif; color: var(--ink); background: #777; }
+  .s { width: 1280px; height: 720px; padding: 56px 72px; background: var(--cream); position: relative; overflow: hidden;
+       page-break-after: always; display: flex; flex-direction: column; }
+  .s::after { content: attr(data-n) " / 10  ·  HugMe – platforma dla HubMi.pl"; position: absolute; bottom: 22px; right: 72px; font-size: 14px; color: var(--soft); }
+  .thread { position: absolute; left: 0; top: 0; bottom: 0; width: 14px; background: linear-gradient(var(--coral), var(--ink) 50%, #2BA37E); }
+  h1 { font-size: 76px; margin: 0 0 12px; letter-spacing: -1px; line-height: 1.05; }
+  h2 { font-size: 46px; margin: 0 0 24px; line-height: 1.1; }
+  .eyebrow { text-transform: uppercase; letter-spacing: 3px; font-weight: 700; color: var(--coral); font-size: 16px; margin: 0 0 14px; }
+  p, li { font-size: 25px; line-height: 1.45; }
+  ul { margin: 0; padding-left: 28px; }
+  li { margin-bottom: 8px; }
+  .row { display: flex; gap: 40px; flex: 1; min-height: 0; align-items: flex-start; }
+  .col { flex: 1; min-width: 0; }
+  .shot { border-radius: 14px; box-shadow: 0 10px 30px rgba(27,37,64,.18); border: 1px solid #E2D6C2; max-height: 470px; object-fit: cover; object-position: top; width: 100%; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .card { background: #fff; border-radius: 14px; padding: 16px 18px; border-left: 8px solid var(--coral); font-size: 19px; line-height: 1.35; }
+  .card b { display: block; font-size: 21px; margin-bottom: 4px; }
+  .big { font-size: 64px; font-weight: 700; color: var(--coral); line-height: 1; }
+  .stat { background: #fff; border-radius: 14px; padding: 18px 22px; }
+  .stat p { font-size: 20px; margin: 6px 0 0; }
+  .ai { background: var(--mintbg); border: 2px solid #2BA37E; border-radius: 14px; padding: 14px 20px; font-size: 21px; }
+  .lead { font-size: 30px; color: var(--soft); max-width: 900px; }
+  table { border-collapse: collapse; font-size: 22px; width: 100%; background: #fff; border-radius: 14px; overflow: hidden; }
+  td, th { padding: 10px 16px; border-bottom: 1px solid #E2D6C2; text-align: left; }
+  th { background: var(--sand); }
+</style>
+</head>
+<body>
+
+<section class="s" data-n="1">
+  <div class="thread"></div>
+  <div class="row" style="align-items:center">
+    <div class="col">
+      <p class="eyebrow">HackYeah 2026 · zadanie HubMi.pl · ROPS Kraków</p>
+      <h1>HugMe</h1>
+      <p class="lead">platforma dla HubMi.pl</p>
+      <p style="font-size:44px;font-weight:700;margin:28px 0">Twój problem nie zostaje sam.</p>
+      <p><b>Hub + Mi</b>(łopolska) czyta się jak <i lang="en">hug me</i> – „przytul mnie”. Mieszkaniec z problemem
+        nie trafia do urzędu, tylko do kogoś, kto go obejmuje i łączy z rozwiązaniem i ludźmi.</p>
+    </div>
+    <div style="width:360px">
+      <svg viewBox="0 0 48 48" width="340" height="340" role="img" aria-label="Logo: dwie nici splecione w serce">
+        <path d="M24 17 C20 7 6 7 7 18.5 C8 28 18 34 31 43" fill="none" stroke="#1B2540" stroke-width="4.5" stroke-linecap="round"/>
+        <path d="M24 17 C28 7 42 7 41 18.5 C40 28 30 34 17 43" fill="none" stroke="#B8432F" stroke-width="4.5" stroke-linecap="round"/>
+        <circle cx="24" cy="37.6" r="4" fill="#2BA37E" stroke="#FBF6EE" stroke-width="2"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="s" data-n="2">
+  <div class="thread"></div>
+  <p class="eyebrow">Problem</p>
+  <h2>Rozwiązania istnieją. Ludzie o nich nie wiedzą.</h2>
+  <div class="row">
+    <div class="col">
+      <ul>
+        <li>Rodzice dziecka z zespołem Downa jeżdżą do 5 specjalistów w 5 różnych dni – a w sąsiednim powiecie
+          działa już <b>asystent zdrowia rodziny</b>.</li>
+        <li>Gmina szuka sposobu na dojazd seniorów do lekarza – inna gmina ma <b>bus na telefon</b>.</li>
+        <li>Hub Innowacji Społecznych nie widzi, <b>gdzie potrzeby rosną</b> i gdzie brakuje rozwiązań.</li>
+      </ul>
+    </div>
+    <div class="col" style="flex:.8">
+      <div class="stat"><span class="big">7</span><p>obszarów wyzwań Małopolski – pilotaż: rodziny osób z zespołem Downa</p></div>
+      <div class="stat" style="margin-top:16px"><span class="big">22</span><p>powiaty – potrzeby rozproszone, wiedza w silosach</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="s" data-n="3">
+  <div class="thread"></div>
+  <p class="eyebrow">Rozwiązanie</p>
+  <h2>Opisz po swojemu → zobacz, co działa → Hub odpowie</h2>
+  <div class="row">
+    <div class="col" style="flex:.9">
+      <ul>
+        <li>Na starcie jedno pole: <b>„Co jest trudne? Kogo to dotyczy?”</b> – z przykładem.</li>
+        <li>Dopasowane innowacje, podobne zgłoszenia, poradniki i eksperci.</li>
+        <li>Zapis tworzy <b>wątek z Hubem</b> i powiadomienie dla koordynatorki ROPS.</li>
+        <li>Dane osobowe ukrywane automatycznie – „nie musisz podawać diagnozy”.</li>
+      </ul>
+    </div>
+    <div class="col"><img class="shot" src="../zrzuty/01-start-desktop.png" alt="Strona startowa HugMe"></div>
+  </div>
+</section>
+
+<section class="s" data-n="4">
+  <div class="thread"></div>
+  <p class="eyebrow">Matchmaking (moduł obowiązkowy)</p>
+  <h2>Wyjaśnialne dopasowanie – działa bez AI</h2>
+  <div class="row">
+    <div class="col" style="flex:.9">
+      <ul>
+        <li><b>BM25 + polski stemming + słownik pojęć</b> (lekarz, wizyta, kardiolog → „zdrowie”).</li>
+        <li>Każdy wynik: etykieta słowna, trafność i <b>„dlaczego pasuje”</b> – wspólne słowa i tematy.</li>
+        <li>Autor ocenia „pomocne / niepomocne” → <b>pomiar trafności</b> w panelu.</li>
+        <li>Test trafności: <b>11/11 w top 3</b>.</li>
+      </ul>
+      <p class="ai" style="margin-top:18px">✦ Claude Haiku tylko wzbogaca (analiza opisu) – zawsze oznaczony. Bez klucza działa wersja regułowa.</p>
+    </div>
+    <div class="col"><img class="shot" src="../zrzuty/02-wyniki-desktop.png" alt="Wyniki dopasowania z uzasadnieniem"></div>
+  </div>
+</section>
+
+<section class="s" data-n="5">
+  <div class="thread"></div>
+  <p class="eyebrow">Wszystkie moduły z briefu</p>
+  <h2>7 z 7 modułów – działające, przetestowane</h2>
+  <div class="grid">
+    <div class="card"><b>Matchmaking</b>opis → dopasowania z uzasadnieniem, zapis, wątek, ocena trafności</div>
+    <div class="card"><b>Zasobnik wiedzy</b>wyzwania, Biblioteka z filtrami i filmami, materiały, ścieżka rodziny</div>
+    <div class="card"><b>Trendy potrzeb</b>obszar m/m, mapa powiat × obszar – tylko dla Hubu</div>
+    <div class="card"><b>Kreator pomysłów</b>fiszka, Kanwa, asystent, generator wniosków w trakcie naboru</div>
+    <div class="card"><b>Tester innowacji</b>zgłoszenie do testu, ocena 1–5, usprawnienie → powiadomienie Hubu</div>
+    <div class="card"><b>Komunikacja</b>wątki, pytania do ekspertów, powiadomienia, e-mail, obserwowanie obszarów</div>
+    <div class="card"><b>Panel ROPS</b>skrzynka, statusy, edycja i import Biblioteki, nabory, luki, CSV</div>
+    <div class="card"><b>Pośrednik innowacji</b>karta usługi dla gminy, CUS i NGO – koszty bez wymyślonych kwot</div>
+  </div>
+  <p style="margin-top:22px">5 ról demo · API JSON dla bazy grantowej · <b>80 testów automatycznych</b> (ścieżki, role, CSRF, prywatność)</p>
+</section>
+
+<section class="s" data-n="6">
+  <div class="thread"></div>
+  <p class="eyebrow">Dla Hubu Innowacji Społecznych</p>
+  <h2>Hub widzi trendy i luki – tematy nowych konkursów</h2>
+  <div class="row">
+    <div class="col" style="flex:.8">
+      <ul>
+        <li>Skrzynka zgłoszeń, pomysłów, testów i wniosków.</li>
+        <li>Wątki bez odpowiedzi, zmiana statusu z powiadomieniem.</li>
+        <li><b>Luki</b>: problemy bez dobrego rozwiązania → kandydaci na konkurs.</li>
+        <li>Szybka edycja Biblioteki – działa od razu, bez przebudowy. Import z pliku ROPS.</li>
+      </ul>
+    </div>
+    <div class="col"><img class="shot" src="../zrzuty/14-trendy-desktop.png" alt="Trendy potrzeb w panelu Hubu"></div>
+  </div>
+</section>
+
+<section class="s" data-n="7">
+  <div class="thread"></div>
+  <p class="eyebrow">Dla gmin, CUS i organizacji</p>
+  <h2>Od problemu do wdrożenia: Pośrednik i Kreator</h2>
+  <div class="row">
+    <div class="col" style="flex:.85">
+      <ul>
+        <li><b>Pośrednik</b>: typ instytucji, grupa, skala, budżet → karta usługi: zespół, kroki, partnerzy,
+          finansowanie, mierniki, ryzyka.</li>
+        <li><b>Kreator</b>: fiszka → Kanwa → asystent (mocne strony, pytania, nieoczywiste kierunki, prototyp)
+          → wniosek wypełniony z fiszki, gdy trwa nabór.</li>
+      </ul>
+    </div>
+    <div class="col"><img class="shot" src="../zrzuty/11-karta-uslugi-desktop.png" alt="Karta usługi z Pośrednika"></div>
+  </div>
+</section>
+
+<section class="s" data-n="8">
+  <div class="thread"></div>
+  <p class="eyebrow">Dostępność i prywatność</p>
+  <h2>Dla każdego – także dla seniorów</h2>
+  <div class="row">
+    <div class="col">
+      <div class="stat"><span class="big">72/72</span><p>widoków bez naruszeń WCAG 2.1 AA (axe-core) – desktop i telefon 320 px</p></div>
+      <ul style="margin-top:18px">
+        <li>A+ i wysoki kontrast bez JavaScriptu, cele ≥ 44 px</li>
+        <li>Atkinson Hyperlegible, 18 px, prosty język, przykład pod polem</li>
+        <li>Statusy symbolem i słowem, nie tylko kolorem</li>
+      </ul>
+    </div>
+    <div class="col">
+      <div class="stat"><span class="big">7</span><p>rodzajów danych osobowych maskowanych <b>przed</b> zapisem i przed AI: PESEL, telefon, e-mail, adres, kod, imię dziecka, nazwisko lekarza</p></div>
+      <p style="margin-top:18px">Wszystkie dane są fikcyjne i oznaczone jako „PRZYKŁAD”. CSRF, CSP bez zewnętrznych skryptów, role sprawdzane na serwerze.</p>
+    </div>
+  </div>
+</section>
+
+<section class="s" data-n="9">
+  <div class="thread"></div>
+  <p class="eyebrow">Potencjał wdrożeniowy</p>
+  <h2>Tanie w utrzymaniu, gotowe do pilotażu</h2>
+  <table>
+    <tr><th>Pozycja</th><th>Miesięcznie (pilotaż)</th></tr>
+    <tr><td>Hosting: 1 kontener Docker, Coolify na VPS Hetzner</td><td>ok. 50 zł</td></tr>
+    <tr><td>AI – Claude Haiku (ok. 2 500 użyć)</td><td>ok. 25 zł · <b>wariant bez AI: 0 zł, pełna funkcjonalność</b></td></tr>
+    <tr><td>Koordynator/ka Hubu + moderacja</td><td>1–1,5 etatu – to tu jest prawdziwa wartość</td></tr>
+  </table>
+  <p style="margin-top:22px">Python + Flask, 3 zależności, bez frameworka JS · SQLite → PostgreSQL · import Biblioteki ROPS ·
+    API dla bazy grantowej · docelowo logowanie przez <b>login.gov.pl</b>.</p>
+</section>
+
+<section class="s" data-n="10">
+  <div class="thread"></div>
+  <p class="eyebrow">Co dalej</p>
+  <h2>Pilotaż w obszarze rodzin osób z zespołem Downa</h2>
+  <div class="row">
+    <div class="col">
+      <ul>
+        <li><b>Miesiąc 1</b>: import Biblioteki i Mapy Wyzwań ROPS, testy z rodzinami i seniorami.</li>
+        <li><b>Miesiące 2–4</b>: login.gov.pl, PostgreSQL, pilotaż w 2–3 powiatach.</li>
+        <li><b>Mierniki</b>: odpowiedź Hubu ≤ 3 dni, dopasowania „pomocne” 51% → 70%, luki zamienione na nabory.</li>
+        <li><b>Potem</b>: cały region, integracja z bazą grantową, sieć wdrożeń między gminami.</li>
+      </ul>
+    </div>
+    <div style="width:420px;text-align:center;align-self:center">
+      <p style="font-size:56px;font-weight:700;line-height:1.1">HugMe</p>
+      <p style="font-size:30px">Twój problem<br>nie zostaje sam.</p>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
