@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf, field %}
+{% block title %}Nowy pomysł{% endblock %}
+{% block content %}
+<p><a href="/pomysly">← Pomysły</a></p>
+<h1>Fiszka pomysłu</h1>
+<p class="lead">Cztery pola – tyle wystarczy na start. Resztę dopiszesz później w kanwie.</p>
+<p class="notice">Pomysł będzie widoczny publicznie. Nie wpisuj danych osobowych – i tak je ukryjemy.</p>
+{% if errors %}
+<div class="error-summary" role="alert" aria-labelledby="err-h">
+  <h2 id="err-h">Popraw {{ errors|length }} {{ 'pole' if errors|length == 1 else 'pola' }}</h2>
+  <ul>{% for k, msg in errors.items() %}<li><a href="#f-{{ k }}">{{ msg }}</a></li>{% endfor %}</ul>
+</div>
+{% endif %}
+<form method="post" class="card" novalidate>
+  {{ csrf() }}
+  <fieldset>
+    <legend>Fiszka</legend>
+    {{ field('title', '1. Tytuł', value=form.title, error=errors.title, required=true, hint='Weekendowy klub dla nastolatków') }}
+    {{ field('essence', '2. Istota – na czym polega pomysł?', value=form.essence, error=errors.essence, required=true, rows=3,
+             hint='sobotnie spotkania młodzieży z zespołem Downa, a rodzice mają w tym czasie wolne') }}
+    {{ field('audience', '3. Dla kogo?', options=audiences|pairs, value=form.audience, error=errors.audience, required=true, hint='rodzice i opiekunowie') }}
+    {{ field('stage', '4. Etap', options=stages|pairs, value=form.stage, error=errors.stage, required=true, hint='pomysł – jeszcze nie testowany') }}
+  </fieldset>
+  {% set area_opts = [] %}{% for slug, a in AREAS.items() %}{% set _ = area_opts.append((slug, a.name)) %}{% endfor %}
+  {{ field('area', 'Obszar', options=area_opts, value=form.area, hint='Rodziny osób z zespołem Downa') }}
+  <button type="submit" class="btn btn--primary btn--large">Zapisz fiszkę</button>
+</form>
+{% endblock %}

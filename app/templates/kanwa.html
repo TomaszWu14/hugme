@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf, field %}
+{% block title %}Kanwa: {{ idea.title }}{% endblock %}
+{% block content %}
+<p><a href="/pomysly/{{ idea.id }}">← {{ idea.title }}</a></p>
+<h1>Kanwa Innowacji Społecznych</h1>
+<p class="lead">Dziesięć krótkich pól. Wypełnij te, które już wiesz – resztę możesz dopisać później.</p>
+<form method="post" class="card">
+  {{ csrf() }}
+  <fieldset>
+    <legend>Kanwa pomysłu „{{ idea.title }}”</legend>
+    {% for key, label, question, ex in fields %}
+    <div class="field">
+      <label for="f-{{ key }}">{{ label }} <span class="optional">– {{ question }}</span></label>
+      <p class="hint" id="h-{{ key }}">{{ ex }}</p>
+      <textarea id="f-{{ key }}" name="{{ key }}" rows="2" aria-describedby="h-{{ key }}">{{ data.get(key, '') }}</textarea>
+    </div>
+    {% endfor %}
+  </fieldset>
+  <button type="submit" class="btn btn--primary btn--large">Zapisz kanwę</button>
+</form>
+{% endblock %}

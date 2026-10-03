@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% from "_macros.html" import area_tag, example %}
+{% block title %}Pomysły{% endblock %}
+{% block content %}
+<h1>Kreator pomysłów</h1>
+<p class="lead">Masz pomysł, jak pomóc ludziom w swojej okolicy? Zapisz go w 5 minut na fiszce.
+  Asystent podpowie, co rozwinąć, a gdy trwa nabór – pomoże przygotować wniosek.</p>
+<p><a class="btn btn--primary btn--large" href="/pomysly/nowy">Zapisz nowy pomysł</a></p>
+
+<section aria-labelledby="calls-h">
+  <h2 id="calls-h">Nabory</h2>
+  <ul class="grid">
+    {% for c in calls %}
+    <li class="card card--thread thread--{{ c.area }}">
+      <h3>{{ c.title }}</h3>
+      <p>{% if c.is_open %}<span class="badge badge--open">● Otwarty do {{ c.deadline }}</span>{% else %}<span class="badge badge--closed">■ Zamknięty</span>{% endif %} {{ example() }}</p>
+      <p>{{ c.description }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section aria-labelledby="ideas-h">
+  <h2 id="ideas-h">Pomysły mieszkańców i organizacji</h2>
+  {% if ideas %}
+  <ul class="grid">
+    {% for i in ideas %}
+    <li class="card card--thread thread--{{ i.area or 'wspolpraca' }}">
+      <h3><a href="/pomysly/{{ i.id }}">{{ i.title }}</a></h3>
+      <p class="meta">{{ area_tag(i.area) }} <span>Etap: {{ i.stage }}</span> <span>Dla: {{ i.audience }}</span></p>
+      <p>{{ i.essence }}</p>
+      <p class="meta">Autor: {{ i.author.split(' – ')[0] }} {% if i.is_example %}{{ example() }}{% endif %}</p>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}<p>Nie ma jeszcze pomysłów – bądź pierwszy!</p>{% endif %}
+</section>
+{% endblock %}

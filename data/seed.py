@@ -61,8 +61,8 @@ def run(con):
     idea_ids = []
     for n, (ui, title, essence, aud, stage, area, canvas) in enumerate(D.IDEAS):
         cur = con.execute(
-            "INSERT INTO ideas (user_id, title, essence, audience, stage, area, canvas, created_at) "
-            "VALUES (?,?,?,?,?,?,?,?)",
+            "INSERT INTO ideas (user_id, title, essence, audience, stage, area, canvas, is_example, created_at) "
+            "VALUES (?,?,?,?,?,?,?,1,?)",
             (uid[ui], title, essence, aud, stage, area, json.dumps(canvas, ensure_ascii=False), ago(8 - n * 3)))
         idea_ids.append(cur.lastrowid)
 

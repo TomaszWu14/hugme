@@ -78,6 +78,7 @@ CREATE TABLE IF NOT EXISTS ideas (
     stage TEXT NOT NULL,
     area TEXT,
     canvas TEXT NOT NULL DEFAULT '{}',
+    is_example INTEGER NOT NULL DEFAULT 0,
     created_at TIMESTAMP NOT NULL
 );
 CREATE TABLE IF NOT EXISTS applications (

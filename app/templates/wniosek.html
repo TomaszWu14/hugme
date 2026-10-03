@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf, ai_box %}
+{% block title %}Wniosek: {{ call.title }}{% endblock %}
+{% block content %}
+<p><a href="/pomysly/{{ idea.id }}#wnioski">← {{ idea.title }}</a></p>
+<h1>Wniosek do naboru</h1>
+<p class="lead"><strong>{{ call.title }}</strong> <span class="badge badge--open">● Otwarty do {{ call.deadline }}</span></p>
+<p>Pola wypełniliśmy danymi z fiszki i kanwy. Popraw je, zapisz szkic, a gdy wszystko gotowe – złóż wniosek.</p>
+{% if errors %}
+<div class="error-summary" role="alert" aria-labelledby="err-h">
+  <h2 id="err-h">Uzupełnij {{ errors|length }} {{ 'pole' if errors|length == 1 else 'pola' }}, żeby złożyć wniosek</h2>
+  <ul>{% for k in errors %}<li><a href="#f-{{ k }}">{{ (spec|selectattr(0, 'equalto', k)|first)[1] }}</a></li>{% endfor %}</ul>
+</div>
+{% endif %}
+{% if suggestion %}
+{% call ai_box(true, 'Propozycja opisów') %}
+  <p><strong>Działania:</strong> {{ suggestion.get('dzialania', '') }}</p>
+  <p><strong>Rezultaty:</strong> {{ suggestion.get('rezultaty', '') }}</p>
+  <p class="meta">Skopiuj to, co Ci pasuje, do pól poniżej.</p>
+{% endcall %}
+{% endif %}
+<form method="post" class="card" novalidate>
+  {{ csrf() }}
+  <fieldset>
+    <legend>Pola wniosku</legend>
+    {% for key, label, hint in spec %}
+    <div class="field {{ 'field--error' if errors.get(key) }}">
+      <label for="f-{{ key }}">{{ label }}</label>
+      <p class="hint" id="h-{{ key }}">{{ hint }}</p>
+      {% if errors.get(key) %}<p class="error-msg" id="e-{{ key }}"><span aria-hidden="true">⚠</span> {{ errors[key] }}</p>{% endif %}
+      <textarea id="f-{{ key }}" name="{{ key }}" rows="{{ 1 if key == 'tytul' else 3 }}" aria-describedby="h-{{ key }}{{ ' e-' ~ key if errors.get(key) }}" {% if errors.get(key) %}aria-invalid="true"{% endif %}>{{ fields.get(key, '') }}</textarea>
+    </div>
+    {% endfor %}
+  </fieldset>
+  <div class="actions">
+    <button type="submit" name="akcja" value="szkic" class="btn">Zapisz szkic</button>
+    {% if ai_enabled %}<button type="submit" name="akcja" value="ai" class="btn btn--ai"><span aria-hidden="true">✦</span> Podpowiedz opisy (AI)</button>{% endif %}
+    <button type="submit" name="akcja" value="zloz" class="btn btn--primary">Złóż wniosek</button>
+  </div>
+</form>
+{% endblock %}

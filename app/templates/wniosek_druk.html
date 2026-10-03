@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Wniosek: {{ fields.tytul }}{% endblock %}
+{% block content %}
+<p class="no-print"><a href="/pomysly/{{ a.idea_id }}#wnioski">← Wróć do pomysłu</a></p>
+<article class="card">
+  <p class="eyebrow">HugMe – platforma dla HubMi.pl · wniosek {{ 'ZŁOŻONY' if a.status == 'zlozony' else 'SZKIC' }}</p>
+  <h1>{{ fields.tytul }}</h1>
+  <p class="meta"><span>Nabór: {{ a.call_title }}</span> <span>Termin: {{ a.deadline }}</span> <span>Data: {{ a.created_at|date }}</span></p>
+  <dl class="app-doc">
+    {% for key, label, hint in spec %}<dt>{{ label }}</dt><dd>{{ fields.get(key) or '—' }}</dd>{% endfor %}
+  </dl>
+  <p class="meta">Dokument przygotowany w prototypie HugMe (dane przykładowe).</p>
+</article>
+<p class="no-print notice">Aby wydrukować albo zapisać jako PDF, użyj skrótu <kbd>Ctrl</kbd>+<kbd>P</kbd> (na telefonie: menu przeglądarki → Drukuj).</p>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf, area_tag, example, ai_box %}
+{% from "_cards.html" import thread_block %}
+{% block title %}{{ idea.title }}{% endblock %}
+{% block content %}
+{% set own = g.user and g.user.id == idea.user_id %}
+<p><a href="/pomysly">← Pomysły</a></p>
+<article class="card card--raised">
+  <p class="eyebrow">Fiszka pomysłu</p>
+  <h1>{{ idea.title }}</h1>
+  <p class="meta">{{ area_tag(idea.area) }} <span>Etap: {{ idea.stage }}</span> <span>Dla kogo: {{ idea.audience }}</span>
+    <span>Autor: {{ author.name.split(' – ')[0] }}</span> {% if idea.is_example %}{{ example() }}{% endif %}</p>
+  <p class="lead">{{ idea.essence }}</p>
+</article>
+
+<section id="kanwa" aria-labelledby="kanwa-h">
+  <h2 id="kanwa-h">Kanwa Innowacji Społecznych</h2>
+  {% if canvas %}
+  <dl class="app-doc">
+    {% for key, label, q, ex in fields if canvas.get(key) %}<dt>{{ label }}</dt><dd>{{ canvas[key] }}</dd>{% endfor %}
+  </dl>
+  <p class="meta">Wypełnione pola: {{ canvas|length }} z {{ fields|length }}.</p>
+  {% else %}<p>Kanwa nie jest jeszcze wypełniona.</p>{% endif %}
+  {% if own %}<p><a class="btn" href="/pomysly/{{ idea.id }}/kanwa">{{ 'Edytuj kanwę' if canvas else 'Wypełnij kanwę' }}</a></p>{% endif %}
+</section>
+
+<section id="asystent" aria-labelledby="asys-h">
+  <h2 id="asys-h">Asystent pomysłu</h2>
+  {% if assistant %}
+  {% call ai_box(assistant.by_ai, 'Co mówi asystent') %}
+    <h4>Mocne strony</h4><ul>{% for s in assistant.strengths %}<li>{{ s }}</li>{% endfor %}</ul>
+    <h4>Pytania, które pomogą rozwinąć pomysł</h4><ul>{% for s in assistant.questions %}<li>{{ s }}</li>{% endfor %}</ul>
+    <h4>Nieoczywiste kierunki</h4><ul>{% for s in assistant.directions %}<li>{{ s }}</li>{% endfor %}</ul>
+    <h4>Szkic prototypu</h4><p>{{ assistant.prototype }}</p>
+  {% endcall %}
+  {% else %}
+  <p>Asystent wskaże mocne strony, zada pytania rozwijające, podsunie nieoczywiste kierunki i opisze szkic prototypu.</p>
+  {% endif %}
+  {% if g.user %}
+  <form method="post" action="/pomysly/{{ idea.id }}/asystent#asystent">{{ csrf() }}
+    <button type="submit" class="btn btn--ai"><span aria-hidden="true">✦</span> {{ 'Zapytaj ponownie' if assistant else 'Zapytaj asystenta' }}</button>
+  </form>
+  {% endif %}
+</section>
+
+{% if own %}
+<section id="wnioski" aria-labelledby="wn-h">
+  <h2 id="wn-h">Generator wniosków</h2>
+  {% if open_calls %}
+  <p>Trwa nabór! Generator wypełni pola wniosku danymi z fiszki i kanwy.</p>
+  <ul class="list-plain">
+    {% for c in open_calls %}
+    {% set app = (apps|selectattr('call_id', 'equalto', c.id)|list|first) %}
+    <li class="actions"><span><strong>{{ c.title }}</strong> <span class="badge badge--open">● do {{ c.deadline }}</span></span>
+      {% if app and app.status == 'zlozony' %}<a class="btn" href="/wnioski/{{ app.id }}">✔ Złożony – zobacz</a>
+      {% else %}<a class="btn btn--primary" href="/pomysly/{{ idea.id }}/wniosek/{{ c.id }}">{{ 'Wróć do szkicu' if app else 'Przygotuj wniosek' }}</a>{% endif %}</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="notice"><span aria-hidden="true">■</span> Generator jest nieaktywny – obecnie nie trwa żaden nabór. Obserwuj obszar, a damy znać o nowym.</p>
+  {% endif %}
+</section>
+{% endif %}
+
+{{ thread_block(thread) }}
+{% endblock %}
