@@ -3,7 +3,7 @@
 Wygenerowany przez `python scripts/axe_audit.py`. Reguły axe: wcag2a, wcag2aa, wcag21a, wcag21aa.
 Widoki: desktop 1280 px i telefon 320 px; dodatkowo tryb wysokiego kontrastu i A+.
 
-**Sprawdzonych widoków:** 136 · **z naruszeniami axe:** 0 · **z przewijaniem w poziomie:** 0
+**Sprawdzonych widoków:** 136 · **z naruszeniami axe:** 0 · **z przewijaniem w poziomie:** 0 · **układ na telefonie z A+ (wszystkie widoki):** bez problemów ✔
 
 | Ekran | Rola | Ścieżka | Naruszenia axe | Reguły zaliczone | Przewijanie w bok | Małe cele dotykowe |
 |---|---|---|---|---|---|---|

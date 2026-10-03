@@ -80,3 +80,13 @@
 <ul class="nav nav-d {{ cls }}">{% for it in items %}<li><a href="{{ it[0] }}" {% if it[2] %}aria-current="page"{% endif %}>{{ it[1] }}{% if it|length > 3 and it[3] %} <span class="count">{{ it[3] }}<span class="sr-only"> nowych</span></span>{% endif %}</a></li>{% endfor %}</ul>
 {%- endmacro %}
 
+
+{% macro ai_note() -%}
+<span class="meta ai-note">AI to zewnętrzny model (Claude): dostaje tekst bez danych osobowych – te ukrywamy wcześniej.</span>
+{%- endmacro %}
+
+{% macro hide_button(kind, oid, hidden, label, back) -%}
+<form method="post" action="/admin/ukryj/{{ kind }}/{{ oid }}" class="inline-form">{{ csrf() }}
+  <input type="hidden" name="next" value="{{ back }}">
+  <button type="submit" class="btn btn--small">{{ 'Przywróć' if hidden else 'Ukryj' }} {{ label }}</button></form>
+{%- endmacro %}

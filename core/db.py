@@ -240,6 +240,10 @@ CREATE TABLE IF NOT EXISTS admin_log (
     action TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL
 );
+CREATE TABLE IF NOT EXISTS ai_usage (
+    day TEXT PRIMARY KEY,
+    calls INTEGER NOT NULL DEFAULT 0
+);
 CREATE INDEX IF NOT EXISTS ix_reports_created ON reports(created_at);
 CREATE INDEX IF NOT EXISTS ix_notifications_user ON notifications(user_id, is_read);
 CREATE INDEX IF NOT EXISTS ix_messages_thread ON messages(thread_id);
@@ -272,10 +276,11 @@ def close_db(_exc=None):
 def init_schema(con):
     con.executescript(SCHEMA)
     # Migracja istniejących baz (wolumen na produkcji): kolumny dodane po pierwszym wdrożeniu.
-    cols = {r[1] for r in con.execute("PRAGMA table_info(users)")}
-    if "is_active" not in cols:
-        con.execute("ALTER TABLE users ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1")
-        con.commit()
+    for table, column in (("users", "is_active INTEGER NOT NULL DEFAULT 1"), ("ideas", "hidden INTEGER NOT NULL DEFAULT 0"),
+                          ("messages", "hidden INTEGER NOT NULL DEFAULT 0")):
+        if column.split()[0] not in {r[1] for r in con.execute(f"PRAGMA table_info({table})")}:
+            con.execute(f"ALTER TABLE {table} ADD COLUMN {column}")
+    con.commit()
 
 
 def query(sql, args=()):

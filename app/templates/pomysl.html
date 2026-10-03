@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import csrf, area_tag, example, ai_box %}
+{% from "_macros.html" import csrf, area_tag, example, ai_box, ai_note, hide_button %}
 {% from "_cards.html" import thread_block %}
 {% block title %}{{ idea.title }}{% endblock %}
 {% block content %}
@@ -10,7 +10,9 @@
   <h1>{{ idea.title }}</h1>
   <p class="meta">{{ area_tag(idea.area) }} <span>Etap: {{ idea.stage }}</span> <span>Dla kogo: {{ idea.audience }}</span>
     <span>Autor: {{ author.name.split(' – ')[0] }}</span> {% if idea.is_example %}{{ example() }}{% endif %}</p>
+  {% if idea.hidden %}<p class="notice">Ten pomysł jest ukryty – widzi go tylko Hub.</p>{% endif %}
   <p class="lead">{{ idea.essence }}</p>
+  {% if g.user and g.user.role == 'admin' %}{{ hide_button('pomysl', idea.id, idea.hidden, 'pomysł', request.path) }}{% endif %}
 </article>
 
 <section id="kanwa" aria-labelledby="kanwa-h">
@@ -39,6 +41,7 @@
   {% if g.user %}
   <form method="post" action="/pomysly/{{ idea.id }}/asystent#asystent">{{ csrf() }}
     <button type="submit" class="btn btn--ai"><span aria-hidden="true">✦</span> {{ 'Zapytaj ponownie' if assistant else 'Zapytaj asystenta' }}</button>
+    {% if ai_enabled %}{{ ai_note() }}{% endif %}
   </form>
   {% endif %}
 </section>

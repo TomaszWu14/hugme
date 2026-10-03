@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import csrf, ai_box %}
+{% from "_macros.html" import csrf, ai_box, ai_note %}
 {% block title %}Wniosek: {{ call.title }}{% endblock %}
 {% block content %}
 <p><a href="/pomysly/{{ idea.id }}#wnioski">← {{ idea.title }}</a></p>
@@ -34,7 +34,7 @@
   </fieldset>
   <div class="actions">
     <button type="submit" name="akcja" value="szkic" class="btn">Zapisz szkic</button>
-    {% if ai_enabled %}<button type="submit" name="akcja" value="ai" class="btn btn--ai"><span aria-hidden="true">✦</span> Podpowiedz opisy (AI)</button>{% endif %}
+    {% if ai_enabled %}<button type="submit" name="akcja" value="ai" class="btn btn--ai"><span aria-hidden="true">✦</span> Podpowiedz opisy (AI)</button> {{ ai_note() }}{% endif %}
     <button type="submit" name="akcja" value="zloz" class="btn btn--primary">Złóż wniosek</button>
   </div>
 </form>

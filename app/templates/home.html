@@ -3,6 +3,23 @@
 {% block title %}Twój problem nie zostaje sam{% endblock %}
 {% block main_class %}home{% endblock %}
 {% block content %}
+{% if config.DEMO_MODE and not g.user %}
+{% macro as_role(uid, next, label) -%}
+<form method="post" action="{{ url_for('auth.demo') }}" class="inline-form">{{ csrf() }}
+  <input type="hidden" name="user_id" value="{{ uid }}"><input type="hidden" name="next" value="{{ next }}">
+  <button type="submit" class="btn btn--small">{{ label }}</button></form>
+{%- endmacro %}
+<details class="notice demo-guide">
+  <summary>Oglądasz demo? Zobacz wszystko w 4 krokach (ok. 3 minuty)</summary>
+  <ol class="demo-guide__steps">
+    <li><strong>Opisz problem</strong> w polu poniżej – przykład już jest wpisany. Kliknij „Znajdź rozwiązania”.</li>
+    <li><strong>Hub Innowacji Społecznych</strong>: skrzynka zgłoszeń, trendy i luki. {{ as_role(5, '/admin', 'Wejdź jako koordynatorka Hubu') }}</li>
+    <li><strong>Gmina</strong>: karta usługi do wdrożenia u siebie. {{ as_role(3, '/posrednik', 'Wejdź jako gmina') }}</li>
+    <li><strong>Asystent pomysłów</strong>: miętowa ramka to AI, bez niej działa wersja regułowa. {{ as_role(2, '/pomysly/1', 'Wejdź jako organizacja') }}</li>
+  </ol>
+  <p class="meta">Konta demo nie mają haseł – rolę zmienisz też w pasku u góry. Demo odnawia się samo po 20 minutach bez nowych wpisów.</p>
+</details>
+{% endif %}
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero__text">
     <p class="eyebrow">HugMe – platforma dla HubMi.pl</p>

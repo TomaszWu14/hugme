@@ -8,7 +8,7 @@ from datetime import date
 
 from flask import Blueprint, Response, abort, flash, g, redirect, render_template, request, url_for
 
-from app.auth import role_required
+from app.auth import role_required, safe_next
 from app.views.wiedza import embed_url
 from core import db, notify
 from core.domain import AREAS, AUDIENCES, GAP_THRESHOLD, POWIATY, REPORT_STATUSES, STAGES
@@ -391,3 +391,23 @@ def razem_pair():
                   "/razem/przewodnik")
     flash(f"Połączono: {s['alias']} ↔ {o['alias']}. Obie strony dostały powiadomienie.", "success")
     return redirect(url_for("admin.razem_panel"))
+
+
+HIDEABLE = {"pomysl": ("ideas", "pomysł"), "wiadomosc": ("messages", "wiadomość")}
+
+
+@bp.post("/ukryj/<kind>/<int:oid>")
+def toggle_hidden(kind, oid):
+    """Moderacja po publikacji: ukryty wpis znika dla wszystkich poza Hubem; da się go przywrócić."""
+    if kind not in HIDEABLE:
+        abort(404)
+    table, label = HIDEABLE[kind]
+    row = db.one(f"SELECT user_id, hidden FROM {table} WHERE id = ?", (oid,))
+    if row is None:
+        abort(404)
+    db.execute(f"UPDATE {table} SET hidden = ? WHERE id = ?", (0 if row["hidden"] else 1, oid))
+    db.execute("INSERT INTO admin_log (admin_id, user_id, action, created_at) VALUES (?,?,?,?)",
+               (g.user["id"], row["user_id"], f"{'przywrócono' if row['hidden'] else 'ukryto'} {label} #{oid}", db.now()))
+    flash(f"{label.capitalize()} {'przywrócona' if kind == 'wiadomosc' else 'przywrócony'}." if row["hidden"]
+          else f"{label.capitalize()} {'ukryta' if kind == 'wiadomosc' else 'ukryty'} – widzi go tylko Hub.", "success")
+    return redirect(safe_next(request.form.get("next"), url_for("admin.panel")))

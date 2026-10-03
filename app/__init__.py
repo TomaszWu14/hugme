@@ -28,6 +28,7 @@ def create_app(test_config=None):
         SESSION_COOKIE_SAMESITE="Lax",
         SESSION_COOKIE_SECURE=os.environ.get("COOKIE_SECURE") == "1",
         MAX_CONTENT_LENGTH=2 * 1024 * 1024,
+        DEMO_MODE=os.environ.get("DEMO_MODE") == "1",  # publiczne demo: ochrona kont demo, ramka dla jury, reset
     )
     if test_config:
         app.config.update(test_config)

@@ -94,3 +94,46 @@ def test_templates_never_mark_content_safe():
     tpl = Path(__file__).resolve().parent.parent / "app" / "templates"
     offenders = [p.name for p in tpl.rglob("*.html") if "|safe" in p.read_text(encoding="utf-8") or "| safe" in p.read_text(encoding="utf-8")]
     assert offenders == []
+
+
+def test_personal_data_is_masked_for_every_caller(fake_ai):
+    """Strażnik w jednym miejscu: nawet wywołujący, który zapomni o maskowaniu, nie wyśle PESEL ani telefonu."""
+    fake_ai["reply"] = "ok"
+    ai.easy_text("Mój syn Kacper, tel. 600 123 456, PESEL 44051401359, pisz na anna@example.com")
+    p = fake_ai["prompt"]
+    assert "600 123 456" not in p and "44051401359" not in p and "anna@example.com" not in p
+    assert "[TELEFON]" in p and "[PESEL]" in p
+
+
+class FakeClient:
+    def __init__(self):
+        self.calls = 0
+        self.messages = self
+
+    def create(self, **_kw):
+        self.calls += 1
+        block = type("B", (), {"type": "text", "text": f"odpowiedź {self.calls}"})()
+        return type("R", (), {"stop_reason": "end_turn", "content": [block]})()
+
+
+def test_daily_limit_falls_back_and_cache_does_not_spend(monkeypatch, app):
+    monkeypatch.setenv("AI_DISABLED", "0")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    monkeypatch.setenv("AI_DAILY_LIMIT", "2")
+    fake = FakeClient()
+    monkeypatch.setattr(ai, "_client", lambda: fake)
+    monkeypatch.setattr(ai, "_CACHE", {})
+    with app.app_context():
+        assert ai.ask("pierwsze") and ai.ask("drugie")
+        assert ai.ask("pierwsze") == "odpowiedź 1"   # z cache – bez zużycia limitu
+        assert ai.ask("trzecie") is None              # limit wyczerpany → wywołujący bierze szablon
+        assert fake.calls == 2
+        assert db.get_db().execute("SELECT calls FROM ai_usage").fetchone()[0] == 2
+
+
+def test_ai_buttons_tell_where_text_goes(monkeypatch, client):
+    monkeypatch.setenv("AI_DISABLED", "0")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    login(client, "ngo")
+    assert "zewnętrzny model (Claude)" in client.get("/pomysly/1").get_data(as_text=True)
+    assert "Anthropic" in client.get("/prywatnosc").get_data(as_text=True)
