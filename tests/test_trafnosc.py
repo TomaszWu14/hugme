@@ -26,6 +26,8 @@ CASES = [
      {"Cyfrowy Przewodnik w bibliotece", "Tablet z Bibliotecznej Półki"}),
     ("Nastolatki w szkole mają depresję i lęki, psycholog jest dostępny za pół roku.",
      {"Szkolny Punkt Pierwszego Kontaktu"}),
+    ("Starsi mieszkańcy pięciu sołectw nie mają jak dojechać do przychodni.",
+     {"Bus na Telefon", "Sąsiedzkie Dojazdy"}),
     ("Chcemy, żeby gmina, fundacje i firmy zaczęły razem współpracować przy usługach społecznych.",
      {"Gminne Laboratorium Innowacji", "Inkubator Partnerstw dla NGO"}),
 ]

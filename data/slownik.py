@@ -35,7 +35,7 @@ TOPICS = {
         "gdzie", "baza", "mapa", "turnus", "turnusy", "dofinansowanie", "pomoc",
     ]),
     "seniorzy": ("seniorzy i starość", [
-        "senior", "seniorka", "seniorzy", "seniorów", "starszy", "starsza", "starsze", "starszych",
+        "senior", "seniorka", "seniorzy", "seniorów", "starsi", "starszy", "starsza", "starsze", "starszych",
         "emeryt", "emerytka", "babcia", "dziadek", "starość", "wiek",
     ]),
     "samotnosc": ("samotność i więzi", [

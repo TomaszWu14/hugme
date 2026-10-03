@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% from "_macros.html" import ai_box %}
+{% block title %}Karta usługi{% endblock %}
+{% block content %}
+<p class="no-print"><a href="/posrednik">← Pośrednik innowacji</a></p>
+<h1>Karta usługi</h1>
+<p class="meta"><span>{{ institutions[ctx.institution] }}</span> <span>Dla: {{ ctx.audience }}</span> <span>Skala: {{ scales[ctx.scale] }}</span>
+  <span>Budżet: {{ budgets[ctx.budget] }}</span> {% if ctx.powiat %}<span>Powiat: {{ ctx.powiat }}</span>{% endif %}</p>
+<p class="lead">{{ ctx.problem }}</p>
+{% call ai_box(row.by_ai, 'Proponowana usługa') %}
+  <dl class="app-doc">
+    {% for k in keys %}
+    <dt>{{ labels[k] }}</dt>
+    <dd>{% if card[k] is string %}{{ card[k] }}{% else %}<ul>{% for x in card[k] %}<li>{{ x }}</li>{% endfor %}</ul>{% endif %}</dd>
+    {% endfor %}
+  </dl>
+{% endcall %}
+{% if card._inspiracje %}
+<section aria-labelledby="insp-h">
+  <h2 id="insp-h">Inspiracje z Biblioteki</h2>
+  <ul>{% for i in card._inspiracje %}<li><a href="/biblioteka/{{ i.id }}">{{ i.title }}</a></li>{% endfor %}</ul>
+  <p>Zapytaj autorów w rozmowie przy innowacji – Hub pomoże nawiązać kontakt.</p>
+</section>
+{% endif %}
+<p class="notice">Karta nie zawiera kwot – koszty trzeba wycenić lokalnie. Źródła finansowania sprawdź w aktualnych naborach.</p>
+<p class="no-print notice">Wydruk albo PDF: <kbd>Ctrl</kbd>+<kbd>P</kbd>.</p>
+{% endblock %}

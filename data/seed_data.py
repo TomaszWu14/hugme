@@ -153,7 +153,7 @@ INNOVATIONS = [
      "Mieszkańcy zamawiają kurs telefonicznie dzień wcześniej. Bus łączy kilka wsi i jeździ tam, "
      "gdzie nie ma autobusu.",
      "wies", "dąbrowski", "wdrożenie", "cała społeczność", "Gmina Przykładowo (PRZYKŁAD)",
-     "transport dojazd bus wieś lekarz autobus na żądanie"),
+     "transport dojazd dojechać bus wieś sołectwa przychodnia lekarz autobus na żądanie starsi mieszkańcy"),
     ("Sąsiedzkie Dojazdy",
      "Mieszkańcy dzielą się miejscami w samochodach jadących do miasta.",
      "Prosta tablica w sklepie i grupa telefoniczna: kto jedzie, dokąd i o której. Gmina ubezpiecza "

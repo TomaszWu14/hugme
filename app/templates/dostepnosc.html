@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Deklaracja dostępności{% endblock %}
+{% block content %}
+<h1>Deklaracja dostępności</h1>
+<p class="lead">HugMe projektujemy tak, żeby korzystali z niego wszyscy – także seniorzy, osoby słabowidzące
+  i osoby, które obsługują komputer tylko klawiaturą. Celem jest zgodność z WCAG 2.1 na poziomie AA.</p>
+<h2>Co działa</h2>
+<ul>
+  <li>Obsługa klawiaturą i link „Przejdź do treści” (pierwszy przystanek klawisza Tab).</li>
+  <li>Przyciski <strong>A+ większy tekst</strong> i <strong>Wysoki kontrast</strong> na górze strony – działają także bez JavaScriptu.</li>
+  <li>Kontrast tekstu co najmniej 4,5:1, duża i czytelna czcionka Atkinson Hyperlegible.</li>
+  <li>Każde pole formularza ma etykietę i przykład; błędy są opisane słowami i odczytywane przez czytniki ekranu.</li>
+  <li>Przyciski i linki mają co najmniej 44 piksele wysokości.</li>
+  <li>Strona działa na ekranie szerokim na 320 pikseli bez przewijania w bok.</li>
+  <li>Statusy oznaczamy słowem i symbolem, nie tylko kolorem.</li>
+  <li>Treści od AI są zawsze oznaczone.</li>
+</ul>
+<h2>Znane ograniczenia prototypu</h2>
+<ul>
+  <li>Filmy z Biblioteki mogą nie mieć napisów – zależy to od autora filmu. Każdy film ma opis tekstowy.</li>
+  <li>Deklaracja zostanie uzupełniona po audycie z udziałem użytkowników (w tym osób z niepełnosprawnościami).</li>
+</ul>
+<h2>Kontakt</h2>
+<p>Problem z dostępnością? Napisz do Hubu przez dowolną rozmowę w serwisie – odpowiemy i poprawimy.</p>
+{% endblock %}

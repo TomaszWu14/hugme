@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Prywatność{% endblock %}
+{% block content %}
+<h1>Prywatność</h1>
+<p class="lead">Twój problem jest ważny – Twoje dane osobowe nie są nam potrzebne.</p>
+<h2>Co robimy z tym, co piszesz</h2>
+<ul>
+  <li>Zanim cokolwiek zapiszemy albo przekażemy asystentowi AI, automatycznie ukrywamy: numer PESEL, telefon, e-mail,
+    adres, kod pocztowy, imię po słowach typu „syn”, „córka” oraz nazwisko lekarza.</li>
+  <li>Oryginalnego tekstu nie zapisujemy nigdzie.</li>
+  <li>Nie musisz podawać diagnozy. Wystarczy opis sytuacji – najlepiej grupy, np. „rodzice dzieci w naszej gminie”.</li>
+  <li>Zgłoszenie widzisz Ty, Hub i eksperci. Innym pokazujemy je dopiero po zatwierdzeniu przez Hub.</li>
+  <li>Trendy potrzeb są zbiorcze (obszar, powiat, miesiąc) – bez treści i bez autorów.</li>
+</ul>
+<h2>Asystent AI</h2>
+<p>Asystent AI jest opcjonalny. Dostaje wyłącznie tekst po ukryciu danych osobowych. Odpowiedzi AI są zawsze oznaczone.</p>
+<h2>Administrator danych (docelowo)</h2>
+<p>Regionalny Ośrodek Polityki Społecznej w Krakowie. Podstawa: zadanie publiczne (art. 6 ust. 1 lit. e RODO).
+  Zgłoszenia przechowujemy 24 miesiące od zamknięcia sprawy. Szczegóły: <code>docs/DANE.md</code>.</p>
+<p class="notice">To prototyp na HackYeah 2026 – wszystkie dane w serwisie są fikcyjne.</p>
+{% endblock %}
