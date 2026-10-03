@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf, field %}
+{% block title %}Twój problem nie zostaje sam{% endblock %}
+{% block content %}
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__text">
+    <p class="eyebrow">HugMe – platforma dla HubMi.pl</p>
+    <h1 id="hero-title">Twój problem nie&nbsp;zostaje sam</h1>
+    <p class="lead">Opisz, co jest trudne, własnymi słowami. Pokażemy, co już działa w Małopolsce,
+      kto może pomóc i skąd wziąć pieniądze. Odpowie Ci też człowiek z Hubu Innowacji Społecznych.</p>
+  </div>
+  <figure class="hero__art">
+    <svg viewBox="0 0 360 220" role="img" aria-labelledby="art-t art-d" class="weave">
+      <title id="art-t">Splot: problem, ludzie i rozwiązanie łączą się w serce</title>
+      <desc id="art-d">Trzy nici – koralowa (problemy), granatowa (ludzie) i miętowa (rozwiązania) – biegną z lewej strony, splatają się i tworzą na prawo kształt serca z węzłem pośrodku.</desc>
+      <path class="weave__t weave__t--coral" d="M10 50 C80 40 120 120 190 110 S260 40 272 70 C285 100 250 150 230 170"/>
+      <path class="weave__t weave__t--navy" d="M10 110 C70 110 120 70 190 110 S300 40 318 70 C330 100 290 150 230 170"/>
+      <path class="weave__t weave__t--mint" d="M10 170 C80 180 130 130 190 110 S250 160 230 170"/>
+      <circle cx="230" cy="170" r="9" class="weave__knot"/>
+      <text x="14" y="38" class="weave__lbl">problemy</text>
+      <text x="14" y="98" class="weave__lbl">ludzie</text>
+      <text x="14" y="196" class="weave__lbl">rozwiązania</text>
+    </svg>
+    <figcaption class="sr-only">Ilustracja splotu nici – opis powyżej.</figcaption>
+  </figure>
+</section>
+
+<section class="ask card card--raised" aria-labelledby="ask-title">
+  <h2 id="ask-title">Co jest trudne? Kogo to dotyczy?</h2>
+  <form method="post" action="/szukaj" novalidate>
+    {{ csrf() }}
+    {{ field('opis', 'Opisz sytuację własnymi słowami', rows=5, required=true, value=example,
+             hint='Przykład jest już wpisany – możesz go zmienić. Pisz o sytuacji grupy, np. „rodzice dzieci w naszej gminie…”.') }}
+    <p class="privacy-note"><span aria-hidden="true">🛡</span> Nie musisz podawać diagnozy ani danych osobowych.
+      Jeśli przez przypadek wpiszesz PESEL, telefon, e-mail, adres albo imię dziecka – ukryjemy je, zanim cokolwiek zapiszemy.</p>
+    <button type="submit" class="btn btn--primary btn--large">Znajdź rozwiązania</button>
+  </form>
+</section>
+
+<section aria-labelledby="how-title" class="how">
+  <h2 id="how-title">Jak to działa</h2>
+  <ol class="steps">
+    <li><strong>Opisujesz</strong> problem po swojemu – bez urzędowego języka.</li>
+    <li><strong>Widzisz</strong>, co już działa: sprawdzone pomysły, podobne zgłoszenia, ekspertów i poradniki.</li>
+    <li><strong>Zapisujesz</strong> zgłoszenie, a Hub ROPS odpisuje i łączy Cię z ludźmi.</li>
+  </ol>
+</section>
+
+<section aria-labelledby="areas-title">
+  <h2 id="areas-title">Wyzwania Małopolski</h2>
+  <ul class="grid grid--areas">
+    {% for slug, a in AREAS.items() %}
+    <li class="card card--thread thread--{{ slug }}">
+      <h3><a href="/wiedza/obszar/{{ slug }}">{{ a.name }}</a></h3>
+      {% if a.pilot %}<p class="badge badge--pilot">Obszar pilotażowy</p>{% endif %}
+      <p>{{ a.challenge }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

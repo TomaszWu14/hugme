@@ -1,0 +1,45 @@
+{% macro example() -%}
+<span class="badge badge--example" title="Dane fikcyjne do prezentacji">PRZYKŁAD</span>
+{%- endmacro %}
+
+{% macro area_tag(slug) -%}
+{% set a = AREAS.get(slug) %}{% if a %}<span class="area-tag thread--{{ slug }}"><span class="area-tag__dot" aria-hidden="true"></span>{{ a.short }}</span>{% endif %}
+{%- endmacro %}
+
+{% macro status(code) -%}
+{% set icons = {'nowe': '●', 'w-analizie': '◐', 'polaczone': '✔', 'luka': '!', 'zamkniete': '■'} %}
+<span class="status status--{{ code }}"><span aria-hidden="true">{{ icons.get(code, '•') }}</span> {{ REPORT_STATUSES.get(code, code) }}</span>
+{%- endmacro %}
+
+{% macro ai_box(by_ai, title='') -%}
+<div class="ai-box {% if not by_ai %}ai-box--rules{% endif %}">
+  <p class="ai-box__label">
+    {% if by_ai %}<span aria-hidden="true">✦</span> Wygenerowane przez AI – sprawdź, zanim użyjesz
+    {% else %}<span aria-hidden="true">⚙</span> Podpowiedź z szablonu (bez AI){% endif %}
+  </p>
+  {% if title %}<h3 class="ai-box__title">{{ title }}</h3>{% endif %}
+  {{ caller() }}
+</div>
+{%- endmacro %}
+
+{# Pole formularza: etykieta, przykład pod polem, komunikat błędu powiązany przez aria-describedby #}
+{% macro field(name, label, hint='', error='', value='', type='text', required=false, rows=0, options=none, optional_text=true) -%}
+<div class="field {% if error %}field--error{% endif %}">
+  <label for="f-{{ name }}">{{ label }}{% if not required and optional_text %} <span class="optional">(nieobowiązkowe)</span>{% endif %}</label>
+  {% if hint %}<p class="hint" id="h-{{ name }}">{{ hint }}</p>{% endif %}
+  {% if error %}<p class="error-msg" id="e-{{ name }}"><span aria-hidden="true">⚠</span> {{ error }}</p>{% endif %}
+  {% set described = [('h-' ~ name) if hint else '', ('e-' ~ name) if error else '']|select|join(' ') %}
+  {% if options is not none %}
+  <select id="f-{{ name }}" name="{{ name }}" {% if required %}required{% endif %} {% if described %}aria-describedby="{{ described }}"{% endif %} {% if error %}aria-invalid="true"{% endif %}>
+    {% if not required %}<option value="">— wybierz —</option>{% endif %}
+    {% for val, text in options %}<option value="{{ val }}" {% if val == value %}selected{% endif %}>{{ text }}</option>{% endfor %}
+  </select>
+  {% elif rows %}
+  <textarea id="f-{{ name }}" name="{{ name }}" rows="{{ rows }}" {% if required %}required{% endif %} {% if described %}aria-describedby="{{ described }}"{% endif %} {% if error %}aria-invalid="true"{% endif %}>{{ value }}</textarea>
+  {% else %}
+  <input id="f-{{ name }}" name="{{ name }}" type="{{ type }}" value="{{ value }}" {% if required %}required{% endif %} {% if described %}aria-describedby="{{ described }}"{% endif %} {% if error %}aria-invalid="true"{% endif %}>
+  {% endif %}
+</div>
+{%- endmacro %}
+
+{% macro csrf() -%}<input type="hidden" name="_csrf" value="{{ csrf_token() }}">{%- endmacro %}
