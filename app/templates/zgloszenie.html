@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import csrf, example, area_tag, status %}
+{% from "_macros.html" import csrf, example, area_tag, status, icon %}
 {% from "_cards.html" import score_bar, thread_block %}
 {% block title %}Zgłoszenie{% endblock %}
 {% block content %}
@@ -39,8 +39,8 @@
       <form method="post" action="/zgloszenie/{{ r.id }}/ocena" class="feedback">
         {{ csrf() }}<input type="hidden" name="innovation_id" value="{{ m.id }}">
         <span id="fb-{{ m.id }}">Czy to pomocne?</span>
-        <button type="submit" name="ocena" value="pomocne" class="btn btn--small" aria-pressed="{{ 'true' if m.feedback == 1 else 'false' }}" aria-describedby="fb-{{ m.id }}"><span aria-hidden="true">👍</span> Pomocne</button>
-        <button type="submit" name="ocena" value="niepomocne" class="btn btn--small" aria-pressed="{{ 'true' if m.feedback == -1 else 'false' }}" aria-describedby="fb-{{ m.id }}"><span aria-hidden="true">👎</span> Niepomocne</button>
+        <button type="submit" name="ocena" value="pomocne" class="btn btn--small" aria-pressed="{{ 'true' if m.feedback == 1 else 'false' }}" aria-describedby="fb-{{ m.id }}">{{ icon('kciuk-gora') }} Pomocne</button>
+        <button type="submit" name="ocena" value="niepomocne" class="btn btn--small" aria-pressed="{{ 'true' if m.feedback == -1 else 'false' }}" aria-describedby="fb-{{ m.id }}">{{ icon('kciuk-dol') }} Niepomocne</button>
         {% if m.feedback %}<span class="meta">Twoja ocena: {{ 'pomocne' if m.feedback == 1 else 'niepomocne' }}</span>{% endif %}
       </form>
       {% endif %}

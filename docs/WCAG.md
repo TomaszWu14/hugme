@@ -29,6 +29,9 @@ i `tabindex="0"`), tekst dla czytników ekranu rozpychający stronę na telefoni
 | 320 px, bez przewijania w bok | układ płynny, tabele w przewijanym regionie | 1.4.10 |
 | Statusy nie tylko kolorem | status = symbol + słowo (● Nowe, ✔ Połączone, ! Luka); trafność = etykieta + procent; trendy ▲/▼ + „więcej o 1” | 1.4.1 |
 | Ilustracja | SVG z `<title>` i `<desc>` opisującym splot | 1.1.1 |
+| Nici obszarów a daltonizm | kolor + **wzór kreski** (ciągła, kreski, kropki, paski) – pary mylone w deuteranopii mają różne wzory; nazwa obszaru zawsze obok | 1.4.1 |
+| Heatmapa trendów | skala sekwencyjna w granacie z legendą, progi bezwzględne (1 / 2–3 / 4–6 / 7+), liczby w każdej komórce | 1.4.1, 1.4.11 |
+| Ikony | SVG w kolorze tekstu (`aria-hidden`), bez emoji; grafiki AI i ilustracji ≥ 3:1 | 1.4.11 |
 | Język | `lang="pl"`, angielskie „hug me” oznaczone `lang="en"` | 3.1.1, 3.1.2 |
 | Ruch | brak animacji; respektujemy `prefers-reduced-motion` | 2.3.3 |
 | Filmy | YouTube bez śledzenia, z tytułem iframe i opisem tekstowym | 1.2.1 (częściowo) |

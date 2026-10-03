@@ -47,7 +47,10 @@ def test_a11y_prefs_toggle_cookie(client):
 
 def test_area_css_from_domain(client):
     css = client.get("/obszary.css").get_data(as_text=True)
-    assert ".thread--rodziny-zd{--thread:#7A3E9D}" in css
+    assert ".thread--rodziny-zd{--thread:#7A3E9D;" in css
+    # drugi kanał obok koloru: pary mylone przy daltonizmie mają różne wzory
+    assert "repeating-linear-gradient" in css.split(".thread--seniorzy")[1].split("}")[0]
+    assert "repeating-linear-gradient" not in css.split(".thread--wies")[1].split("}")[0]
 
 
 def test_friendly_404(client):
@@ -63,3 +66,15 @@ def test_logout(client):
 
 def test_health_endpoint(client):
     assert client.get("/zdrowie").get_json() == {"status": "ok"}
+
+
+def test_heat_levels_are_absolute_not_relative():
+    from core.domain import heat_level
+    assert [heat_level(n) for n in (0, 1, 2, 3, 4, 6, 7, 30)] == [0, 1, 2, 2, 3, 3, 4, 4]
+
+
+def test_no_emoji_used_as_icons_in_templates():
+    import pathlib
+    for f in pathlib.Path("app/templates").rglob("*.html"):
+        text = f.read_text(encoding="utf-8")
+        assert not any(ch in text for ch in "🛡👍👎"), f

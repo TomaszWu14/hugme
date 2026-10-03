@@ -149,8 +149,21 @@ def mine():
 @bp.route("/obszary.css")
 def area_css():
     """Kolory „nici” obszarów z jednego źródła (core.domain.AREAS); CSP nie pozwala na style inline."""
-    css = "".join(f".thread--{slug}{{--thread:{a['color']}}}" for slug, a in AREAS.items())
+    css = "".join(
+        f".thread--{slug}{{--thread:{a['color']};--thread-v:{thread_pattern(a, 'to bottom')};"
+        f"--thread-h:{thread_pattern(a, 'to right')}}}" for slug, a in AREAS.items())
     return Response(css, mimetype="text/css", headers={"Cache-Control": "public, max-age=3600"})
+
+
+def thread_pattern(area, direction):
+    """Wzór „nici” – drugi kanał obok koloru (daltonizm): ciągła, kreski, kropki, paski."""
+    c = area["color"]
+    return {
+        "ciagla": c,
+        "kreski": f"repeating-linear-gradient({direction},{c} 0 12px,transparent 12px 18px)",
+        "kropki": f"repeating-linear-gradient({direction},{c} 0 5px,transparent 5px 10px)",
+        "paski": f"repeating-linear-gradient(45deg,{c} 0 4px,transparent 4px 7px)",
+    }[area["pattern"]]
 
 
 @bp.route("/dostepnosc")

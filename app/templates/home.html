@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import csrf, field %}
+{% from "_macros.html" import csrf, field, icon %}
 {% block title %}Twój problem nie zostaje sam{% endblock %}
 {% block content %}
 <section class="hero" aria-labelledby="hero-title">
@@ -10,16 +10,16 @@
       kto może pomóc i skąd wziąć pieniądze. Odpowie Ci też człowiek z Hubu Innowacji Społecznych.</p>
   </div>
   <figure class="hero__art">
-    <svg viewBox="0 0 360 220" role="img" aria-labelledby="art-t art-d" class="weave">
+    <svg viewBox="0 0 360 230" role="img" aria-labelledby="art-t art-d" class="weave">
       <title id="art-t">Splot: problem, ludzie i rozwiązanie łączą się w serce</title>
-      <desc id="art-d">Trzy nici – koralowa (problemy), granatowa (ludzie) i miętowa (rozwiązania) – biegną z lewej strony, splatają się i tworzą na prawo kształt serca z węzłem pośrodku.</desc>
-      <path class="weave__t weave__t--coral" d="M10 50 C80 40 120 120 190 110 S260 40 272 70 C285 100 250 150 230 170"/>
-      <path class="weave__t weave__t--navy" d="M10 110 C70 110 120 70 190 110 S300 40 318 70 C330 100 290 150 230 170"/>
-      <path class="weave__t weave__t--mint" d="M10 170 C80 180 130 130 190 110 S250 160 230 170"/>
-      <circle cx="230" cy="170" r="9" class="weave__knot"/>
+      <desc id="art-d">Z lewej strony biegną trzy nici: koralowa (problemy), granatowa (ludzie) i miętowa (rozwiązania). Spotykają się w jednym węźle, z którego koralowa i granatowa nić wznoszą się i razem tworzą serce – tak jak w logo HugMe.</desc>
+      <path class="weave__t weave__t--coral" d="M14 52 C90 52 150 120 196 176 C214 198 236 210 262 206 C312 172 344 128 336 86 C330 50 288 40 262 78"/>
+      <path class="weave__t weave__t--navy" d="M14 118 C96 118 150 170 196 190 C220 202 242 210 262 206 C212 172 180 128 188 86 C194 50 236 40 262 78"/>
+      <path class="weave__t weave__t--mint" d="M14 184 C96 184 170 200 262 206"/>
+      <circle cx="262" cy="206" r="10" class="weave__knot"/>
       <text x="14" y="38" class="weave__lbl">problemy</text>
-      <text x="14" y="98" class="weave__lbl">ludzie</text>
-      <text x="14" y="196" class="weave__lbl">rozwiązania</text>
+      <text x="14" y="104" class="weave__lbl">ludzie</text>
+      <text x="14" y="170" class="weave__lbl">rozwiązania</text>
     </svg>
     <figcaption class="sr-only">Ilustracja splotu nici – opis powyżej.</figcaption>
   </figure>
@@ -38,7 +38,7 @@
     {{ field('opis', 'Opisz sytuację własnymi słowami', rows=5, required=true, value=example, error=error,
              hint='Przykład jest już wpisany – możesz go zmienić. Pisz o sytuacji grupy: „rodzice dzieci w naszej gminie…”.', plain_hint=true) }}
     {{ field('powiat', 'Powiat, którego to dotyczy', options=powiaty|pairs, hint='wadowicki. Pomoże Hubowi zobaczyć, gdzie problem jest częsty.') }}
-    <p class="privacy-note"><span aria-hidden="true">🛡</span> Nie musisz podawać diagnozy ani danych osobowych.
+    <p class="privacy-note">{{ icon('tarcza') }} Nie musisz podawać diagnozy ani danych osobowych.
       Jeśli przez przypadek wpiszesz PESEL, telefon, e-mail, adres albo imię dziecka – ukryjemy je, zanim cokolwiek zapiszemy.</p>
     <button type="submit" class="btn btn--primary btn--large">Znajdź rozwiązania</button>
   </form>

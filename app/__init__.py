@@ -7,7 +7,7 @@ from pathlib import Path
 from flask import Flask, abort, render_template, request, session
 
 from core import db
-from core.domain import AREAS, REPORT_STATUSES, ROLES
+from core.domain import AREAS, REPORT_STATUSES, ROLES, heat_level
 from core.match import label as score_label
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -114,5 +114,5 @@ def _template_globals(app):
     app.jinja_env.filters["pairs"] = lambda xs: [(x, x) for x in xs]
     app.jinja_env.filters["date"] = lambda s: f"{s[8:10]}.{s[5:7]}.{s[:4]}" if s else ""
     app.jinja_env.globals.update(
-        csrf_token=csrf_token, score_label=score_label, AREAS=AREAS, ROLES=ROLES, REPORT_STATUSES=REPORT_STATUSES,
+        csrf_token=csrf_token, score_label=score_label, heat_level=heat_level, AREAS=AREAS, ROLES=ROLES, REPORT_STATUSES=REPORT_STATUSES,
     )

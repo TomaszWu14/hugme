@@ -1,8 +1,10 @@
 """Stałe domenowe: obszary wyzwań, powiaty Małopolski, role, etapy, statusy."""
 
 # Obszary wyzwań regionu. Kolor = „nić” obszaru na kartach (kontrast >= 3:1 do kremowego tła).
+# Wzór kreski (pattern) odróżnia nici, które przy daltonizmie mają podobny kolor.
 AREAS = {
     "rodziny-zd": {
+        "pattern": "ciagla",
         "name": "Rodziny osób z zespołem Downa",
         "short": "Rodziny i zespół Downa",
         "color": "#7A3E9D",
@@ -12,6 +14,7 @@ AREAS = {
                      "i nie wiedzą, gdzie szukać wsparcia.",
     },
     "seniorzy": {
+        "pattern": "kreski",
         "name": "Seniorzy i opieka",
         "short": "Seniorzy",
         "color": "#8F5300",
@@ -19,6 +22,7 @@ AREAS = {
                      "dostępu do usług i kontaktu z ludźmi.",
     },
     "samotnosc": {
+        "pattern": "ciagla",
         "name": "Samotność i więzi sąsiedzkie",
         "short": "Samotność",
         "color": "#2F6AA6",
@@ -26,6 +30,7 @@ AREAS = {
                      "żeby poznać sąsiadów i poczuć się potrzebnym.",
     },
     "cyfrowe": {
+        "pattern": "kropki",
         "name": "Wykluczenie cyfrowe",
         "short": "Wykluczenie cyfrowe",
         "color": "#1C7570",
@@ -33,6 +38,7 @@ AREAS = {
                      "umiejętności albo pewności siebie, żeby z tego korzystać.",
     },
     "psychiczne": {
+        "pattern": "paski",
         "name": "Zdrowie psychiczne",
         "short": "Zdrowie psychiczne",
         "color": "#A8346A",
@@ -40,6 +46,7 @@ AREAS = {
                      "Szczególnie dotyczy to młodzieży i opiekunów.",
     },
     "wies": {
+        "pattern": "ciagla",
         "name": "Wieś i transport",
         "short": "Wieś i transport",
         "color": "#4A7320",
@@ -47,6 +54,7 @@ AREAS = {
                      "Trudno dojechać do lekarza, urzędu, szkoły czy pracy.",
     },
     "wspolpraca": {
+        "pattern": "kreski",
         "name": "Współpraca międzysektorowa",
         "short": "Współpraca",
         "color": "#55596A",
@@ -83,6 +91,14 @@ REPORT_STATUSES = {
 }
 
 TEST_KINDS = {"zgloszenie": "Zgłoszenie do testu", "ocena": "Ocena", "usprawnienie": "Propozycja usprawnienia"}
+
+# Progi heatmapy trendów: liczba zgłoszeń → stopień 1–4 (bezwzględne, nie względem maksimum).
+HEAT_STEPS = (1, 2, 4, 7)
+
+
+def heat_level(n):
+    return sum(n >= step for step in HEAT_STEPS)
+
 
 # Próg trafności, poniżej którego zgłoszenie uznajemy za „lukę”.
 GAP_THRESHOLD = 0.35

@@ -14,7 +14,7 @@
   --cream: #FBF6EE;
   --paper: #FFFFFF;
   --sand: #F3EADB;
-  --line: #E2D6C2;
+  --line: #D5C6AE;       /* obramowania kart – wyraźniejsze oddzielenie od kremu */
   --ink: #1B2540;        /* granat – tekst, 14:1 na kremie */
   --ink-soft: #46506B;   /* tekst pomocniczy, 7.6:1 */
   --coral: #B8432F;      /* akcent / przyciski główne, 5.1:1 */
@@ -22,8 +22,8 @@
   --coral-soft: #FBE4DC;
   --mint: #1D6B52;       /* AI – tekst, 5.9:1 na mint-bg */
   --mint-bg: #E1F4EB;
-  --mint-line: #2BA37E;
-  --ok: #1F6B3A;
+  --mint-line: #1F8566;  /* grafiki AI i ilustracji: 4.2:1 na kremie (>= 3:1) */
+  --ok: #2E6417;         /* zieleń sukcesu – oliwkowa, żeby nie mylić z miętą AI */
   --warn: #8A4B00;
   --danger: #A1261B;
   --border-input: #6B7186;  /* 4.6:1 do bieli */
@@ -42,6 +42,7 @@ html.a11y-contrast {
 }
 html.a11y-contrast a { text-decoration-thickness: 2px; }
 html.a11y-contrast .card, html.a11y-contrast .ai-box { border: 2px solid #000; }
+html.a11y-contrast .heat-1, html.a11y-contrast .heat-2 { border: 1px solid #000; }
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
@@ -139,7 +140,9 @@ textarea { resize: vertical; line-height: 1.5; }
 .card > :first-child { margin-top: 0; }
 .card > :last-child { margin-bottom: 0; }
 .card--raised { border-top: 6px solid var(--coral); }
-.card--thread { border-left: 8px solid var(--thread); }
+.card--thread { position: relative; padding-left: calc(1.3rem + 8px); }
+.card--thread::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 8px;
+  border-radius: var(--radius) 0 0 var(--radius); background: var(--thread-v, var(--thread)); }
 .card--thread h3 a, .card h3 a { color: var(--ink); }
 .grid { display: grid; gap: 1rem; list-style: none; padding: 0; margin: 0 0 1.5rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); }
 .grid--areas { grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); }
@@ -155,11 +158,12 @@ textarea { resize: vertical; line-height: 1.5; }
 .badge--open { background: #DDF2E3; color: var(--ok); border: 1px solid var(--ok); }
 .badge--closed { background: var(--sand); color: var(--ink-soft); border: 1px solid var(--ink-soft); }
 .area-tag { display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; font-weight: 700; color: var(--ink); }
-.area-tag__dot { width: 1.4rem; height: .45rem; border-radius: 999px; background: var(--thread); }
+.area-tag__dot { width: 1.6rem; height: .55rem; border-radius: 999px; background: var(--thread-h, var(--thread));
+  box-shadow: inset 0 0 0 1.5px var(--thread); }
 .status { display: inline-flex; gap: .35rem; align-items: center; font-weight: 700; font-size: .9rem; padding: .1rem .6rem; border-radius: 6px; border: 1px solid currentColor; }
-.status--nowe { color: var(--coral-dark); }
+.status--nowe { color: #fff; background: var(--ink); border-color: var(--ink); }
 .status--w-analizie { color: var(--warn); }
-.status--polaczone { color: var(--ok); }
+.status--polaczone { color: var(--ink); }
 .status--luka { color: var(--danger); }
 .status--zamkniete { color: var(--ink-soft); }
 
@@ -217,8 +221,14 @@ th, td { text-align: left; padding: .55rem .7rem; border-bottom: 1px solid var(-
 th { background: var(--sand); }
 caption { text-align: left; font-weight: 700; padding: .7rem; }
 .heat td.num { text-align: center; font-weight: 700; }
-.heat-0 { background: var(--paper); color: var(--ink-soft); } .heat-1 { background: #FBE4DC; } .heat-2 { background: #F4BFAE; } .heat-3 { background: #E58E73; color: #1B2540; } .heat-4 { background: #8F2F1F; color: #fff; }
-.trend-up { color: var(--danger); font-weight: 700; } .trend-down { color: var(--ok); font-weight: 700; }
+/* Skala sekwencyjna w granacie (nie koral – koral to akcja/błąd). Progi bezwzględne: core.domain.HEAT_STEPS */
+.heat-0 { background: var(--paper); color: var(--ink-soft); } .heat-1 { background: #E3E8F2; } .heat-2 { background: #B9C4DB; }
+.heat-3 { background: #4A5F8C; color: #fff; } .heat-4 { background: #1B2540; color: #fff; }
+.legend { display: flex; flex-wrap: wrap; gap: .4rem 1rem; align-items: center; list-style: none; padding: 0; margin: -.8rem 0 1.5rem; font-size: .9rem; }
+.legend li { display: inline-flex; align-items: center; gap: .4rem; }
+.legend__sw { width: 1.6rem; height: 1.1rem; border: 1px solid var(--border-input); border-radius: 4px; }
+/* Trend to informacja, nie błąd – neutralny granat, kierunek niosą ▲/▼ i słowa */
+.trend-up, .trend-down { color: var(--ink); font-weight: 700; }
 .stat-row { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); list-style: none; padding: 0; margin: 0 0 1.5rem; }
 .stat { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; }
 .stat__num { display: block; font-size: 2rem; font-weight: 700; line-height: 1.1; }
@@ -232,7 +242,7 @@ caption { text-align: left; font-weight: 700; padding: .7rem; }
 
 /* Ścieżka rodziny */
 .path { list-style: none; padding: 0; margin: 0 0 2rem; position: relative; }
-.path::before { content: ""; position: absolute; left: 1.15rem; top: .5rem; bottom: .5rem; width: 6px; border-radius: 3px; background: var(--thread); }
+.path::before { content: ""; position: absolute; left: 1.15rem; top: .5rem; bottom: .5rem; width: 6px; border-radius: 3px; background: var(--thread-v, var(--thread)); }
 .path > li { position: relative; padding-left: 3.4rem; margin-bottom: 1.4rem; }
 .path__num { position: absolute; left: 0; top: 0; width: 2.6rem; height: 2.6rem; border-radius: 50%; background: var(--paper); border: 4px solid var(--thread); display: grid; place-items: center; font-weight: 700; }
 
@@ -266,3 +276,6 @@ code { background: var(--sand); padding: 0 .25rem; border-radius: 4px; }
 .demo-bar .role-switch select { max-width: 100%; min-width: 0; }
 @media (max-width: 30em) { .demo-bar .role-switch select { width: 100%; } }
 .table-wrap:focus-visible { outline-offset: 0; }
+
+/* Ikony SVG (zamiast emoji) – kolor z tekstu */
+.ico { width: 1.15em; height: 1.15em; vertical-align: -.2em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }

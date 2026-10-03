@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import csrf, field, example, ai_box, area_tag %}
+{% from "_macros.html" import csrf, field, example, ai_box, area_tag, icon %}
 {% from "_cards.html" import innovation_card, score_bar, why %}
 {% block title %}Co może pomóc{% endblock %}
 {% block content %}
@@ -9,7 +9,7 @@
   <h2 id="opis-h" class="h3">Twój opis</h2>
   <p class="masked">{{ draft.opis }}</p>
   {% if masked_info %}
-  <p class="notice" role="status"><span aria-hidden="true">🛡</span> Dla Twojego bezpieczeństwa ukryliśmy: <strong>{{ masked_info }}</strong>.
+  <p class="notice" role="status">{{ icon('tarcza') }} Dla Twojego bezpieczeństwa ukryliśmy: <strong>{{ masked_info }}</strong>.
     Nie musisz podawać takich danych ani diagnozy – wystarczy opis sytuacji.</p>
   {% endif %}
   <p><a href="/">Zmień opis</a></p>

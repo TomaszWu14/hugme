@@ -23,16 +23,23 @@
 
 <div class="table-wrap heat" tabindex="0" role="region" aria-label="Mapa potrzeb – na małym ekranie przewiń w bok">
 <table>
-  <caption>Mapa potrzeb: powiat × obszar (liczba zgłoszeń; ciemniej = więcej)</caption>
+  <caption>Mapa potrzeb: powiat × obszar – liczba zgłoszeń (ciemniej = więcej)</caption>
   <thead><tr><th scope="col">Powiat</th>{% for slug, a in AREAS.items() %}<th scope="col">{{ a.short }}</th>{% endfor %}</tr></thead>
   <tbody>
     {% for p in powiaty %}
     <tr><th scope="row">{{ p }}</th>
       {% for slug in AREAS %}{% set n = heat[p][slug] %}
-      <td class="num heat-{{ 0 if not n else [((n / peak) * 4)|round(0, 'ceil')|int, 4]|min }}">{{ n if n else '·' }}<span class="sr-only">{{ '' if n else 'brak' }}</span></td>
+      <td class="num heat-{{ heat_level(n) }}">{{ n if n else '·' }}<span class="sr-only">{{ '' if n else 'brak' }}</span></td>
       {% endfor %}</tr>
     {% endfor %}
   </tbody>
 </table>
 </div>
+<ul class="legend" aria-label="Legenda mapy potrzeb">
+  <li><span class="legend__sw heat-0" aria-hidden="true"></span> 0</li>
+  <li><span class="legend__sw heat-1" aria-hidden="true"></span> 1</li>
+  <li><span class="legend__sw heat-2" aria-hidden="true"></span> 2–3</li>
+  <li><span class="legend__sw heat-3" aria-hidden="true"></span> 4–6</li>
+  <li><span class="legend__sw heat-4" aria-hidden="true"></span> 7 i więcej zgłoszeń</li>
+</ul>
 {% endblock %}

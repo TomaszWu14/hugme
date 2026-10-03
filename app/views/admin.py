@@ -273,9 +273,8 @@ def trends():
         if r["powiat"]:
             heat[r["powiat"]][r["area"]] += 1
     rate, rated = helpful_rate()
-    peak = max((c for row in heat.values() for c in row.values()), default=1)
     return render_template("admin/trendy.html", by_area=by_area, mom=mom, heat=heat,
-                           powiaty=[p for p in POWIATY if p in heat], peak=peak, total=len(reports),
+                           powiaty=[p for p in POWIATY if p in heat], total=len(reports),
                            rate=rate, rated=rated)
 
 
