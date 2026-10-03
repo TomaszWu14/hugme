@@ -206,7 +206,9 @@ def toggle_signup(eid):
         db.execute("DELETE FROM event_signups WHERE event_id = ? AND user_id = ?", (eid, g.user["id"]))
         flash(f"Wypisano z wydarzenia „{e['title']}”.", "success")
     else:
-        db.execute("INSERT INTO event_signups (event_id, user_id, created_at) VALUES (?,?,?)", (eid, g.user["id"], db.now()))
+        # ON CONFLICT: dwa równoczesne kliknięcia nie kończą się błędem (SQLite i PostgreSQL).
+        db.execute("INSERT INTO event_signups (event_id, user_id, created_at) VALUES (?,?,?) "
+                   "ON CONFLICT (event_id, user_id) DO NOTHING", (eid, g.user["id"], db.now()))
         notify.notify([g.user["id"]], f"Zapisano: „{e['title']}” – {e['date']}, {e['place']}", "/razem/wydarzenia")
         flash("Zapisano. Przypomnienie znajdziesz w powiadomieniach.", "success")
     return redirect(url_for("razem.events"))

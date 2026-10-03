@@ -347,8 +347,11 @@ def razem_status(rid):
     r = db.one("SELECT * FROM family_requests WHERE id = ?", (rid,))
     if r is None:
         abort(404)
+    from data.razem import PUBLIC_KINDS
     status = request.form.get("status")
-    if status not in ("zatwierdzone", "odrzucone", "zamkniete"):
+    # Zatwierdzanie dotyczy tylko treści publicznych (miejsca, sprzęt); pozostałe prośby można jedynie zamknąć.
+    allowed = ("zatwierdzone", "odrzucone", "zamkniete") if r["kind"] in PUBLIC_KINDS else ("zamkniete",)
+    if status not in allowed:
         abort(400)
     db.execute("UPDATE family_requests SET status = ? WHERE id = ?", (status, rid))
     what = {"zatwierdzone": "Hub zatwierdził", "odrzucone": "Hub nie opublikował", "zamkniete": "Hub zamknął"}[status]

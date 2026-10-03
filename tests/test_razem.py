@@ -221,3 +221,20 @@ def test_pairing_guides(client, app):
         assert count(app, "SELECT COUNT(*) FROM notifications WHERE user_id=? AND body LIKE 'Hub połączył%'", (uid,)) == 1
     resp = client.post("/admin/razem/polacz", data={"_csrf": token, "szukam_id": o["id"], "oferuje_id": s["id"]})
     assert resp.status_code == 400
+
+
+def test_signup_is_idempotent_at_db_level(app):
+    """Równoczesny drugi zapis (wyścig) nie może skończyć się błędem."""
+    with app.app_context():
+        for _ in range(2):
+            db.execute("INSERT INTO event_signups (event_id, user_id, created_at) VALUES (1, 2, '2026-10-03') "
+                       "ON CONFLICT (event_id, user_id) DO NOTHING")
+        assert db.one("SELECT COUNT(*) FROM event_signups WHERE event_id=1 AND user_id=2")[0] == 1
+
+
+def test_guide_request_cannot_be_approved_only_closed(client, app):
+    token = login(client, "admin")
+    with app.app_context():
+        rid = db.one("SELECT id FROM family_requests WHERE kind='przewodnik-szukam' LIMIT 1")["id"]
+    assert client.post(f"/admin/razem/{rid}/status", data={"_csrf": token, "status": "zatwierdzone"}).status_code == 400
+    assert client.post(f"/admin/razem/{rid}/status", data={"_csrf": token, "status": "zamkniete"}).status_code == 302
