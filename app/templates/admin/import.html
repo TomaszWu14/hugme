@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf %}
+{% block title %}Import Biblioteki{% endblock %}
+{% block content %}
+<h1>Import Biblioteki Innowacji ROPS</h1>
+{% include "admin/_nav.html" %}
+<p>Wgraj plik CSV (separator przecinek albo średnik) lub JSON (lista obiektów albo <code>{"innowacje": [...]}</code>), w kodowaniu UTF-8.
+  Każdy wiersz jest sprawdzany tak samo jak ręczna edycja. Zaimportowane innowacje nie mają plakietki „PRZYKŁAD”.</p>
+<p><strong>Rozpoznawane kolumny:</strong> {{ columns|join(', ') }}. Obszar może być kodem (np. <code>wies</code>) albo nazwą.</p>
+<form method="post" enctype="multipart/form-data" class="card">
+  {{ csrf() }}
+  <div class="field">
+    <label for="f-plik">Plik z biblioteką</label>
+    <p class="hint" id="h-plik">biblioteka-rops.csv</p>
+    <input id="f-plik" name="plik" type="file" accept=".csv,.json" required aria-describedby="h-plik">
+  </div>
+  <button type="submit" class="btn btn--primary">Importuj</button>
+</form>
+{% if report %}
+<section aria-labelledby="rep-h" role="status">
+  <h2 id="rep-h">Wynik importu</h2>
+  <p><span aria-hidden="true">✔</span> Zaimportowano: <strong>{{ report.ok }}</strong>.
+    {% if report.bad %}<span aria-hidden="true">⚠</span> Pominięto: <strong>{{ report.bad|length }}</strong>.{% endif %}</p>
+  {% if report.bad %}
+  <div class="table-wrap"><table><caption>Pominięte wiersze</caption>
+    <thead><tr><th scope="col">Wiersz</th><th scope="col">Tytuł</th><th scope="col">Problem</th></tr></thead>
+    <tbody>{% for n, t, why in report.bad %}<tr><td>{{ n }}</td><td>{{ t }}</td><td>{{ why }}</td></tr>{% endfor %}</tbody></table></div>
+  {% endif %}
+</section>
+{% endif %}
+{% endblock %}

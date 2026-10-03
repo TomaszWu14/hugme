@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Kolejka e-mail{% endblock %}
+{% block content %}
+<h1>Kolejka e-mail</h1>
+{% include "admin/_nav.html" %}
+<p>Każde powiadomienie w aplikacji trafia też tutaj. W prototypie nic nie jest wysyłane; po wdrożeniu
+  worker wyśle wiadomości przez SMTP i uzupełni datę wysyłki.</p>
+<div class="table-wrap">
+<table>
+  <caption>Ostatnie wiadomości ({{ rows|length }})</caption>
+  <thead><tr><th scope="col">Do</th><th scope="col">Temat</th><th scope="col">Utworzono</th><th scope="col">Wysłano</th></tr></thead>
+  <tbody>{% for e in rows %}<tr><td>{{ e.name.split(' – ')[0] }}</td><td>{{ e.subject }}</td><td>{{ e.created_at|date }}</td><td>{{ e.sent_at|date if e.sent_at else 'w kolejce' }}</td></tr>{% endfor %}</tbody>
+</table>
+</div>
+{% endblock %}

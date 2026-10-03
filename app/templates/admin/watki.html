@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Wątki bez odpowiedzi{% endblock %}
+{% block content %}
+<h1>Wątki bez odpowiedzi</h1>
+{% include "admin/_nav.html" %}
+<p>Rozmowy, w których ostatnie słowo należy do mieszkańca lub organizacji – czekają na Hub albo eksperta.</p>
+{% if rows %}
+<ul class="list-plain">
+  {% for t in rows %}<li><a href="{{ link(t.subject_type, t.subject_id) }}#watek">{{ t.title }}</a><br>
+    <span class="meta"><span>Ostatnia wiadomość: {{ t.last_at|date }}</span> <span>Od: {{ ROLES[t.last_role] }}</span></span></li>{% endfor %}
+</ul>
+{% else %}<p><span aria-hidden="true">✔</span> Wszystkie wątki mają odpowiedź.</p>{% endif %}
+{% endblock %}

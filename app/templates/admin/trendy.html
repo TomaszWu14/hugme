@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% from "_macros.html" import area_tag %}
+{% block title %}Trendy potrzeb{% endblock %}
+{% block content %}
+<h1>Trendy potrzeb</h1>
+{% include "admin/_nav.html" %}
+<p class="notice">Widok tylko dla Hubu. Dane zagregowane – bez treści zgłoszeń i bez autorów. Wszystkich zgłoszeń: {{ total }}.
+  {% if rate is not none %}Dopasowania ocenione jako pomocne: <strong>{{ rate }}%</strong> ({{ rated }} ocen).{% endif %}</p>
+
+<div class="table-wrap">
+<table>
+  <caption>Zgłoszenia według obszaru – ostatnie 30 dni wobec poprzednich 30</caption>
+  <thead><tr><th scope="col">Obszar</th><th scope="col">Razem</th><th scope="col">Ostatnie 30 dni</th><th scope="col">Poprzednie 30 dni</th><th scope="col">Zmiana</th></tr></thead>
+  <tbody>
+    {% for slug, a in AREAS.items() %}
+    {% set m = mom[slug] %}{% set d = m.now - m.prev %}
+    <tr><th scope="row">{{ area_tag(slug) }}</th><td>{{ by_area.get(slug, 0) }}</td><td>{{ m.now }}</td><td>{{ m.prev }}</td>
+      <td>{% if d > 0 %}<span class="trend-up"><span aria-hidden="true">▲</span> więcej o {{ d }}</span>{% elif d < 0 %}<span class="trend-down"><span aria-hidden="true">▼</span> mniej o {{ -d }}</span>{% else %}<span aria-hidden="true">■</span> bez zmian{% endif %}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<div class="table-wrap heat">
+<table>
+  <caption>Mapa potrzeb: powiat × obszar (liczba zgłoszeń; ciemniej = więcej)</caption>
+  <thead><tr><th scope="col">Powiat</th>{% for slug, a in AREAS.items() %}<th scope="col">{{ a.short }}</th>{% endfor %}</tr></thead>
+  <tbody>
+    {% for p in powiaty %}
+    <tr><th scope="row">{{ p }}</th>
+      {% for slug in AREAS %}{% set n = heat[p][slug] %}
+      <td class="num heat-{{ 0 if not n else [((n / peak) * 4)|round(0, 'ceil')|int, 4]|min }}">{{ n if n else '·' }}<span class="sr-only">{{ '' if n else 'brak' }}</span></td>
+      {% endfor %}</tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

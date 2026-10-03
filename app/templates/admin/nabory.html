@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf, field, area_tag %}
+{% block title %}Nabory{% endblock %}
+{% block content %}
+<h1>Nabory</h1>
+{% include "admin/_nav.html" %}
+<p>Otwarcie naboru powiadamia obserwujących obszar i włącza generator wniosków w Kreatorze.</p>
+<ul class="list-plain">
+  {% for c in rows %}
+  <li class="actions">
+    <span><strong>{{ c.title }}</strong> {{ area_tag(c.area) }}
+      {% if c.is_open %}<span class="badge badge--open">● Otwarty do {{ c.deadline }}</span>{% else %}<span class="badge badge--closed">■ Zamknięty</span>{% endif %}</span>
+    <form method="post" action="/admin/nabory/{{ c.id }}/przelacz">{{ csrf() }}
+      <button type="submit" class="btn btn--small">{{ 'Zamknij' if c.is_open else 'Otwórz' }}<span class="sr-only"> nabór {{ c.title }}</span></button></form>
+  </li>
+  {% endfor %}
+</ul>
+<h2>Nowy nabór</h2>
+<form method="post" action="/admin/nabory/nowy" class="card">
+  {{ csrf() }}
+  {% set area_opts = [] %}{% for slug, a in AREAS.items() %}{% set _ = area_opts.append((slug, a.name)) %}{% endfor %}
+  {{ field('title', 'Tytuł naboru', required=true, hint='Sąsiedzkie kluby seniora 2027') }}
+  {{ field('area', 'Obszar', options=area_opts, required=true) }}
+  {{ field('description', 'Opis', rows=2, required=true, hint='granty na test nowych usług dla seniorów w małych gminach') }}
+  {{ field('deadline', 'Termin', type='date', required=true) }}
+  <button type="submit" class="btn btn--primary">Dodaj nabór</button>
+</form>
+{% endblock %}

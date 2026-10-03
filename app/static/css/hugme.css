@@ -253,3 +253,12 @@ details > summary { cursor: pointer; font-weight: 700; min-height: 44px; display
   a { color: #000; }
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
+
+/* Panel Hubu */
+.admin-nav { margin: 0 0 1.5rem; padding: .4rem; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); }
+.admin-nav a { font-size: .92rem; }
+select.select-inline { width: auto; }
+.stat a { color: var(--ink); text-decoration: none; display: block; }
+.stat a:hover .stat__num { text-decoration: underline; }
+kbd { border: 1px solid var(--ink-soft); border-radius: 4px; padding: 0 .3rem; font: inherit; font-size: .85em; background: var(--paper); }
+code { background: var(--sand); padding: 0 .25rem; border-radius: 4px; }

@@ -1,0 +1,9 @@
+<nav aria-label="Menu panelu Hubu" class="no-print">
+  <ul class="nav admin-nav">
+    {% for href, text in [('/admin', 'Skrzynka'), ('/admin/watki', 'Wątki bez odpowiedzi'), ('/admin/luki', 'Luki'),
+                          ('/admin/trendy', 'Trendy potrzeb'), ('/admin/biblioteka', 'Biblioteka'), ('/admin/import', 'Import'),
+                          ('/admin/nabory', 'Nabory'), ('/admin/poczta', 'Kolejka e-mail')] %}
+    <li><a href="{{ href }}" {% if request.path == href %}aria-current="page"{% endif %}>{{ text }}</a></li>
+    {% endfor %}
+  </ul>
+</nav>

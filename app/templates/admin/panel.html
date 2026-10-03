@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% from "_macros.html" import area_tag, status, example %}
+{% block title %}Panel Hubu{% endblock %}
+{% block content %}
+<h1>Panel Hubu Innowacji Społecznych</h1>
+{% include "admin/_nav.html" %}
+<ul class="stat-row" aria-label="Najważniejsze liczby">
+  <li class="stat"><span class="stat__num">{{ stats.new }}</span> nowych zgłoszeń</li>
+  <li class="stat"><a href="/admin/watki"><span class="stat__num">{{ stats.unanswered }}</span> wątków bez odpowiedzi</a></li>
+  <li class="stat"><a href="/admin/luki"><span class="stat__num">{{ stats.gaps }}</span> luk (brak rozwiązania)</a></li>
+  <li class="stat"><span class="stat__num">{{ stats.rate if stats.rate is not none else '–' }}{{ '%' if stats.rate is not none }}</span> dopasowań ocenionych jako pomocne <span class="meta">({{ stats.rated }} ocen)</span></li>
+  <li class="stat"><a href="/admin/poczta"><span class="stat__num">{{ stats.queue }}</span> e-maili w kolejce</a></li>
+</ul>
+
+<h2>Skrzynka</h2>
+<form method="get" action="/admin" class="actions" aria-label="Filtr skrzynki">
+  <label for="typ">Pokaż:</label>
+  <select id="typ" name="typ" class="select-inline">
+    {% for val, text in [('', 'wszystko'), ('zgloszenie', 'zgłoszenia'), ('pomysl', 'pomysły'), ('test', 'testy'), ('wniosek', 'wnioski')] %}
+    <option value="{{ val }}" {% if kind == val %}selected{% endif %}>{{ text }}</option>{% endfor %}
+  </select>
+  <button type="submit" class="btn btn--small">Filtruj</button>
+  <a class="btn btn--small btn--ghost" href="/admin/eksport/zgloszenia.csv">Eksport zgłoszeń (CSV)</a>
+</form>
+{% if items %}
+<div class="table-wrap">
+<table>
+  <caption>Nowe sprawy ({{ items|length }})</caption>
+  <thead><tr><th scope="col">Rodzaj</th><th scope="col">Data</th><th scope="col">Treść</th><th scope="col">Szczegóły</th></tr></thead>
+  <tbody>
+    {% for typ, when, text, link, row in items %}
+    <tr>
+      <td>{{ {'zgloszenie': 'Zgłoszenie', 'pomysl': 'Pomysł', 'test': 'Test', 'wniosek': 'Wniosek'}[typ] }}</td>
+      <td>{{ when|date }}</td>
+      <td><a href="{{ link }}">{{ text|truncate(90) }}</a></td>
+      <td>{% if typ == 'zgloszenie' %}{{ status(row.status) }} {{ area_tag(row.area) }} {{ row.powiat or '' }}{% if not row.approved %} <span class="badge badge--closed">niezatwierdzone</span>{% endif %}{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}<p><span aria-hidden="true">✔</span> Skrzynka pusta.</p>{% endif %}
+{% endblock %}

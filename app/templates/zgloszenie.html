@@ -12,6 +12,19 @@
   {% if not r.approved %}<p class="notice">To zgłoszenie widzisz tylko Ty, Hub i eksperci. Gdy Hub je zatwierdzi, pomoże też innym.</p>{% endif %}
 </div>
 
+{% if g.user and g.user.role == 'admin' %}
+<form method="post" action="/admin/zgloszenie/{{ r.id }}/status" class="card card--raised">
+  {{ csrf() }}
+  <fieldset>
+    <legend>Decyzja Hubu</legend>
+    <div class="field"><label for="f-status">Status</label>
+      <select id="f-status" name="status">{% for code, text in REPORT_STATUSES.items() %}<option value="{{ code }}" {% if code == r.status %}selected{% endif %}>{{ text }}</option>{% endfor %}</select></div>
+    <label class="choice"><input type="checkbox" name="approved" value="1" {% if r.approved %}checked{% endif %}> Opublikuj (pokaż innym jako podobne zgłoszenie)</label>
+  </fieldset>
+  <button type="submit" class="btn btn--primary">Zapisz i powiadom autora</button>
+</form>
+{% endif %}
+
 <section aria-labelledby="dop-h">
   <h2 id="dop-h">Dopasowane rozwiązania</h2>
   {% if is_author %}<p>Oceń, czy propozycja Ci pomaga. To dla nas najlepszy sprawdzian trafności.</p>{% endif %}

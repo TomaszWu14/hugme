@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% from "_macros.html" import area_tag, status %}
+{% block title %}Luki{% endblock %}
+{% block content %}
+<h1>Luki – problemy bez dobrego rozwiązania</h1>
+{% include "admin/_nav.html" %}
+<p>Zgłoszenia, dla których Biblioteka nie ma dobrej odpowiedzi. To kandydaci na nowe konkursy i nabory.</p>
+<p class="actions"><a class="btn btn--small" href="/admin/eksport/luki.csv">Eksport luk (CSV)</a></p>
+{% if by_area %}
+<h2>Gdzie brakuje rozwiązań najczęściej</h2>
+<ul class="list-plain">{% for area, n in by_area %}<li>{{ area_tag(area) }} – <strong>{{ n }}</strong> {{ 'luka' if n == 1 else 'luki' if n < 5 else 'luk' }}{% if loop.first %} <span class="badge badge--pilot">Kandydat na konkurs</span>{% endif %}</li>{% endfor %}</ul>
+{% endif %}
+<h2>Zgłoszenia ({{ rows|length }})</h2>
+<ul class="list-plain">
+  {% for r, why in rows %}
+  <li><a href="/zgloszenie/{{ r.id }}">{{ r.body|truncate(120) }}</a><br>
+    <span class="meta">{{ status(r.status) }} {{ area_tag(r.area) }} <span>{{ r.powiat }}</span>
+      <span>Najlepsze dopasowanie: {{ (r.best_score * 100)|round|int }}%</span> <span>Powód: {{ why|join(', ') }}</span></span></li>
+  {% endfor %}
+</ul>
+{% endblock %}
