@@ -18,7 +18,7 @@ import axe_audit as A  # noqa: E402  (serve() – świeża baza na :5077)
 from playwright.sync_api import sync_playwright  # noqa: E402
 
 OUT = Path(sys.argv[1] if len(sys.argv) > 1 else ROOT / "docs" / "film")
-W, H, SCALE = 1536, 864, 1.25  # 125% powiększenia → wideo 1920×1080
+W, H, ZOOM = 1920, 1080, 1.25  # wideo 1920×1080; 125% powiększenia przez CSS zoom (Playwright nie skaluje wideo w górę)
 
 CURSOR_JS = """
 (() => {
@@ -27,7 +27,7 @@ CURSOR_JS = """
   Object.assign(dot.style, {position: 'fixed', left: '-40px', top: '-40px', width: '22px', height: '22px',
     borderRadius: '50%', background: 'rgba(184,67,47,.85)', border: '3px solid #fff', boxShadow: '0 0 0 3px rgba(27,37,64,.35)',
     pointerEvents: 'none', zIndex: '2147483647', transform: 'translate(-50%,-50%)', transition: 'width .15s, height .15s'});
-  const add = () => document.body && document.body.appendChild(dot);
+  const add = () => { document.documentElement.style.zoom = '1.25'; document.body && document.body.appendChild(dot); };
   document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', add) : add();
   document.addEventListener('mousemove', e => { dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px'; }, true);
   document.addEventListener('mousedown', () => { dot.style.width = '34px'; dot.style.height = '34px'; }, true);
@@ -56,17 +56,26 @@ class Film:
         self.page.mouse.move(x, y, steps=steps)
         self.mouse = (x, y)
 
-    def click(self, selector, pause=0.6):
+    def click(self, selector, pause=0.6, nav=False, edge=False):
+        """Klik „ludzką” myszą; nav=True czeka na nawigację; edge=True klika przy początku (linki wielowierszowe)."""
         el = self.page.locator(selector).first
         el.scroll_into_view_if_needed()
         time.sleep(0.3)
         box = el.bounding_box()
-        x, y = box["x"] + box["width"] / 2, box["y"] + box["height"] / 2
+        if edge:
+            x, y = box["x"] + min(24, box["width"] / 2), box["y"] + min(14, box["height"] / 2)
+        else:
+            x, y = box["x"] + box["width"] / 2, box["y"] + box["height"] / 2
         self.move(x, y)
         time.sleep(pause)
-        self.page.mouse.down()
-        time.sleep(0.12)
-        self.page.mouse.up()
+        if nav:
+            with self.page.expect_navigation(timeout=15000):
+                self.page.mouse.click(x, y)
+            self.page.wait_for_load_state()
+        else:
+            self.page.mouse.down()
+            time.sleep(0.12)
+            self.page.mouse.up()
         time.sleep(0.4)
 
     def type(self, selector, text, delay=55):
@@ -94,7 +103,7 @@ class Film:
         self.click("#role-switch", pause=0.3)
         sel.select_option(value)
         time.sleep(0.4)
-        self.click("form.role-switch button")
+        self.click("form.role-switch button", nav=True)
         self.page.wait_for_load_state()
         time.sleep(0.6)
 
@@ -112,7 +121,7 @@ def record(page):
     # 0:15 Pole „Co jest trudne?”
     f.type("#f-opis", " Mój syn Kacper, tel. 600 123 456.")
     time.sleep(1.0)
-    f.click("button:has-text('Znajdź rozwiązania')")
+    f.click("button:has-text('Znajdź rozwiązania')", nav=True)
     page.wait_for_url("**/wyniki")
     until(34)
     # 0:35 Wyniki
@@ -128,20 +137,20 @@ def record(page):
     f.scroll(-750, 2.0)
     until(58)
     # 1:00 Zapis zgłoszenia
-    f.click("button:has-text('Zapisz zgłoszenie')")
+    f.click("button:has-text('Zapisz zgłoszenie')", nav=True)
     page.wait_for_url(lambda u: "/konto" in u or "/zgloszenie/" in u)
     if "/konto" in page.url:  # gość: wybór konta, szkic czeka w sesji
-        f.click("form button[type=submit].btn--primary")
+        f.click("form button[type=submit].btn--primary", nav=True)
         page.wait_for_load_state()
         time.sleep(0.8)
     if "/zgloszenie/" not in page.url:
         if not page.url.rstrip("/").endswith("/wyniki"):
             f.goto("/wyniki")
-        f.click("button:has-text('Zapisz zgłoszenie')")
+        f.click("button:has-text('Zapisz zgłoszenie')", nav=True)
         page.wait_for_url("**/zgloszenie/*")
     time.sleep(1.5)
     f.scroll(500, 2.0)
-    f.click("button[value=pomocne]")
+    f.click("button[value=pomocne]", nav=True)
     page.wait_for_load_state()
     until(74)
     # 1:15 Panel Hubu – koordynatorka
@@ -149,22 +158,22 @@ def record(page):
     f.goto("/admin")
     time.sleep(1.5)
     f.scroll(600, 2.0)
-    f.click("table tbody tr:has(td:text-is('Zgłoszenie')) a")
+    f.click("table tbody tr:has(td:text-is('Zgłoszenie')) a", nav=True, edge=True)
     page.wait_for_load_state()
     time.sleep(1.0)
     page.locator("#f-status").select_option("polaczone")
     time.sleep(0.6)
-    f.click("button:has-text('Zapisz i powiadom autora')")
+    f.click("button:has-text('Zapisz i powiadom autora')", nav=True)
     page.wait_for_load_state()
     time.sleep(0.8)
     f.type("#f-tresc", "Dziękujemy! Łączymy Państwa z Asystentem zdrowia rodziny z powiatu wadowickiego – zadzwonię w tym tygodniu.", delay=28)
-    f.click("form[action^='/watek'] button:has-text('Wyślij')")
+    f.click("form[action^='/watek'] button:has-text('Wyślij')", nav=True)
     page.wait_for_load_state()
     until(99)
     # 1:40 Razem z ZD – plan
     f.goto("/razem")
     time.sleep(1.2)
-    f.click("button.stage-btn:has-text('Przedszkole')")
+    f.click("button.stage-btn:has-text('Przedszkole')", nav=True)
     page.wait_for_load_state()
     time.sleep(1.5)
     f.scroll(500, 3.0)
@@ -179,16 +188,16 @@ def record(page):
     f.type("#f-alias", "Zosia")
     page.locator("#f-powiat").select_option("wadowicki")
     f.click("#f-consent")
-    f.click("button:has-text('Wyślij')")
+    f.click("button:has-text('Wyślij')", nav=True)
     page.wait_for_load_state()
     time.sleep(2.0)
     f.role("Koordynatorka")
     f.goto("/admin/potrzebny")
     time.sleep(1.0)
-    f.click("li.actions:has-text('Zosia') button:has-text('Połącz')")
+    f.click("li.actions:has-text('Zosia') button:has-text('Połącz')", nav=True)
     page.wait_for_load_state()
     time.sleep(1.2)
-    f.click("li:has-text('Zosia') button:has-text('Misja odbyła się')")
+    f.click("li:has-text('Zosia') button:has-text('Misja odbyła się')", nav=True)
     page.wait_for_load_state()
     time.sleep(1.0)
     f.role("Mieszkanka")
@@ -200,21 +209,21 @@ def record(page):
     # 2:25 Praca – mapa
     f.goto("/razem/praca#mapa-pl-h")
     time.sleep(1.5)
-    f.click("a[aria-label^='małopolskie']")
+    f.click("a[aria-label^='małopolskie']", nav=True)
     page.wait_for_load_state()
     page.locator("#lista-h").scroll_into_view_if_needed()
     time.sleep(0.5)
     f.scroll(200, 1.5)
     until(152)
     # 2:33 Pośrednik – gmina
-    f.role("Urząd")
+    f.role("Gmina")
     f.goto("/posrednik")
     page.check("input[name=institution][value=gmina]")
     page.select_option("#f-audience", "seniorzy")
     page.select_option("#f-scale", "srednia")
     page.select_option("#f-budget", "maly")
     f.type("#f-problem", "Starsi mieszkańcy pięciu sołectw nie mają jak dojechać do przychodni.", delay=20)
-    f.click("button:has-text('Przygotuj kartę usługi')")
+    f.click("button:has-text('Przygotuj kartę usługi')", nav=True)
     page.wait_for_load_state()
     time.sleep(1.0)
     f.scroll(400, 2.0)
@@ -228,17 +237,17 @@ def record(page):
     time.sleep(2.0)
     until(168)
     # 2:49 Dostępność
-    f.click("form:has(input[value=duzy-tekst]) button")
+    f.click("form:has(input[value=duzy-tekst]) button", nav=True)
     page.wait_for_load_state()
     time.sleep(1.2)
-    f.click("form:has(input[value=kontrast]) button")
+    f.click("form:has(input[value=kontrast]) button", nav=True)
     page.wait_for_load_state()
     time.sleep(1.5)
     until(173)
     # 2:54 Strona startowa (kontrast wyłączony)
-    f.click("form:has(input[value=kontrast]) button")
+    f.click("form:has(input[value=kontrast]) button", nav=True)
     page.wait_for_load_state()
-    f.click("form:has(input[value=duzy-tekst]) button")
+    f.click("form:has(input[value=duzy-tekst]) button", nav=True)
     page.wait_for_load_state()
     f.goto("/")
     f.move(760, 420, steps=40)
@@ -252,11 +261,13 @@ def main():
     server = A.serve()
     with sync_playwright() as p:
         browser = p.chromium.launch()
-        ctx = browser.new_context(viewport={"width": W, "height": H}, device_scale_factor=SCALE, locale="pl-PL",
+        ctx = browser.new_context(viewport={"width": W, "height": H}, locale="pl-PL",
                                   bypass_csp=True, record_video_dir=str(OUT), record_video_size={"width": 1920, "height": 1080})
         ctx.add_init_script(CURSOR_JS)
         page = ctx.new_page()
         page.set_default_timeout(15000)
+        global T0
+        T0 = time.time()  # zegar scen od pierwszej sceny, nie od startu serwera
         try:
             record(page)
         except Exception:
