@@ -111,7 +111,10 @@ def test_home_wait_state_and_seven_modules(client):
     html = client.get("/").get_data(as_text=True)
     assert 'data-czekaj="Szukam rozwiązań' in html and "js/czekaj.js" in html
     assert "7 modułów HubMi" in html and html.count('class="mod"') == 7
-    assert html.index("Jak to działa") < html.index('id="razem-title"')
+    # Start w 4 blokach: hero → demo w 1,5 minuty → formularz → moduły; reszta jest w /wiedza i /razem
+    order = [html.index(x) for x in ('id="hero-title"', 'id="demo-title"', 'id="ask-title"', 'id="mod-title"')]
+    assert order == sorted(order)
+    assert "Jak to działa" not in html and "Wyzwania Małopolski" not in html and 'id="razem-title"' not in html
 
 
 def test_flash_sekcja_not_shown_on_top(app):

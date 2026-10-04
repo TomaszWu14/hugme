@@ -24,12 +24,6 @@
       "przyklad": "Kliknij „Znajdź rozwiązania” – na razie tylko szukamy, nic nie zapisujemy.",
       "zrodlo": "Wyniki dobiera porównanie słów z Twojego opisu ze słowami w Bibliotece innowacji, bez AI. AI (gdy jest włączone) może tylko dopisać streszczenie i dodatkowe słowa do szukania."
     },
-    "home.obszary": {
-      "nazwa": "Wyzwania Małopolski",
-      "po_co": "Siedem obszarów, którymi zajmuje się Hub Innowacji Społecznych.",
-      "jak_czytac": "Kliknij obszar, żeby zobaczyć rozwiązania, poradniki i otwarte nabory z tego tematu. „Obszar pilotażowy” to temat, który w prototypie jest opracowany najdokładniej.",
-      "zrodlo": "Obszary przygotowaliśmy na podstawie wyzwań Małopolskiego Hubu Innowacji Społecznych (ROPS w Krakowie). Treści w obszarach są przykładowe."
-    },
 
     "wyniki.rozpoznanie": {
       "nazwa": "Jak rozumiemy Twoją sytuację",
@@ -343,8 +337,7 @@
       {"klucz": "home.opis", "tytul": "Opisz sytuację", "tekst": "Napisz własnymi słowami, co jest trudne i kogo dotyczy. Przykład jest już wpisany – możesz go zostawić."},
       {"klucz": "home.powiat", "tytul": "Wybierz powiat", "tekst": "Nie musisz, ale to pomaga Hubowi zobaczyć, gdzie problem wraca."},
       {"klucz": "home.prywatnosc", "tytul": "Twoje dane są bezpieczne", "tekst": "PESEL, telefon czy adres ukryjemy, zanim cokolwiek zapiszemy."},
-      {"klucz": "home.szukaj", "tytul": "Znajdź rozwiązania", "tekst": "Na razie tylko szukamy. Zgłoszenie zapiszesz w następnym kroku, jeśli zechcesz."},
-      {"klucz": "home.obszary", "tytul": "Wyzwania Małopolski", "tekst": "Możesz też przeglądać pomoc według tematów."}
+      {"klucz": "home.szukaj", "tytul": "Znajdź rozwiązania", "tekst": "Na razie tylko szukamy. Zgłoszenie zapiszesz w następnym kroku, jeśli zechcesz."}
     ],
     "public.results": [
       {"klucz": "wyniki.rozpoznanie", "tytul": "Co zrozumieliśmy", "tekst": "Tu widać tematy rozpoznane w Twoim opisie. Ramka mówi, czy to reguły, czy AI."},

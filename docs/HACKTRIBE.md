@@ -2,6 +2,13 @@
 
 Gotowe do wklejenia. Zadanie: **HubMi.pl** (ROPS Kraków). Demo: https://hugme.twapp.pl · Kod: https://github.com/TomaszWu14/hugme
 
+**Jak obejrzeć (dla jury):** najprościej wejdź na https://hugme.twapp.pl/demo i wybierz scenariusz – pasek na górze
+poprowadzi Cię krok po kroku (ok. 1,5 min każdy), sam przełącza konta, bez haseł:
+- **Rodzic osoby z zespołem Downa – „Jestem potrzebny”**: zgłoszenie syna → Hub łączy go ze schroniskiem →
+  odpowiedź Hubu i miejsce w dzienniczku → mapa miejsc pracy i zajęcia.
+- **Gmina → Hub**: problem seniorów → „Bus na Telefon” („Bardzo pasuje”) → karta usługi z Pośrednika (Drukuj / PDF) →
+  Hub odpowiada, trendy i luki → gmina dostaje odpowiedź.
+
 ## Problem
 
 W Małopolsce rozwiązania problemów społecznych już istnieją – w Bibliotece Innowacji ROPS, w organizacjach,

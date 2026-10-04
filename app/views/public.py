@@ -2,6 +2,7 @@
 from flask import Blueprint, Response, abort, flash, g, redirect, render_template, request, session, url_for
 
 from app.auth import login_required
+from app.scenariusze import current as current_scenario
 from app.views.komunikacja import ensure_thread, thread_view
 from core import catalog, db, notify
 from core.domain import AREAS, GAP_THRESHOLD, POWIATY
@@ -37,7 +38,8 @@ def validate_search(text):
 
 @bp.route("/")
 def home():
-    return render_template("home.html", example=EXAMPLE_PROBLEM, powiaty=POWIATY)
+    s = current_scenario()  # scenariusz demo „Gmina” wpisuje swój opis problemu
+    return render_template("home.html", example=(s and s["scen"].get("opis_problemu")) or EXAMPLE_PROBLEM, powiaty=POWIATY)
 
 
 @bp.post("/szukaj")

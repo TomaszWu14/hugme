@@ -1,15 +1,22 @@
 {% from "_macros.html" import compact_nav %}
-{# Kolejność według pilności pracy Hubu; pilotaże na końcu. Liczniki: sprawy czekające i wątki bez odpowiedzi. #}
+{# Kolejność według pilności pracy Hubu; 5 głównych pozycji, rzadziej używane pod „Więcej” (bez JS – <details>,
+   otwarte, gdy bieżąca strona jest w środku). Liczniki: sprawy czekające i wątki bez odpowiedzi. #}
 {% set c = admin_counts() %}
-{% set items = [] %}
+{% set items, more = [], [] %}
 {% for href, text, n in [('/admin', 'Skrzynka', c.inbox), ('/admin/watki', 'Wątki bez odpowiedzi', c.threads),
-                         ('/admin/trendy', 'Trendy i luki', 0), ('/admin/biblioteka', 'Biblioteka', 0), ('/admin/nabory', 'Nabory', 0),
-                         ('/admin/import', 'Import', 0), ('/admin/poczta', 'Kolejka e-mail', 0), ('/admin/uzytkownicy', 'Użytkownicy', 0),
-                         ('/admin/role', 'Role', 0), ('/admin/razem', 'Pilotaż ZD', 0)] %}
+                         ('/admin/trendy', 'Trendy i luki', 0), ('/admin/biblioteka', 'Biblioteka', 0), ('/admin/razem', 'Pilotaż ZD', 0)] %}
 {% set here = request.path == href or (href != '/admin' and request.path.startswith(href ~ '/'))
               or (href == '/admin/razem' and request.path.startswith('/admin/potrzebny')) %}
 {% set _ = items.append((href, text, here, n)) %}
 {% endfor %}
+{% for href, text in [('/admin/nabory', 'Nabory'), ('/admin/import', 'Import'), ('/admin/poczta', 'Kolejka e-mail'),
+                      ('/admin/uzytkownicy', 'Użytkownicy'), ('/admin/role', 'Role')] %}
+{% set _ = more.append((href, text, request.path == href or request.path.startswith(href ~ '/'))) %}
+{% endfor %}
 <nav aria-label="Menu panelu Hubu" class="no-print admin-nav">
   {{ compact_nav(items, 'Menu panelu') }}
+  <details class="admin-nav__more"{% if more|selectattr(2)|list %} open{% endif %}>
+    <summary>Więcej <span aria-hidden="true">▾</span></summary>
+    <ul class="nav nav--small">{% for href, text, cur in more %}<li><a href="{{ href }}" {% if cur %}aria-current="page"{% endif %}>{{ text }}</a></li>{% endfor %}</ul>
+  </details>
 </nav>
