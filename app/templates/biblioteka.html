@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from "_macros.html" import field %}
 {% from "_cards.html" import innovation_card %}
+{% from "_podpowiedzi.html" import help %}
 {% block title %}{{ 'Tester innowacji' if tester else 'Biblioteka innowacji' }}{% endblock %}
 {% block content %}
 {% if tester %}
@@ -18,11 +19,11 @@
 
 <form method="get" action="{{ request.path }}" class="filters" role="search" aria-label="{{ 'Filtruj innowacje do testu' if tester else 'Filtruj bibliotekę' }}">
   {% set area_opts = [] %}{% for slug, a in AREAS.items() %}{% set _ = area_opts.append((slug, a.short)) %}{% endfor %}
-  {{ field('q', 'Szukaj słowami', value=f.q, type='search', optional_text=false, hint='transport, samotność') }}
-  {{ field('obszar', 'Obszar', options=area_opts, value=f.obszar, optional_text=false) }}
-  {{ field('powiat', 'Powiat', options=powiaty|pairs, value=f.powiat, optional_text=false) }}
-  {{ field('etap', 'Etap', options=stages|pairs, value=f.etap, optional_text=false) }}
-  {{ field('grupa', 'Dla kogo', options=audiences|pairs, value=f.grupa, optional_text=false) }}
+  {{ field('q', 'Szukaj słowami', value=f.q, type='search', optional_text=false, hint='transport, samotność', help='biblioteka.q') }}
+  {{ field('obszar', 'Obszar', options=area_opts, value=f.obszar, optional_text=false, help='biblioteka.obszar') }}
+  {{ field('powiat', 'Powiat', options=powiaty|pairs, value=f.powiat, optional_text=false, help='biblioteka.powiat') }}
+  {{ field('etap', 'Etap', options=stages|pairs, value=f.etap, optional_text=false, help='biblioteka.etap') }}
+  {{ field('grupa', 'Dla kogo', options=audiences|pairs, value=f.grupa, optional_text=false, help='biblioteka.grupa') }}
   <div class="actions">
     <button type="submit" class="btn btn--primary">Pokaż</button>
     <a class="btn btn--ghost" href="{{ request.path }}">Wyczyść</a>

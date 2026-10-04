@@ -1,3 +1,4 @@
+{% from "_podpowiedzi.html" import help as help_i %}
 {% macro example() -%}
 <span class="badge badge--example" title="Dane fikcyjne do prezentacji">PRZYKŁAD</span>
 {%- endmacro %}
@@ -23,9 +24,9 @@
 {%- endmacro %}
 
 {# Pole formularza: etykieta, przykład pod polem, komunikat błędu powiązany przez aria-describedby #}
-{% macro field(name, label, hint='', error='', value='', type='text', required=false, rows=0, options=none, optional_text=true, plain_hint=false) -%}
-<div class="field {% if error %}field--error{% endif %}">
-  <label for="f-{{ name }}">{{ label }}{% if not required and optional_text %} <span class="optional">(nieobowiązkowe)</span>{% endif %}</label>
+{% macro field(name, label, hint='', error='', value='', type='text', required=false, rows=0, options=none, optional_text=true, plain_hint=false, help='') -%}
+<div class="field {% if error %}field--error{% endif %}"{% if help %} data-help="{{ help }}"{% endif %}>
+  {% if help %}<div class="field-head">{% endif %}<label for="f-{{ name }}">{{ label }}{% if not required and optional_text %} <span class="optional">(nieobowiązkowe)</span>{% endif %}</label>{% if help %}{{ help_i(help) }}</div>{% endif %}
   {% if hint %}<p class="hint {{ 'hint--plain' if plain_hint }}" id="h-{{ name }}">{{ hint }}</p>{% endif %}
   {% if error %}<p class="error-msg" id="e-{{ name }}"><span aria-hidden="true">⚠</span> {{ error }}</p>{% endif %}
   {% set described = [('h-' ~ name) if hint else '', ('e-' ~ name) if error else '']|select|join(' ') %}

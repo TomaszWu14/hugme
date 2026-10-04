@@ -40,7 +40,7 @@ def create_app(test_config=None):
     _security(app)
     _template_globals(app)
 
-    from app import auth
+    from app import auth, podpowiedzi
     from app.views import admin, admin_potrzebny, admin_users, api, komunikacja, kreator, posrednik, potrzebny, praca, public, razem, wiedza
     app.register_blueprint(auth.bp)
     app.register_blueprint(public.bp)
@@ -56,6 +56,7 @@ def create_app(test_config=None):
     app.register_blueprint(admin_potrzebny.bp)
     app.register_blueprint(admin_users.bp)
     auth.init(app)
+    podpowiedzi.init(app)
 
     for code in ERRORS:
         app.register_error_handler(code, _error_page)

@@ -48,7 +48,7 @@ def test_a11y_prefs_toggle_cookie(client):
 
 def test_a11y_prefs_announce_state(client):
     # czytnik ekranu musi usłyszeć „wciśnięty” po włączeniu A+ / kontrastu (WCAG 4.1.2)
-    pressed = lambda: re.findall(r'aria-pressed="(\w+)"', client.get("/").get_data(as_text=True))
+    pressed = lambda: re.findall(r'aria-pressed="(\w+)"', client.get("/").get_data(as_text=True))[:2]  # 3. przycisk to „Podpowiedzi”
     assert pressed() == ["false", "false"]
     for pref in ("duzy-tekst", "kontrast"):
         client.post("/ustawienia", data={"_csrf": csrf_of(client), "pref": pref, "next": "/"})

@@ -1,16 +1,17 @@
 {% extends "base.html" %}
 {% from "_macros.html" import csrf, example, area_tag, status, icon %}
 {% from "_cards.html" import score_bar, thread_block %}
+{% from "_podpowiedzi.html" import help %}
 {% block title %}Zgłoszenie{% endblock %}
-{% macro match_item(m) %}
+{% macro match_item(m, first=false) %}
 <li id="dop-{{ m.id }}" class="card card--thread thread--{{ m.area }}">
   <h3><a href="/biblioteka/{{ m.id }}">{{ m.title }}</a></h3>
   {{ score_bar(m.score, score_label(m.score)) }}
   <p>{{ m.summary }}</p>
   {% if is_author %}
-  <form method="post" action="/zgloszenie/{{ r.id }}/ocena" class="feedback">
+  <form method="post" action="/zgloszenie/{{ r.id }}/ocena" class="feedback" data-help="zgloszenie.ocena">
     {{ csrf() }}<input type="hidden" name="innovation_id" value="{{ m.id }}">
-    <span id="fb-{{ m.id }}">Czy to pomocne?</span>
+    <span id="fb-{{ m.id }}">Czy to pomocne?</span>{% if first %}{{ help('zgloszenie.ocena') }}{% endif %}
     <button type="submit" name="ocena" value="pomocne" class="btn btn--small" aria-pressed="{{ 'true' if m.feedback == 1 else 'false' }}" aria-describedby="fb-{{ m.id }}">{{ icon('kciuk-gora') }} Pomocne</button>
     <button type="submit" name="ocena" value="niepomocne" class="btn btn--small" aria-pressed="{{ 'true' if m.feedback == -1 else 'false' }}" aria-describedby="fb-{{ m.id }}">{{ icon('kciuk-dol') }} Niepomocne</button>
     {% if m.feedback %}<span class="meta">Twoja ocena: {{ 'pomocne' if m.feedback == 1 else 'niepomocne' }}</span>{% endif %}
@@ -23,15 +24,15 @@
 <p><a href="{{ '/moje' if is_author else '/' }}">← {{ 'Moje sprawy' if is_author else 'Start' }}</a></p>
 <h1>Zgłoszenie</h1>
 <div class="card">
-  <p class="meta">{{ status(r.status) }} {{ area_tag(r.area) }} {% if r.powiat %}<span>Powiat: {{ r.powiat }}</span>{% endif %}
-    <span>Dodano: {{ r.created_at|date }}</span> {% if r.is_example %}{{ example() }}{% endif %}</p>
+  <div class="help-row" data-help="zgloszenie.status"><p class="meta">{{ status(r.status) }} {{ area_tag(r.area) }} {% if r.powiat %}<span>Powiat: {{ r.powiat }}</span>{% endif %}
+    <span>Dodano: {{ r.created_at|date }}</span> {% if r.is_example %}{{ example() }}{% endif %}</p>{{ help('zgloszenie.status') }}</div>
   <p class="lead">{{ r.body }}</p>
   {% if not r.approved %}<p class="notice">To zgłoszenie widzisz tylko Ty, Hub i eksperci. Gdy Hub je zatwierdzi, pomoże też innym.</p>{% endif %}
 </div>
 
 {% if g.user and g.user.role == 'admin' %}
-<form method="post" action="/admin/zgloszenie/{{ r.id }}/status" class="card card--raised">
-  {{ csrf() }}
+<form method="post" action="/admin/zgloszenie/{{ r.id }}/status" class="card card--raised help-corner" data-help="zgloszenie.decyzja">
+  {{ csrf() }}{{ help('zgloszenie.decyzja') }}
   <fieldset>
     <legend>Decyzja Hubu</legend>
     <div class="field"><label for="f-status">Status</label>
@@ -50,7 +51,7 @@
   {% if matches %}
   {% if top %}
   <ol class="list-plain">
-    {% for m in top %}{{ match_item(m) }}{% endfor %}
+    {% for m in top %}{{ match_item(m, loop.first) }}{% endfor %}
   </ol>
   {% else %}<p class="notice">Nie mamy jeszcze sprawdzonego rozwiązania dla tej potrzeby – Hub potraktuje zgłoszenie jako lukę i poszuka partnerów.</p>{% endif %}
   {% if rest %}

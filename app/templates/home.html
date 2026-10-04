@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "_macros.html" import csrf, field, icon %}
+{% from "_podpowiedzi.html" import help %}
 {% block title %}Twój problem nie zostaje sam{% endblock %}
 {% block main_class %}home{% endblock %}
 {% block content %}
@@ -56,14 +57,15 @@
   <form method="post" action="/szukaj" novalidate data-czekaj="Szukam rozwiązań… to może potrwać do pół minuty">
     {{ csrf() }}
     {{ field('opis', 'Opisz sytuację własnymi słowami', rows=5, required=true, value=example, error=error,
-             hint='Przykład jest już wpisany – możesz go zmienić. Pisz o sytuacji grupy: „rodzice dzieci w naszej gminie…”.', plain_hint=true) }}
-    {{ field('powiat', 'Powiat, którego to dotyczy', options=powiaty|pairs, hint='wadowicki. Pomoże Hubowi zobaczyć, gdzie problem jest częsty.') }}
-    <p class="privacy-note">{{ icon('tarcza') }} Nie musisz podawać diagnozy ani danych osobowych.
-      Jeśli przez przypadek wpiszesz PESEL, telefon, e-mail, adres albo imię dziecka – ukryjemy je, zanim cokolwiek zapiszemy.</p>
-    <p class="actions">
+             hint='Przykład jest już wpisany – możesz go zmienić. Pisz o sytuacji grupy: „rodzice dzieci w naszej gminie…”.', plain_hint=true, help='home.opis') }}
+    {{ field('powiat', 'Powiat, którego to dotyczy', options=powiaty|pairs, hint='wadowicki. Pomoże Hubowi zobaczyć, gdzie problem jest częsty.', help='home.powiat') }}
+    <div class="help-row" data-help="home.prywatnosc"><p class="privacy-note">{{ icon('tarcza') }} Nie musisz podawać diagnozy ani danych osobowych.
+      Jeśli przez przypadek wpiszesz PESEL, telefon, e-mail, adres albo imię dziecka – ukryjemy je, zanim cokolwiek zapiszemy.</p>{{ help('home.prywatnosc') }}</div>
+    <div class="actions" data-help="home.szukaj">
       <button type="submit" class="btn btn--primary btn--large">Znajdź rozwiązania</button>
       <span class="meta">Najpierw tylko szukamy. Zgłoszenie zapiszesz dopiero w następnym kroku – jeśli zechcesz.</span>
-    </p>
+      {{ help('home.szukaj') }}
+    </div>
     <p class="hint hint--plain">Odpowiedź może potrwać do 30 sekund.</p>
   </form>
 </section>
@@ -102,8 +104,8 @@
   <p><a class="btn btn--primary" href="/razem">Otwórz „Razem z ZD”</a></p>
 </section>
 
-<section aria-labelledby="areas-title">
-  <h2 id="areas-title">Wyzwania Małopolski</h2>
+<section aria-labelledby="areas-title" data-help="home.obszary">
+  <div class="help-row"><h2 id="areas-title">Wyzwania Małopolski</h2>{{ help('home.obszary') }}</div>
   <ul class="grid grid--areas">
     {% for slug, a in AREAS.items() %}
     <li class="card card--thread thread--{{ slug }}">
