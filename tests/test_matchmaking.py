@@ -22,9 +22,49 @@ def test_guest_search_shows_explained_matches_and_masks(client):
 
 
 def test_too_short_description_gives_friendly_error(client):
-    resp = search(client, text="lekarz")
+    resp = search(client, text="asdf")  # bełkot: nic w katalogu
     html = resp.get_data(as_text=True)
     assert resp.status_code == 422 and "Napisz trochę więcej" in html and 'aria-invalid="true"' in html
+    assert search(client, text="samotność").headers["Location"].endswith("/wyniki")  # jedno znane słowo wystarczy
+    resp = client.get("/wyniki")
+    html = resp.get_data(as_text=True)
+    assert resp.status_code == 200 and "article" in html and "Dopisz, kogo to dotyczy" in html
+
+
+def test_need_without_good_match_says_so_honestly(client):
+    search(client, text="Przecieka dach kościoła w naszej parafii, potrzebujemy pieniędzy na remont przed zimą.")
+    html = client.get("/wyniki").get_data(as_text=True)
+    assert "Nie mamy jeszcze sprawdzonego rozwiązania" in html and 'href="/pomysly/nowy"' in html
+    assert "Luźno powiązane" in html or "<article" not in html
+
+
+def test_zd_work_need_links_to_pilot(client):
+    search(client, text="Syn z zespołem Downa skończył szkołę i szuka pierwszej pracy.")
+    html = client.get("/wyniki").get_data(as_text=True)
+    assert 'href="/razem/praca"' in html and 'href="/razem/jestem-potrzebny"' in html
+
+
+def test_report_hides_duplicate_first_message_and_weak_matches(client, app):
+    token = login(client, "mieszkaniec")
+    search(client)
+    client.post("/zgloszenie", data={"_csrf": token, "opis": PROBLEM})
+    with app.app_context():
+        r = db.one("SELECT * FROM reports ORDER BY id DESC LIMIT 1")
+    html = client.get(f"/zgloszenie/{r['id']}").get_data(as_text=True)
+    assert html.count(r["body"]) == 1  # treść tylko w karcie, nie drugi raz w „Rozmowie z Hubem”
+    assert html.split("Pokaż ")[0].count('class="card card--thread') <= 3
+
+
+def test_my_page_marks_hub_reply_on_top(client, app):
+    with app.app_context():
+        r = db.one("SELECT id FROM reports WHERE user_id = 1 ORDER BY created_at LIMIT 1")
+    token = login(client, "admin")
+    client.post(f"/watek/zgloszenie/{r['id']}", data={"_csrf": token, "tresc": "Dzień dobry, odpisujemy."})
+    login(client, "mieszkaniec")
+    html = client.get("/moje").get_data(as_text=True)
+    assert f'Nowa odpowiedź Hubu</span> <a href="/zgloszenie/{r["id"]}#watek"' in html
+    first = html.index('href="/zgloszenie/')
+    assert html.rindex("Nowa odpowiedź Hubu", 0, first) > html.index("Moje zgłoszenia")  # na górze listy
 
 
 def test_guest_save_redirects_to_login_and_keeps_draft(client):

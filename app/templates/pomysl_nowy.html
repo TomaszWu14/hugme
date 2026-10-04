@@ -2,9 +2,10 @@
 {% from "_macros.html" import csrf, field %}
 {% block title %}Nowy pomysł{% endblock %}
 {% block content %}
-<p><a href="/pomysly">← Pomysły</a></p>
+<p><a href="/pomysly">← Kreator pomysłów</a></p>
 <h1>Fiszka pomysłu</h1>
-<p class="lead">Cztery pola – tyle wystarczy na start. Resztę dopiszesz później w kanwie.</p>
+<p class="lead">Krótki opis pomysłu – 4 pola, ok. 5 minut.</p>
+<p>Tyle wystarczy na start. Resztę dopiszesz później w planie pomysłu (kanwie).</p>
 <p class="notice">Pomysł będzie widoczny publicznie. Nie wpisuj danych osobowych – i tak je ukryjemy.</p>
 {% if errors %}
 <div class="error-summary" role="alert" aria-labelledby="err-h">

@@ -1,3 +1,4 @@
+import re
 from conftest import csrf_of, login
 
 
@@ -45,6 +46,17 @@ def test_a11y_prefs_toggle_cookie(client):
     assert 'class="a11y-size' in client.get("/").get_data(as_text=True)
 
 
+def test_a11y_prefs_announce_state(client):
+    # czytnik ekranu musi usłyszeć „wciśnięty” po włączeniu A+ / kontrastu (WCAG 4.1.2)
+    pressed = lambda: re.findall(r'aria-pressed="(\w+)"', client.get("/").get_data(as_text=True))
+    assert pressed() == ["false", "false"]
+    for pref in ("duzy-tekst", "kontrast"):
+        client.post("/ustawienia", data={"_csrf": csrf_of(client), "pref": pref, "next": "/"})
+    assert pressed() == ["true", "true"]
+    client.post("/ustawienia", data={"_csrf": csrf_of(client), "pref": "kontrast", "next": "/"})
+    assert pressed() == ["true", "false"]
+
+
 def test_area_css_from_domain(client):
     css = client.get("/obszary.css").get_data(as_text=True)
     assert ".thread--rodziny-zd{--thread:#7A3E9D;" in css
@@ -78,3 +90,36 @@ def test_no_emoji_used_as_icons_in_templates():
     for f in pathlib.Path("app/templates").rglob("*.html"):
         text = f.read_text(encoding="utf-8")
         assert not any(ch in text for ch in "🛡👍👎"), f
+
+
+def test_menu_shows_brief_modules_in_order_and_bell(client):
+    # K-04: moduły z briefu jako pierwsze w menu, pilotaż na końcu; K-09: dzwonek poza zwiniętym menu
+    html = client.get("/").get_data(as_text=True)
+    nav = html[html.index('class="nav nav-d'):]
+    names = ["Szukaj pomocy", "Zasobnik wiedzy", "Biblioteka innowacji", "Tester innowacji",
+             "Kreator pomysłów", "Pośrednik innowacji", "Razem z ZD · pilotaż"]
+    assert [nav.index(n) for n in names] == sorted(nav.index(n) for n in names)
+    assert 'href="/powiadomienia"' not in html  # gość nie ma powiadomień
+    login(client, "admin")
+    html = client.get("/").get_data(as_text=True)
+    bell = re.search(r'<a class="bell" href="/powiadomienia" aria-label="Powiadomienia(, nowe: \d+)?"', html)
+    assert bell and bell.start() > html.index("</nav>")
+    assert "Panel Hubu (administratora)" in html
+
+
+def test_home_wait_state_and_seven_modules(client):
+    html = client.get("/").get_data(as_text=True)
+    assert 'data-czekaj="Szukam rozwiązań' in html and "js/czekaj.js" in html
+    assert "7 modułów HubMi" in html and html.count('class="mod"') == 7
+    assert html.index("Jak to działa") < html.index('id="razem-title"')
+
+
+def test_flash_sekcja_not_shown_on_top(app):
+    # J2-01: komunikaty kategorii „sekcja” pokazuje sekcja docelowa, nie góra strony
+    from flask import flash, render_template
+    with app.test_request_context("/dostepnosc"):
+        app.preprocess_request()
+        flash("Wysłane do testu", "sekcja")
+        flash("Zapisano", "success")
+        html = render_template("dostepnosc.html")
+    assert "Zapisano" in html and "Wysłane do testu" not in html

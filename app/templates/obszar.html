@@ -3,22 +3,22 @@
 {% from "_cards.html" import innovation_card %}
 {% block title %}{{ a.name }}{% endblock %}
 {% block content %}
-<p><a href="/wiedza">← Wiedza</a></p>
+<p><a href="/wiedza">← Zasobnik wiedzy</a></p>
 <div class="card card--thread thread--{{ slug }}">
   <h1>{{ a.name }}</h1>
   {% if a.pilot %}<p class="badge badge--pilot">Obszar pilotażowy</p>{% endif %}
   <p class="lead">{{ a.challenge }}</p>
   <p class="meta">Zgłoszeń mieszkańców w tym obszarze: {{ report_count }}</p>
   <div class="actions">
+    <a class="btn btn--primary" href="/">Opisz problem z tego obszaru</a>
     {% if g.user %}
     <form method="post" action="/obserwuj/{{ slug }}">{{ csrf() }}<input type="hidden" name="next" value="{{ request.path }}">
-      <button type="submit" class="btn" aria-pressed="{{ 'true' if following else 'false' }}">{{ 'Obserwujesz ✔' if following else 'Obserwuj ten obszar' }}</button>
+      <button type="submit" class="btn btn--ghost" aria-pressed="{{ 'true' if following else 'false' }}">{{ 'Obserwujesz ✔' if following else 'Obserwuj ten obszar' }}</button>
     </form>
-    {% else %}<a class="btn" href="/konto?next={{ request.path }}">Obserwuj ten obszar</a>{% endif %}
-    <a class="btn btn--primary" href="/">Opisz problem z tego obszaru</a>
-    {% if a.pilot %}<a class="btn btn--primary" href="/razem">Razem z ZD – moduł dla rodzin</a> <a class="btn" href="/wiedza/sciezka-rodziny">Ścieżka rodziny</a>{% endif %}
+    {% else %}<a class="btn btn--ghost" href="/konto?next={{ request.path }}">Obserwuj ten obszar</a>{% endif %}
   </div>
   <p class="meta">Obserwujący dostają powiadomienie o nowych innowacjach i naborach.</p>
+  {% if a.pilot %}<p>Dla rodzin: <a href="/razem">moduł Razem z ZD</a> oraz <a href="/wiedza/sciezka-rodziny">Ścieżka rodziny</a>.</p>{% endif %}
 </div>
 
 {% if calls %}

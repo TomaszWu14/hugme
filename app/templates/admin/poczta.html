@@ -3,8 +3,8 @@
 {% block content %}
 <h1>Kolejka e-mail</h1>
 {% include "admin/_nav.html" %}
-<p>Każde powiadomienie w aplikacji trafia też tutaj. W prototypie nic nie jest wysyłane; po wdrożeniu
-  worker wyśle wiadomości przez SMTP i uzupełni datę wysyłki.</p>
+<p>Każde powiadomienie w aplikacji trafia też tutaj.</p>
+<p class="notice">Poczta: {{ queue }} {{ queue|plural('wiadomość czeka', 'wiadomości czekają', 'wiadomości czeka') }} – po wdrożeniu wyjdą automatycznie przez SMTP (w demo nic nie jest wysyłane).</p>
 <div class="table-wrap" tabindex="0" role="region" aria-label="Tabela – na małym ekranie przewiń w bok">
 <table>
   <caption>Ostatnie wiadomości ({{ rows|length }})</caption>

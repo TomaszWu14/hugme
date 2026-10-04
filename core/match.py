@@ -74,11 +74,12 @@ def innovation_text(d):
 
 
 def label(score):
-    if score >= 0.6:
+    p = round(score * 100)  # liczone z pokazywanego procentu: ta sama liczba % → ta sama etykieta
+    if p >= 60:
         return "Bardzo pasuje"
-    if score >= 0.45:
+    if p >= 45:
         return "Pasuje"
-    if score >= 0.35:
+    if p >= 35:
         return "Może pasować"
     return "Słabe dopasowanie"
 
@@ -139,6 +140,10 @@ class Index:
             score = W_BM25 * bm / (bm + SATURATION) + (1 - W_BM25) * coverage
             shared_words = [original[s] for s in original if s in tf]
             shared_topics = [TOPICS[t[1:]][0] for t in sorted(q_terms) if t.startswith("#") and t in tf]
-            results.append(Result(self.ids[i], round(min(score, 1.0), 3), shared_words[:8], shared_topics))
+            results.append(Result(self.ids[i], min(score, 1.0), shared_words[:8], shared_topics))
         results.sort(key=lambda r: r.score, reverse=True)
-        return results[:k]
+        top = results[:k]
+        for r in top:
+            # Wynik = pokazywany procent: progi 0,35 w szablonach i lukach zgadzają się z etykietą (T-6).
+            r.score = round(r.score, 2)
+        return top

@@ -1,27 +1,35 @@
 {% extends "base.html" %}
 {% from "_macros.html" import ai_box %}
+{% from "_cards.html" import innovation_card %}
 {% block title %}Karta usługi{% endblock %}
 {% block content %}
 <p class="no-print"><a href="/posrednik">← Pośrednik innowacji</a></p>
 <h1>Karta usługi</h1>
+<div class="no-print" hidden><p class="actions"><button type="button" class="btn btn--primary" data-druk>Drukuj / zapisz jako PDF</button></p></div>
+<p class="hint hint--plain no-print">Na telefonie: Udostępnij → Drukuj → Zapisz jako PDF</p>
 <p class="meta"><span>{{ institutions[ctx.institution] }}</span> <span>Dla: {{ ctx.audience }}</span> <span>Skala: {{ scales[ctx.scale] }}</span>
   <span>Budżet: {{ budgets[ctx.budget] }}</span> {% if ctx.powiat %}<span>Powiat: {{ ctx.powiat }}</span>{% endif %}</p>
 <p class="lead">{{ ctx.problem }}</p>
 {% call ai_box(row.by_ai, 'Proponowana usługa') %}
   <dl class="app-doc">
-    {% for k in keys %}
+    {% for k in keys if card[k] is string %}
     <dt>{{ labels[k] }}</dt>
-    <dd>{% if card[k] is string %}{{ card[k] }}{% else %}<ul>{% for x in card[k] %}<li>{{ x }}</li>{% endfor %}</ul>{% endif %}</dd>
+    <dd>{{ card[k] }}</dd>
+    {% endfor %}
+  </dl>
+  <dl class="app-doc grid grid--two">
+    {% for k in keys if card[k] is not string %}
+    <div class="card"><dt>{{ labels[k] }}</dt><dd><ul>{% for x in card[k] %}<li>{{ x }}</li>{% endfor %}</ul></dd></div>
     {% endfor %}
   </dl>
 {% endcall %}
-{% if card._inspiracje %}
+{% if inspirations %}
 <section aria-labelledby="insp-h">
   <h2 id="insp-h">Inspiracje z Biblioteki</h2>
-  <ul>{% for i in card._inspiracje %}<li><a href="/biblioteka/{{ i.id }}">{{ i.title }}</a></li>{% endfor %}</ul>
+  <div class="grid">{% for i in inspirations %}{{ innovation_card(i) }}{% endfor %}</div>
   <p>Zapytaj autorów w rozmowie przy innowacji – Hub pomoże nawiązać kontakt.</p>
 </section>
 {% endif %}
 <p class="notice">Karta nie zawiera kwot – koszty trzeba wycenić lokalnie. Źródła finansowania sprawdź w aktualnych naborach.</p>
-<p class="no-print notice">Wydruk albo PDF: <kbd>Ctrl</kbd>+<kbd>P</kbd>.</p>
+<script src="{{ url_for('static', filename='js/druk.js') }}" defer></script>
 {% endblock %}

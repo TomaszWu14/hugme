@@ -31,6 +31,7 @@ PAGES = [
     (None, "/", "01-start"), (None, "@wyniki", "02-wyniki"), (None, "/wiedza", "05-wiedza"),
     (None, "/wiedza/obszar/rodziny-zd", None), (None, "/wiedza/sciezka-rodziny", "06-sciezka-rodziny"),
     (None, "/wiedza/material/1", None), (None, "/biblioteka", "07-biblioteka"), (None, "/biblioteka/1", "08-innowacja-tester"),
+    (None, "/tester", None),
     (None, "/pomysly", None), (None, "/pomysly/1", None), (None, "/posrednik", None), (None, "/konto", None),
     (None, "/dostepnosc", None), (None, "/prywatnosc", None), (None, "/nie-ma-takiej-strony", None),
     ("mieszkaniec", "/moje", None), ("mieszkaniec", "/powiadomienia", None), ("mieszkaniec", "/zgloszenie/1", "03-zgloszenie-watek"),
@@ -58,7 +59,7 @@ PAGES = [
     ("admin", "/admin/uzytkownicy", "26-uzytkownicy"), ("admin", "/admin/uzytkownicy/2", None), ("admin", "/admin/uzytkownicy/nowy", None),
     ("admin", "/admin/role", "27-role"),
 ]
-ROLE_INDEX = {"mieszkaniec": 0, "ngo": 1, "gmina": 2, "ekspert": 3, "admin": 4}
+ROLE_UID = {"mieszkaniec": 1, "ngo": 2, "gmina": 3, "ekspert": 4, "admin": 5}  # id kont demo z seeda
 
 
 def serve():
@@ -71,14 +72,14 @@ def serve():
 
 def login(page, role):
     page.goto(f"{BASE}/konto")
-    page.locator("form button[type=submit].btn--primary").nth(ROLE_INDEX[role]).click()
+    page.locator(f'form:has(input[name=user_id][value="{ROLE_UID[role]}"]) button[type=submit]').first.click()
     page.wait_for_load_state()
 
 
 def open_path(page, path):
     if path == "@wyniki":
         page.goto(BASE + "/")
-        page.click("text=Znajdź rozwiązania")
+        page.click("button:has-text(\"Znajdź rozwiązania\")")
     elif path == "@karta":
         page.goto(BASE + "/posrednik")
         page.check("input[name=institution][value=gmina]")
@@ -175,7 +176,7 @@ def main(screens=False):
 
 
 FOCUS_JS = """() => { const e = document.activeElement, cs = getComputedStyle(e);
-  return {tag: e.tagName, text: (e.innerText || e.value || e.getAttribute('aria-label') || '').trim().slice(0, 40),
+  return {tag: e.tagName, text: (e.innerText || e.value || e.getAttribute('aria-label') || '').replace(/\\s+/g, ' ').trim().slice(0, 40),
           visible: e !== document.body && (parseFloat(cs.outlineWidth) >= 2 && cs.outlineStyle !== 'none' || cs.boxShadow !== 'none')}; }"""
 
 

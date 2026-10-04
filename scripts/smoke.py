@@ -26,7 +26,7 @@ def main():
             if page.locator(".card--thread").count() < 3:
                 fails.append(f"{width}px /wyniki: mniej niż 3 dopasowania")
             page.goto(BASE + "/konto")
-            page.locator("form button[type=submit].btn--primary").nth(0).click()  # mieszkanka-rodzic
+            page.locator('form:has(input[name=user_id][value="1"]) button[type=submit]').first.click()  # mieszkanka-rodzic
             page.wait_for_load_state()
             page.goto(BASE + "/moje")
             link = page.locator("a[href^='/zgloszenie/']").first.get_attribute("href")
@@ -35,7 +35,7 @@ def main():
             if checks["hscroll"] or checks["clipped"]:
                 fails.append(f"{width}px {link}: hscroll={checks['hscroll']} clipped={checks['clipped']}")
             page.goto(BASE + "/konto")
-            page.locator("form button[type=submit].btn--primary").nth(4).click()  # koordynatorka Hubu
+            page.locator('form:has(input[name=user_id][value="5"]) button[type=submit]').first.click()  # koordynatorka Hubu
             page.wait_for_load_state()
             for path in ("/admin", "/admin/uzytkownicy", "/admin/trendy"):
                 if page.goto(BASE + path).status != 200:

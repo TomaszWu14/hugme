@@ -2,7 +2,7 @@
 {% from "_macros.html" import area_tag, example %}
 {% block title %}{{ m.title }}{% endblock %}
 {% block content %}
-<p><a href="/wiedza">← Wiedza</a></p>
+<p><a href="/wiedza">← Zasobnik wiedzy</a></p>
 <article class="card card--thread thread--{{ m.area }}">
   <h1>{{ m.title }}</h1>
   <p class="meta">{{ area_tag(m.area) }} <span>{{ m.kind }}</span> {{ example() }}</p>

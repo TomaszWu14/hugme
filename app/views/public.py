@@ -4,7 +4,8 @@ from flask import Blueprint, Response, abort, flash, g, redirect, render_templat
 from app.auth import login_required
 from app.views.komunikacja import ensure_thread, thread_view
 from core import catalog, db, notify
-from core.domain import AREAS, POWIATY
+from core.domain import AREAS, GAP_THRESHOLD, POWIATY
+from core.match import topics_of
 from core.privacy import describe, mask
 from data.razem import ETR_ERROR, MY_TOPIC_LABELS
 
@@ -27,6 +28,13 @@ def validate_problem(text):
     return None
 
 
+def validate_search(text):
+    """Do samego szukania wystarczy jedno słowo znane z katalogu („samotność”). MIN_LEN pilnuje dopiero zapisu."""
+    if text and len(text) < MIN_LEN and catalog.match_innovations(text, k=1):
+        return None
+    return validate_problem(text)
+
+
 @bp.route("/")
 def home():
     return render_template("home.html", example=EXAMPLE_PROBLEM, powiaty=POWIATY)
@@ -39,7 +47,7 @@ def search():
     topic = MY_TOPIC_LABELS.get(request.form.get("temat", ""))  # „Moje sprawy” – temat wybrany obrazkiem
     if topic and text:
         text = f"{topic}: {text}"
-    error = validate_problem(text) or validate_problem(mask(text)[0])  # maskowanie może wydłużyć tekst
+    error = validate_search(text) or validate_search(mask(text)[0])  # maskowanie może wydłużyć tekst
     if request.form.get("zrodlo") == "etr" and (error or not topic):
         # „Strona dla mnie”: błąd pokazujemy w module, w tekście łatwym do czytania.
         flash(ETR_ERROR, "error")
@@ -65,7 +73,8 @@ def results():
         reports=catalog.similar_reports(query),
         materials=catalog.match_materials(query),
         experts=catalog.match_experts(query),
-        powiaty=POWIATY,
+        powiaty=POWIATY, gap=GAP_THRESHOLD, short=len(text) < MIN_LEN,
+        zd_work=analysis["area"] == "rodziny-zd" and "praca" in topics_of(text),
     )
 
 
@@ -120,7 +129,10 @@ def report(rid):
     thread = None
     if g.user and (is_author or g.user["role"] in ("admin", "ekspert")):
         thread = thread_view("zgloszenie", rid)
-    return render_template("zgloszenie.html", r=r, matches=rows, is_author=is_author, thread=thread)
+        msgs = thread["messages"]
+        if msgs and msgs[0]["body"] == r["body"]:  # pierwsza wiadomość to treść zgłoszenia – nie pokazujemy dubla
+            thread["messages"] = msgs[1:]
+    return render_template("zgloszenie.html", r=r, matches=rows, is_author=is_author, thread=thread, gap=GAP_THRESHOLD)
 
 
 @bp.post("/zgloszenie/<int:rid>/ocena")
@@ -144,9 +156,15 @@ def rate_match(rid):
 @login_required
 def mine():
     uid = g.user["id"]
+    # Czy ostatnie słowo w wątku zgłoszenia należy do Hubu/eksperta – wtedy plakietka i zgłoszenie na górze.
+    reports = db.query("""
+        SELECT r.*, (SELECT u.role FROM threads t JOIN messages m ON m.thread_id = t.id JOIN users u ON u.id = m.user_id
+                     WHERE t.subject_type = 'zgloszenie' AND t.subject_id = r.id AND m.hidden = 0
+                     ORDER BY m.created_at DESC, m.id DESC LIMIT 1) IN ('admin', 'ekspert') AS hub_replied
+        FROM reports r WHERE r.user_id = ? ORDER BY hub_replied DESC, r.created_at DESC""", (uid,))
     return render_template(
         "moje.html",
-        reports=db.query("SELECT * FROM reports WHERE user_id = ? ORDER BY created_at DESC", (uid,)),
+        reports=reports,
         ideas=db.query("SELECT * FROM ideas WHERE user_id = ? ORDER BY created_at DESC", (uid,)),
         tests=db.query("SELECT t.*, i.title FROM tests t JOIN innovations i ON i.id = t.innovation_id "
                        "WHERE t.user_id = ? ORDER BY t.created_at DESC", (uid,)),

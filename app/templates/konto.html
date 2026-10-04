@@ -6,16 +6,18 @@
 <p class="lead">To prototyp, więc konta nie mają haseł. Docelowo zalogujesz się przez <strong>login.gov.pl</strong>
   (profil zaufany, e-dowód) albo jednorazowym linkiem wysłanym e-mailem.</p>
 {% if config.DEMO_MODE %}<p class="notice">To publiczne demo: odnawia się samo po 20 minutach bez nowych wpisów, a konta poniżej zostają bez zmian, żeby każdy mógł je obejrzeć.</p>{% endif %}
+{# Koordynatorka Hubu pierwsza – to konto jury ogląda najczęściej. #}
 <ul class="grid grid--accounts">
-  {% for u in demo_users %}
+  {% for u in demo_users|selectattr('role', 'eq', 'admin')|list + demo_users|rejectattr('role', 'eq', 'admin')|list %}
   <li class="card">
     <h2 class="h3">{{ ROLES[u.role] }}</h2>
     <p>{{ u.name }} {{ example() }}</p>
+    {% if u.role == 'admin' %}<p class="meta">Dla jury: skrzynka zgłoszeń, trendy i luki, odpowiedzi</p>{% endif %}
     <form method="post" action="{{ url_for('auth.demo') }}">
       {{ csrf() }}
       <input type="hidden" name="user_id" value="{{ u.id }}">
       <input type="hidden" name="next" value="{{ next }}">
-      <button type="submit" class="btn btn--primary">Wejdź jako {{ ROLES[u.role]|lower }}</button>
+      <button type="submit" class="btn btn--primary">Wejdź<span class="sr-only"> jako {{ ROLES[u.role][:1]|lower ~ ROLES[u.role][1:] }}</span></button>
     </form>
   </li>
   {% endfor %}

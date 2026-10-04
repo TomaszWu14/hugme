@@ -32,7 +32,7 @@ TOPICS = {
     ]),
     "oferty": ("informacja o ofertach pomocy", [
         "oferta", "oferty", "ulga", "ulgi", "świadczenie", "świadczenia", "informacja", "informacji",
-        "gdzie", "baza", "mapa", "turnus", "turnusy", "dofinansowanie", "pomoc",
+        "baza", "mapa", "turnus", "turnusy", "dofinansowanie", "pomoc",
     ]),
     "seniorzy": ("seniorzy i starość", [
         "senior", "seniorka", "seniorzy", "seniorów", "starsi", "starszy", "starsza", "starsze", "starszych",
@@ -40,23 +40,25 @@ TOPICS = {
     ]),
     "samotnosc": ("samotność i więzi", [
         "samotność", "samotny", "samotna", "samotni", "izolacja", "rozmowa", "towarzystwo", "sąsiad",
-        "sąsiedzi", "sąsiedzki", "kontakt", "więzi",
+        "sąsiedzi", "sąsiedzki", "kontakt", "więzi", "sama", "sam", "samotnie", "nikim", "odwiedza", "odwiedzin",
+        "porozmawiać", "rozmawia", "smutno", "opuszczona",
     ]),
     "cyfrowe": ("technologia i internet", [
         "internet", "internecie", "komputer", "smartfon", "telefon", "tablet", "aplikacja", "online",
         "recepta", "profil", "zaufany", "cyfrowy", "cyfrowe", "mobywatel", "bankowość", "formularz",
     ]),
     "psychiczne": ("zdrowie psychiczne i emocje", [
-        "psycholog", "psychiatra", "psychoterapia", "depresja", "lęk", "kryzys", "stres", "emocje",
-        "nastolatek", "nastolatki", "młodzież", "samookaleczenia", "smutek", "załamanie",
+        "psycholog", "psychologa", "psychiatra", "psychoterapia", "depresja", "depresji", "lęk", "kryzys",
+        "stres", "emocje",
+        "nastolatek", "nastolatków", "nastolatki", "młodzież", "samookaleczenia", "smutek", "załamanie",
     ]),
     "transport": ("dojazd i transport", [
         "autobus", "dojazd", "dojechać", "dojeżdżać", "bus", "transport", "samochód", "kurs", "kursy",
-        "przystanek", "komunikacja", "wieś", "wsi", "sołectwo", "daleko", "dowóz",
+        "przystanek", "komunikacja", "dowóz",
     ]),
     "wspolpraca": ("współpraca instytucji", [
         "współpraca", "partnerstwo", "partner", "partnerzy", "organizacja", "organizacje", "ngo",
-        "fundacja", "stowarzyszenie", "gmina", "gminy", "firma", "firmy", "biznes", "samorząd", "sektor",
+        "fundacja", "stowarzyszenie", "firma", "firmy", "biznes", "samorząd", "sektor",
     ]),
     "finansowanie": ("finansowanie i granty", [
         "grant", "dotacja", "konkurs", "nabór", "finansowanie", "budżet", "pieniądze", "środki", "fundusz",
@@ -77,4 +79,6 @@ można mój moja moje mu my na nad nam nas nasz nasza nasze naszej naszych naszy
 one oni ono oraz po pod przez przy sa się sobie są ta tak tam te tego tej ten też to tu tylko tym u w we wiele
 więc wszystko z za ze że żeby bardziej często coraz każdy każda inaczej czasem trzeba chodzi jedna jeden
 wielu wiele różne różnych inny inna inne bardzo dużo mało nasi nasze nami swoje swoich
+przed raz razy tydzień tygodniu dzień dni kilka pierwszy pierwsza pierwszej pierwszego osoby osób lata mieszka
+przychodzi gminie gdzie szukać prawie nikt kilku dnia
 """.split())

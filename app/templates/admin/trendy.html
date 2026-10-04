@@ -1,21 +1,23 @@
 {% extends "base.html" %}
-{% from "_macros.html" import area_tag %}
-{% block title %}Trendy potrzeb{% endblock %}
+{% from "_macros.html" import area_tag, status %}
+{% block title %}Trendy i luki{% endblock %}
 {% block content %}
-<h1>Trendy potrzeb</h1>
+<h1>Trendy potrzeb i luki</h1>
 {% include "admin/_nav.html" %}
 <p class="notice">Widok tylko dla Hubu. Dane zagregowane – bez treści zgłoszeń i bez autorów. Wszystkich zgłoszeń: {{ total }}.
-  {% if rate is not none %}Dopasowania ocenione jako pomocne: <strong>{{ rate }}%</strong> ({{ rated }} ocen).{% endif %}</p>
+  {% if rate is not none %}Dopasowania ocenione jako pomocne: <strong>{{ rate }}%</strong> ({{ rated }} {{ rated|plural('ocena', 'oceny', 'ocen') }}).{% endif %}
+  <a href="#luki">Przejdź do luk</a>.</p>
 
-<div class="table-wrap" tabindex="0" role="region" aria-label="Tabela – na małym ekranie przewiń w bok">
+<div class="table-wrap" tabindex="0" role="region" aria-label="Tabela obszarów – na małym ekranie przewiń w bok">
 <table>
-  <caption>Zgłoszenia według obszaru – ostatnie 30 dni wobec poprzednich 30</caption>
-  <thead><tr><th scope="col">Obszar</th><th scope="col">Razem</th><th scope="col">Ostatnie 30 dni</th><th scope="col">Poprzednie 30 dni</th><th scope="col">Zmiana</th></tr></thead>
+  <caption>Zgłoszenia według obszaru – najwięcej w ostatnich 30 dniach na górze</caption>
+  <thead><tr><th scope="col">Obszar</th><th scope="col">Zmiana</th><th scope="col">Razem</th><th scope="col">Ostatnie 30 dni</th><th scope="col">Poprzednie 30 dni</th></tr></thead>
   <tbody>
-    {% for slug, a in AREAS.items() %}
+    {% for slug in order %}
     {% set m = mom[slug] %}{% set d = m.now - m.prev %}
-    <tr><th scope="row">{{ area_tag(slug) }}</th><td>{{ by_area.get(slug, 0) }}</td><td>{{ m.now }}</td><td>{{ m.prev }}</td>
-      <td>{% if d > 0 %}<span class="trend-up"><span aria-hidden="true">▲</span> więcej o {{ d }}</span>{% elif d < 0 %}<span class="trend-down"><span aria-hidden="true">▼</span> mniej o {{ -d }}</span>{% else %}<span aria-hidden="true">■</span> bez zmian{% endif %}</td></tr>
+    <tr><th scope="row">{{ area_tag(slug) }}</th>
+      <td>{% if d > 0 %}<span class="trend-up"><span aria-hidden="true">▲</span> więcej o {{ d }}</span>{% elif d < 0 %}<span class="trend-down"><span aria-hidden="true">▼</span> mniej o {{ -d }}</span>{% else %}<span aria-hidden="true">■</span> bez zmian{% endif %}</td>
+      <td>{{ by_area.get(slug, 0) }}</td><td>{{ m.now }}</td><td>{{ m.prev }}</td></tr>
     {% endfor %}
   </tbody>
 </table>
@@ -42,4 +44,9 @@
   <li><span class="legend__sw heat-3" aria-hidden="true"></span> 4–6</li>
   <li><span class="legend__sw heat-4" aria-hidden="true"></span> 7 i więcej zgłoszeń</li>
 </ul>
+
+<section aria-labelledby="luki">
+  <h2 id="luki">Luki – gdzie brakuje rozwiązań</h2>
+  {% include "admin/luki.html" %}
+</section>
 {% endblock %}

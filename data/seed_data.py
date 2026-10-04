@@ -75,7 +75,8 @@ INNOVATIONS = [
      "Strażacy-ochotnicy i koło gospodyń prowadzą zajęcia, wspólny obiad i gimnastykę. Senior nie "
      "musi jechać do miasta, żeby mieć towarzystwo i opiekę.",
      "seniorzy", "limanowski", "wdrożenie", "seniorzy", "OSP Przykładowa Wieś (PRZYKŁAD)",
-     "seniorzy opieka dzienna wieś remiza towarzystwo obiad"),
+     "seniorzy opieka dzienna wieś na wsi remiza towarzystwo obiad"
+     " sama mieszka sama nikt nie odwiedza z nikim nie rozmawia smutno wdowa"),
     ("Asystent Seniora na telefon",
      "Asystent pomaga starszej osobie w drodze do lekarza, urzędu i na zakupy.",
      "Senior dzwoni dzień wcześniej, a asystent przyjeżdża i towarzyszy w sprawach poza domem. "
@@ -99,19 +100,22 @@ INNOVATIONS = [
      "Raz lub dwa razy w tygodniu przeszkolony wolontariusz dzwoni, pyta, jak minął dzień, i słucha. "
      "Gdy trzeba, przekazuje informację do ośrodka pomocy.",
      "samotnosc", "Tarnów", "wdrożenie", "seniorzy", "Fundacja Głos Serca (PRZYKŁAD)",
-     "samotność rozmowa telefon wolontariusz kontakt seniorzy"),
+     "samotność rozmowa telefon wolontariusz kontakt seniorzy rodzina daleko nikt nie zagląda"
+     " sama mieszka sama nikt nie odwiedza z nikim nie rozmawia smutno wdowa"),
     ("Międzypokoleniowe Podwórko",
      "Młodzież i seniorzy razem prowadzą ogród na osiedlu.",
      "Wspólne grządki, ławki i kawa w każdą sobotę. Starsi uczą sadzenia, młodsi pomagają w cięższych "
      "pracach. Na osiedlu znika anonimowość.",
      "samotnosc", "oświęcimski", "wdrożenie", "cała społeczność", "Stowarzyszenie Zielone Osiedle (PRZYKŁAD)",
-     "samotność sąsiedzi ogród młodzież seniorzy więzi spotkania"),
+     "samotność sąsiedzi ogród młodzież seniorzy więzi spotkania"
+     " sama mieszka sama nikt nie odwiedza z nikim nie rozmawia smutno wdowa"),
     ("Stół Sąsiedzki",
      "Raz w miesiącu wspólna kolacja dla wszystkich mieszkańców ulicy.",
      "Każdy przynosi coś do jedzenia. Spotkania organizują sami sąsiedzi, a gmina użycza świetlicy. "
      "Przychodzą też osoby, które mieszkają same.",
      "samotnosc", "wielicki", "pomysł", "cała społeczność", "Grupa Sąsiedzka (PRZYKŁAD)",
-     "sąsiedzi samotność spotkania kolacja więzi świetlica"),
+     "sąsiedzi samotność spotkania kolacja więzi świetlica"
+     " sama mieszka sama nikt nie odwiedza z nikim nie rozmawia smutno wdowa"),
     ("Cyfrowy Przewodnik w bibliotece",
      "Licealiści uczą seniorów obsługi smartfona i spraw przez internet.",
      "Spotkania jeden na jeden: e-recepta, profil zaufany, mObywatel, rozmowa wideo z wnukami. "
@@ -147,7 +151,7 @@ INNOVATIONS = [
      "W parku i przy bibliotece stoją oznaczone ławki. W stałych godzinach dyżuruje tam wolontariusz, "
      "który wysłucha i pokaże, gdzie szukać pomocy.",
      "psychiczne", "brzeski", "prototyp", "dorośli", "Fundacja Głos Serca (PRZYKŁAD)",
-     "rozmowa kryzys wsparcie emocje wolontariusz samotność"),
+     "rozmowa kryzys wsparcie emocje wolontariusz samotność depresja nastolatki psycholog lęk"),
     ("Bus na Telefon",
      "Gminny bus przyjeżdża na zamówienie – do lekarza, urzędu, szkoły.",
      "Mieszkańcy zamawiają kurs telefonicznie dzień wcześniej. Bus łączy kilka wsi i jeździ tam, "

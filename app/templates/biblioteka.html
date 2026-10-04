@@ -1,12 +1,22 @@
 {% extends "base.html" %}
 {% from "_macros.html" import field %}
 {% from "_cards.html" import innovation_card %}
-{% block title %}Biblioteka innowacji{% endblock %}
+{% block title %}{{ 'Tester innowacji' if tester else 'Biblioteka innowacji' }}{% endblock %}
 {% block content %}
+{% if tester %}
+<h1>Tester innowacji</h1>
+<p class="lead">Wybierz innowację, zgłoś się do testu i oceń ją od 1 do 5. Hub przekaże Twoje uwagi autorom.</p>
+<ol class="steps">
+  <li><strong>Wypróbuj</strong> – zgłoś się do testu w swojej gminie albo organizacji.</li>
+  <li><strong>Oceń 1–5</strong> – jednym kliknięciem gwiazdki.</li>
+  <li><strong>Zaproponuj poprawkę</strong> – Hub przekaże ją autorom.</li>
+</ol>
+{% else %}
 <h1>Biblioteka innowacji</h1>
 <p class="lead">Sprawdzone pomysły z Małopolski. Każdy można przenieść do swojej gminy – zapytaj autorów w rozmowie przy innowacji.</p>
+{% endif %}
 
-<form method="get" action="/biblioteka" class="filters" role="search" aria-label="Filtruj bibliotekę">
+<form method="get" action="{{ request.path }}" class="filters" role="search" aria-label="{{ 'Filtruj innowacje do testu' if tester else 'Filtruj bibliotekę' }}">
   {% set area_opts = [] %}{% for slug, a in AREAS.items() %}{% set _ = area_opts.append((slug, a.short)) %}{% endfor %}
   {{ field('q', 'Szukaj słowami', value=f.q, type='search', optional_text=false, hint='transport, samotność') }}
   {{ field('obszar', 'Obszar', options=area_opts, value=f.obszar, optional_text=false) }}
@@ -15,7 +25,7 @@
   {{ field('grupa', 'Dla kogo', options=audiences|pairs, value=f.grupa, optional_text=false) }}
   <div class="actions">
     <button type="submit" class="btn btn--primary">Pokaż</button>
-    <a class="btn btn--ghost" href="/biblioteka">Wyczyść</a>
+    <a class="btn btn--ghost" href="{{ request.path }}">Wyczyść</a>
   </div>
 </form>
 
@@ -24,9 +34,7 @@
 <ul class="grid">
   {% for i in rows %}
   <li>
-    {{ innovation_card(i) }}
-    {% set r = ratings.get(i.id) %}
-    {% if r %}<p class="meta">Ocena testujących: <strong>{{ r.avg }}/5</strong> ({{ r.n }} {{ 'ocena' if r.n == 1 else 'oceny' }})</p>{% endif %}
+    {{ innovation_card(i, actions=true, rating=ratings.get(i.id)) }}
   </li>
   {% endfor %}
 </ul>

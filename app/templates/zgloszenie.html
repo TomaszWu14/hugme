@@ -2,6 +2,23 @@
 {% from "_macros.html" import csrf, example, area_tag, status, icon %}
 {% from "_cards.html" import score_bar, thread_block %}
 {% block title %}Zgłoszenie{% endblock %}
+{% macro match_item(m) %}
+<li id="dop-{{ m.id }}" class="card card--thread thread--{{ m.area }}">
+  <h3><a href="/biblioteka/{{ m.id }}">{{ m.title }}</a></h3>
+  {{ score_bar(m.score, score_label(m.score)) }}
+  <p>{{ m.summary }}</p>
+  {% if is_author %}
+  <form method="post" action="/zgloszenie/{{ r.id }}/ocena" class="feedback">
+    {{ csrf() }}<input type="hidden" name="innovation_id" value="{{ m.id }}">
+    <span id="fb-{{ m.id }}">Czy to pomocne?</span>
+    <button type="submit" name="ocena" value="pomocne" class="btn btn--small" aria-pressed="{{ 'true' if m.feedback == 1 else 'false' }}" aria-describedby="fb-{{ m.id }}">{{ icon('kciuk-gora') }} Pomocne</button>
+    <button type="submit" name="ocena" value="niepomocne" class="btn btn--small" aria-pressed="{{ 'true' if m.feedback == -1 else 'false' }}" aria-describedby="fb-{{ m.id }}">{{ icon('kciuk-dol') }} Niepomocne</button>
+    {% if m.feedback %}<span class="meta">Twoja ocena: {{ 'pomocne' if m.feedback == 1 else 'niepomocne' }}</span>{% endif %}
+  </form>
+  {% endif %}
+</li>
+{% endmacro %}
+
 {% block content %}
 <p><a href="{{ '/moje' if is_author else '/' }}">← {{ 'Moje sprawy' if is_author else 'Start' }}</a></p>
 <h1>Zgłoszenie</h1>
@@ -28,25 +45,22 @@
 <section aria-labelledby="dop-h">
   <h2 id="dop-h">Dopasowane rozwiązania</h2>
   {% if is_author %}<p>Oceń, czy propozycja Ci pomaga. To dla nas najlepszy sprawdzian trafności.</p>{% endif %}
+  {% set top = (matches|selectattr('score', 'ge', gap)|list)[:3] %}
+  {% set rest = matches|reject('in', top)|list %}
   {% if matches %}
+  {% if top %}
   <ol class="list-plain">
-    {% for m in matches %}
-    <li id="dop-{{ m.id }}" class="card card--thread thread--{{ m.area }}">
-      <h3><a href="/biblioteka/{{ m.id }}">{{ m.title }}</a></h3>
-      {{ score_bar(m.score, score_label(m.score)) }}
-      <p>{{ m.summary }}</p>
-      {% if is_author %}
-      <form method="post" action="/zgloszenie/{{ r.id }}/ocena" class="feedback">
-        {{ csrf() }}<input type="hidden" name="innovation_id" value="{{ m.id }}">
-        <span id="fb-{{ m.id }}">Czy to pomocne?</span>
-        <button type="submit" name="ocena" value="pomocne" class="btn btn--small" aria-pressed="{{ 'true' if m.feedback == 1 else 'false' }}" aria-describedby="fb-{{ m.id }}">{{ icon('kciuk-gora') }} Pomocne</button>
-        <button type="submit" name="ocena" value="niepomocne" class="btn btn--small" aria-pressed="{{ 'true' if m.feedback == -1 else 'false' }}" aria-describedby="fb-{{ m.id }}">{{ icon('kciuk-dol') }} Niepomocne</button>
-        {% if m.feedback %}<span class="meta">Twoja ocena: {{ 'pomocne' if m.feedback == 1 else 'niepomocne' }}</span>{% endif %}
-      </form>
-      {% endif %}
-    </li>
-    {% endfor %}
+    {% for m in top %}{{ match_item(m) }}{% endfor %}
   </ol>
+  {% else %}<p class="notice">Nie mamy jeszcze sprawdzonego rozwiązania dla tej potrzeby – Hub potraktuje zgłoszenie jako lukę i poszuka partnerów.</p>{% endif %}
+  {% if rest %}
+  <details class="demo-guide">
+    <summary>Pokaż {{ rest|length }} {{ rest|length|plural('słabszą propozycję', 'słabsze propozycje', 'słabszych propozycji') }}</summary>
+    <ol class="list-plain">
+      {% for m in rest %}{{ match_item(m) }}{% endfor %}
+    </ol>
+  </details>
+  {% endif %}
   {% else %}<p>Brak dopasowań – Hub poszuka rozwiązania ręcznie.</p>{% endif %}
 </section>
 

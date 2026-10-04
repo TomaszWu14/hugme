@@ -36,11 +36,16 @@
   <p class="etr"><strong>Łatwy tekst:</strong> Osoby z zespołem Downa pracują. W kawiarni, w urzędzie, w zakładzie. Tu jest mapa tych miejsc.</p>
 </header>
 
+{# J1A-15: „103 ZAZ · 708 WTZ” łamało kafel – w kaflu tylko pierwsza liczba, druga trafia do opisu pod kaflami. #}
+{% set extra = [] %}
 <ul class="stat-row stat-row--src" aria-label="Liczby ze źródłem">
   {% for num, text, src, url in W.STATS %}
-  <li class="stat"><span class="stat__num">{{ num }}</span> {{ text }} <span class="stat__src"><a href="{{ url }}" rel="noopener">Źródło: {{ src }}</a></span></li>
+  {% set parts = num.split(' · ') %}{% if parts|length > 1 %}{% set _ = extra.extend(parts[1:]) %}{% endif %}
+  <li class="stat"><span class="stat__num">{{ parts[0] }}</span> {{ text }} <span class="stat__src"><a href="{{ url }}" rel="noopener">Źródło: {{ src }}</a></span></li>
   {% endfor %}
 </ul>
+<p class="meta">ZAZ to zakłady aktywności zawodowej – firmy, które zatrudniają osoby z niepełnosprawnością.
+  WTZ to warsztaty terapii zajęciowej – zajęcia, które przygotowują do pracy.{% if extra %} W Polsce działa {{ extra|join(', ') }} (dane z 2024 r.).{% endif %}</p>
 
 <section aria-labelledby="mapa-pl-h">
   <h2 id="mapa-pl-h">Polska – {{ total }} miejsc na mapie</h2>

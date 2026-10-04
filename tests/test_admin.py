@@ -5,14 +5,14 @@ import pytest
 from conftest import login
 from core import db
 
-ADMIN_PAGES = ["/admin", "/admin/watki", "/admin/luki", "/admin/trendy", "/admin/biblioteka", "/admin/import",
+ADMIN_PAGES = ["/admin", "/admin/watki", "/admin/trendy", "/admin/biblioteka", "/admin/import",
                "/admin/nabory", "/admin/poczta", "/admin/biblioteka/nowa", "/admin/eksport/zgloszenia.csv"]
 
 
 @pytest.mark.parametrize("role", ["mieszkaniec", "ngo", "gmina", "ekspert"])
 def test_admin_pages_forbidden_for_other_roles(client, role):
     login(client, role)
-    for page in ADMIN_PAGES:
+    for page in ADMIN_PAGES + ["/admin/luki"]:
         assert client.get(page).status_code == 403, page
 
 
@@ -110,10 +110,9 @@ def test_toggle_call_notifies_followers(client, app):
 
 def test_gaps_list_and_trends(client):
     login(client, "admin")
-    html = client.get("/admin/luki").get_data(as_text=True)
-    assert "mieszkań treningowych" in html and "Kandydat na konkurs" in html
     html = client.get("/admin/trendy").get_data(as_text=True)
     assert "powiat × obszar" in html and "wadowicki" in html and "Ostatnie 30 dni" in html
+    assert 'id="luki"' in html and "mieszkań treningowych" in html and "Kandydat na konkurs" in html
 
 
 def test_csv_export_and_formula_injection_guard(client):
@@ -154,3 +153,93 @@ def test_admin_hides_and_restores_idea_and_message(client, app):
     login(client, "mieszkaniec")
     page = client.get("/pomysly/1").get_data(as_text=True)
     assert title in page and msg["body"][:30] not in page and "Ukryj" not in page
+
+
+def test_gaps_moved_to_trends_and_linked_reports_are_not_gaps(client, app):
+    login(client, "admin")
+    r = client.get("/admin/luki")
+    assert r.status_code == 302 and r.headers["Location"].endswith("/admin/trendy#luki")
+    with app.app_context():
+        from app.views.admin import gaps
+        linked = db.one("SELECT id FROM reports WHERE status = 'polaczone' AND best_score < 0.5 LIMIT 1")
+        assert linked and linked["id"] not in {g["id"] for g, _ in gaps()}
+        n = len(gaps())
+    assert f'<span class="stat__num">{n}</span> luk' in client.get("/admin").get_data(as_text=True)
+    html = client.get("/admin/trendy").get_data(as_text=True)
+    assert f"Zgłoszenia ({n})" in html                              # kafel i sekcja luk się zgadzają
+    assert html.index("Zmiana") < html.index("Razem</th>")          # „Zmiana” zaraz za „Obszar”
+
+
+def test_inbox_waiting_first_and_new_ideas_tile(client, app):
+    with app.app_context():
+        db.execute("INSERT INTO ideas (user_id, title, essence, audience, stage, created_at) VALUES (1, ?, ?, ?, ?, ?)",
+                   ("Kawiarenka dla rodziców", "Spotkania przy kawie", "rodzice", "pomysł", db.now()))
+    login(client, "admin")
+    html = client.get("/admin").get_data(as_text=True)
+    assert "nowy pomysł bez odpowiedzi" in html or "nowe pomysły bez odpowiedzi" in html
+    assert "najpierw czekające na odpowiedź" in html and "Dodaj innowację" in html
+    body = html.split("<tbody>")[1]
+    rows = body.split("<tr>")[1:]
+    flags = ["czeka na odpowiedź" in r for r in rows]
+    assert flags == sorted(flags, reverse=True)                     # czekające na górze
+    assert "Kawiarenka dla rodziców" in client.get("/admin?typ=pomysl").get_data(as_text=True)
+    assert "Wyślij pocztę" not in html
+    assert "w demo nic nie jest wysyłane" in client.get("/admin/poczta").get_data(as_text=True)
+
+
+def test_plural_filter():
+    from app import plural
+    forms = ("wątek", "wątki", "wątków")
+    assert [plural(n, *forms) for n in (0, 1, 2, 4, 5, 12, 14, 22, 25, 112)] == \
+        ["wątków", "wątek", "wątki", "wątki", "wątków", "wątków", "wątków", "wątki", "wątków", "wątków"]
+
+
+def test_unanswered_thread_shows_area_wait_and_reply_button(client, app):
+    with app.app_context():
+        tid = db.one("SELECT id FROM threads WHERE subject_type = 'pomysl' LIMIT 1")["id"]
+        db.execute("INSERT INTO messages (thread_id, user_id, body, created_at) VALUES (?, 1, 'Czy ktoś pomoże?', ?)",
+                   (tid, db.now()))
+    login(client, "admin")
+    html = client.get("/admin/watki").get_data(as_text=True)
+    assert "czeka od niecałej godziny" in html and "Odpowiedz" in html and "#watek" in html
+    assert 'class="count"' in client.get("/admin/trendy").get_data(as_text=True)  # licznik w menu panelu
+
+
+def test_waited_text():
+    from datetime import datetime
+    from app.views.admin import waited
+    now = datetime(2026, 10, 4, 12, 0, 0)
+    assert waited("2026-10-04 07:00:00", now) == "czeka od 5 h"
+    assert waited("2026-10-03 11:00:00", now) == "czeka od 1 dnia"
+    assert waited("2026-10-01 12:00:00", now) == "czeka od 3 dni"
+
+
+@pytest.mark.parametrize("user_id, home", [(5, "/admin"), (3, "/posrednik"), (4, "/ekspert"), (1, "/")])
+def test_demo_login_lands_by_role(client, user_id, home):
+    from conftest import csrf_of
+    r = client.post("/konto", data={"_csrf": csrf_of(client, "/konto"), "user_id": user_id})
+    assert r.headers["Location"] == home
+
+
+@pytest.mark.parametrize("target", ["//evil.example", "/\\evil.example", "/\t/evil.example", "https://evil.example",
+                                    "javascript:alert(1)", "\\\\evil.example", "/\n/evil.example", ""])
+def test_safe_next_blocks_open_redirect(client, target):
+    from conftest import csrf_of
+    r = client.post("/konto", data={"_csrf": csrf_of(client, "/konto"), "user_id": 5, "next": target})
+    assert r.headers["Location"] == "/admin"
+
+
+def test_safe_next_keeps_fragment_and_query(client):
+    from conftest import csrf_of
+    from app.auth import safe_next
+    assert safe_next("/biblioteka/1#watek") == "/biblioteka/1#watek"
+    r = client.post("/konto", data={"_csrf": csrf_of(client, "/konto"), "user_id": 1, "next": "/biblioteka/1?x=1#watek"})
+    assert r.headers["Location"] == "/biblioteka/1?x=1#watek"
+
+
+def test_konto_admin_first_without_lowercase(client):
+    html = client.get("/konto").get_data(as_text=True).split("grid--accounts")[1]
+    assert html.index("Koordynatorka ROPS") < html.index("Mieszkanka-rodzic")
+    assert "Dla jury" in html and "jako koordynatorka rops" not in html and ">Wejdź<" in html
+    # Środek zdania: mała pierwsza litera, skróty bez zmian (szuka tego też scripts/axe_audit.py).
+    assert "jako koordynatorka ROPS" in html and "jako gmina (JST)" in html

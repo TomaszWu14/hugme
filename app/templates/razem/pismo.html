@@ -11,7 +11,7 @@
 <article class="card letter" aria-label="Gotowe pismo">{{ text }}</article>
 <p class="no-print notice">Wydruk albo PDF: <kbd>Ctrl</kbd>+<kbd>P</kbd>. Pisma nie zapisujemy – po zamknięciu strony zniknie.</p>
 {% endif %}
-<form method="post" class="card no-print" novalidate>
+<form method="post" class="card no-print" novalidate {% if ai_enabled %}data-czekaj="Chwila… z AI to może potrwać do pół minuty"{% endif %}>
   {{ csrf() }}
   {% if errors %}
   <div class="error-summary" role="alert" aria-labelledby="err-h"><h2 id="err-h">Uzupełnij {{ errors|length }} {{ 'pole' if errors|length == 1 else 'pola' }}</h2>
@@ -35,5 +35,6 @@
     {% if ai_enabled %}<button type="submit" name="akcja" value="ai" class="btn btn--ai"><span aria-hidden="true">✦</span> Pismo z uzasadnieniem od AI</button> {{ ai_note() }}
     {% else %}<button type="submit" name="akcja" value="ai" class="btn">Dopisz uzasadnienie z szablonu</button>{% endif %}
   </div>
+  {% if ai_enabled %}<p class="hint hint--plain">Odpowiedź może potrwać do 30 sekund.</p>{% endif %}
 </form>
 {% endblock %}

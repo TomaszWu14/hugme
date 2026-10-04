@@ -5,23 +5,27 @@
 <h1>Panel Hubu Innowacji Społecznych</h1>
 {% include "admin/_nav.html" %}
 <ul class="stat-row" aria-label="Najważniejsze liczby">
-  <li class="stat {{ 'stat--alert' if stats.new }}"><a href="/admin?typ=zgloszenie"><span class="stat__num">{{ stats.new }}</span> nowych zgłoszeń</a></li>
-  <li class="stat {{ 'stat--alert' if stats.unanswered }}"><a href="/admin/watki"><span class="stat__num">{{ stats.unanswered }}</span> wątków bez odpowiedzi</a></li>
-  <li class="stat {{ 'stat--alert' if stats.gaps }}"><a href="/admin/luki"><span class="stat__num">{{ stats.gaps }}</span> luk (brak rozwiązania)</a></li>
-  <li class="stat"><span class="stat__num">{{ stats.rate if stats.rate is not none else '–' }}{{ '%' if stats.rate is not none }}</span> dopasowań ocenionych jako pomocne <span class="meta">({{ stats.rated }} ocen)</span></li>
-  <li class="stat {{ 'stat--alert' if stats.queue }}"><a href="/admin/poczta"><span class="stat__num">{{ stats.queue }}</span> e-maili w kolejce</a></li>
+  <li class="stat {{ 'stat--alert' if stats.ideas }}"><a href="/admin?typ=pomysl"><span class="stat__num">{{ stats.ideas }}</span> {{ stats.ideas|plural('nowy pomysł', 'nowe pomysły', 'nowych pomysłów') }} bez odpowiedzi</a></li>
+  <li class="stat {{ 'stat--alert' if stats.new }}"><a href="/admin?typ=zgloszenie"><span class="stat__num">{{ stats.new }}</span> {{ stats.new|plural('nowe zgłoszenie', 'nowe zgłoszenia', 'nowych zgłoszeń') }}</a></li>
+  <li class="stat {{ 'stat--alert' if stats.unanswered }}"><a href="/admin/watki"><span class="stat__num">{{ stats.unanswered }}</span> {{ stats.unanswered|plural('wątek', 'wątki', 'wątków') }} bez odpowiedzi</a></li>
+  <li class="stat"><a href="/admin/trendy"><strong>Trendy potrzeb – ostatnie 30 dni</strong>
+    {%- for a, n in stats.trends %}<br>{{ AREAS[a].short }}: {{ n }}{% else %}<br>brak nowych zgłoszeń{% endfor %}</a></li>
+  <li class="stat {{ 'stat--alert' if stats.gaps }}"><a href="/admin/trendy#luki"><span class="stat__num">{{ stats.gaps }}</span> {{ stats.gaps|plural('luka', 'luki', 'luk') }} (brak rozwiązania)</a></li>
+  <li class="stat"><span class="stat__num">{{ stats.rate if stats.rate is not none else '–' }}{{ '%' if stats.rate is not none }}</span> dopasowań ocenionych jako pomocne <span class="meta">({{ stats.rated }} {{ stats.rated|plural('ocena', 'oceny', 'ocen') }})</span></li>
 </ul>
 
 <section aria-labelledby="dalej-h" class="next-steps">
   <h2 id="dalej-h" class="h3">Co teraz?</h2>
   {% set todo = [] %}
-  {% if stats.unanswered %}{% set _ = todo.append(('/admin/watki', 'Odpisz mieszkańcom', stats.unanswered ~ ' wątków czeka na pierwszą odpowiedź Hubu.')) %}{% endif %}
-  {% if stats.new %}{% set _ = todo.append(('/admin?typ=zgloszenie', 'Zdecyduj o zgłoszeniach', stats.new ~ ' nowych – połącz z rozwiązaniem albo oznacz jako lukę.')) %}{% endif %}
-  {% if stats.gaps %}{% set _ = todo.append(('/admin/luki', 'Przejrzyj luki', stats.gaps ~ ' potrzeb bez rozwiązania – kandydaci na temat konkursu.')) %}{% endif %}
-  {% if stats.queue %}{% set _ = todo.append(('/admin/poczta', 'Wyślij pocztę', stats.queue ~ ' e-maili czeka w kolejce.')) %}{% endif %}
+  {% if stats.ideas %}{% set _ = todo.append(('/admin?typ=pomysl', 'Odpowiedz na pomysły', stats.ideas ~ ' ' ~ stats.ideas|plural('nowy pomysł czeka', 'nowe pomysły czekają', 'nowych pomysłów czeka') ~ ' na pierwszą odpowiedź Hubu.')) %}{% endif %}
+  {% if stats.unanswered %}{% set _ = todo.append(('/admin/watki', 'Odpisz mieszkańcom', stats.unanswered ~ ' ' ~ stats.unanswered|plural('wątek czeka', 'wątki czekają', 'wątków czeka') ~ ' na odpowiedź Hubu.')) %}{% endif %}
+  {% if stats.new %}{% set _ = todo.append(('/admin?typ=zgloszenie', 'Zdecyduj o zgłoszeniach', stats.new ~ ' ' ~ stats.new|plural('nowe zgłoszenie', 'nowe zgłoszenia', 'nowych zgłoszeń') ~ ' – połącz z rozwiązaniem albo oznacz jako lukę.')) %}{% endif %}
+  {% if stats.gaps %}{% set _ = todo.append(('/admin/trendy#luki', 'Przejrzyj luki', stats.gaps ~ ' ' ~ stats.gaps|plural('potrzeba', 'potrzeby', 'potrzeb') ~ ' bez rozwiązania – kandydaci na temat konkursu.')) %}{% endif %}
   {% if todo %}
   <ol class="steps steps--compact">{% for href, title, text in todo %}<li><a href="{{ href }}"><strong>{{ title }}</strong></a> – {{ text }}</li>{% endfor %}</ol>
-  {% else %}<p><span aria-hidden="true">✔</span> Na dziś spokój – wszystko odpowiedziane i wysłane.</p>{% endif %}
+  {% else %}<p><span aria-hidden="true">✔</span> Na dziś spokój – wszystko odpowiedziane.</p>{% endif %}
+  {% if stats.queue %}<p><a href="/admin/poczta">Poczta</a>: {{ stats.queue }} {{ stats.queue|plural('wiadomość czeka', 'wiadomości czekają', 'wiadomości czeka') }} – po wdrożeniu wyjdą automatycznie przez SMTP (w demo nic nie jest wysyłane).</p>{% endif %}
+  <p class="actions"><a class="btn btn--small" href="/admin/biblioteka/nowa">Dodaj innowację</a></p>
 </section>
 
 <h2>Skrzynka</h2>
@@ -32,20 +36,20 @@
     <option value="{{ val }}" {% if kind == val %}selected{% endif %}>{{ text }}</option>{% endfor %}
   </select>
   <button type="submit" class="btn btn--small">Filtruj</button>
-  <a class="btn btn--small btn--ghost" href="/admin/eksport/zgloszenia.csv">Eksport zgłoszeń (CSV)</a>
+  <a class="btn btn--small btn--ghost" href="/admin/eksport/zgloszenia.csv">Pobierz zgłoszenia do Excela (plik CSV)</a>
 </form>
 {% if items %}
 <div class="table-wrap" tabindex="0" role="region" aria-label="Tabela – na małym ekranie przewiń w bok">
 <table class="table--stack">
-  <caption>Nowe sprawy ({{ items|length }})</caption>
+  <caption>Wszystkie sprawy ({{ items|length }}), najpierw czekające na odpowiedź</caption>
   <thead><tr><th scope="col">Rodzaj</th><th scope="col">Data</th><th scope="col">Treść</th><th scope="col">Szczegóły</th></tr></thead>
   <tbody>
-    {% for typ, when, text, link, row in items %}
+    {% for typ, when, text, link, row, wait in items %}
     <tr>
       <td class="cell-kind">{{ {'zgloszenie': 'Zgłoszenie', 'pomysl': 'Pomysł', 'test': 'Test', 'wniosek': 'Wniosek', 'razem': 'Razem z ZD', 'potrzebny': 'Jestem potrzebny'}[typ] }}</td>
       <td class="cell-when">{{ when|date }}</td>
       <td class="cell-main"><a href="{{ link }}">{{ text|truncate(90) }}</a></td>
-      <td>{% if typ == 'zgloszenie' %}{{ status(row.status) }} {{ area_tag(row.area) }} {{ row.powiat or '' }}{% if not row.approved %} <span class="badge badge--closed">niezatwierdzone</span>{% endif %}{% endif %}</td>
+      <td>{% if wait %}<span class="badge badge--pilot">czeka na odpowiedź</span> {% endif %}{% if typ == 'zgloszenie' %}{{ status(row.status) }} {{ area_tag(row.area) }} {{ row.powiat or '' }}{% if not row.approved %} <span class="badge badge--closed">niezatwierdzone</span>{% endif %}{% elif typ == 'pomysl' %}{{ area_tag(row.area) }}{% endif %}</td>
     </tr>
     {% endfor %}
   </tbody>

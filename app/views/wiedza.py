@@ -2,7 +2,7 @@
 Tester innowacji: zgłoszenie do testu, ocena 1–5, propozycja usprawnienia (powiadamia Hub)."""
 import re
 
-from flask import Blueprint, abort, flash, g, redirect, render_template, request, url_for
+from flask import Blueprint, abort, flash, g, redirect, render_template, request, session, url_for
 
 from app.auth import login_required
 from app.views.komunikacja import thread_view
@@ -87,7 +87,9 @@ def material(mid):
 
 
 @bp.route("/biblioteka")
-def library():
+@bp.route("/tester", endpoint="tester", defaults={"tester": True})
+def library(tester=False):
+    """Biblioteka; pod /tester ta sama lista jako wejście do Testera (bez filtra etapu: prototyp i test)."""
     f = {k: request.args.get(k, "") for k in ("obszar", "powiat", "etap", "grupa", "q")}
     sql, args = "SELECT * FROM innovations WHERE 1=1", []
     for key, col, allowed in [("obszar", "area", AREAS), ("powiat", "powiat", POWIATY),
@@ -100,10 +102,13 @@ def library():
         by_id = {r["id"]: r for r in rows}
         hits = Index([(r["id"], innovation_text(r)) for r in rows]).search(f["q"][:200], k=len(rows) or 1)
         rows = [by_id[h.doc_id] for h in hits]
+    if tester and not f["etap"]:
+        trial = [r for r in rows if r["stage"] in ("prototyp", "test")]
+        rows = trial if len(trial) >= 4 else rows
     ratings = {r["innovation_id"]: r for r in db.query(
         "SELECT innovation_id, ROUND(AVG(rating), 1) AS avg, COUNT(rating) AS n FROM tests "
         "WHERE rating IS NOT NULL GROUP BY innovation_id")}
-    return render_template("biblioteka.html", rows=rows, f=f, ratings=ratings,
+    return render_template("biblioteka.html", rows=rows, f=f, ratings=ratings, tester=tester,
                            powiaty=POWIATY, stages=STAGES, audiences=AUDIENCES)
 
 
@@ -116,8 +121,10 @@ def innovation(iid):
                     "WHERE innovation_id = ? AND rating IS NOT NULL", (iid,))
     tests = db.query("SELECT t.*, u.name FROM tests t JOIN users u ON u.id = t.user_id "
                      "WHERE t.innovation_id = ? ORDER BY t.created_at DESC", (iid,))
+    # Potwierdzenie (flash „sekcja”) pokazujemy w jednej sekcji: Testera albo rozmowy.
     return render_template("innowacja.html", i=i, video=embed_url(i["video_url"]), rating=rating,
-                           tests=tests, thread=thread_view("innowacja", iid), kinds=TEST_KINDS)
+                           tests=tests, thread=thread_view("innowacja", iid), kinds=TEST_KINDS,
+                           tester_ok=session.pop("tester_ok", False))
 
 
 @bp.post("/biblioteka/<int:iid>/test")
@@ -138,11 +145,15 @@ def test_action(iid):
     if kind in ("zgloszenie", "usprawnienie") and len(body) < 10:
         flash("Napisz kilka słów (co najmniej 10 znaków) – np. gdzie i kiedy chcesz testować albo co poprawić.", "error")
         return redirect(link)
+    if kind == "ocena":  # jedna ocena na osobę – nowa zastępuje poprzednią
+        db.execute("DELETE FROM tests WHERE innovation_id = ? AND user_id = ? AND kind = 'ocena'", (iid, g.user["id"]))
     db.execute("INSERT INTO tests (innovation_id, user_id, kind, rating, body, created_at) VALUES (?,?,?,?,?,?)",
                (iid, g.user["id"], kind, rating if kind == "ocena" else None, body, db.now()))
     what = {"zgloszenie": "zgłoszenie do testu", "ocena": f"ocena {rating}/5", "usprawnienie": "propozycja usprawnienia"}[kind]
     notify.notify_admins(f"Tester: {what} – „{i['title']}”", link, exclude=g.user["id"])
-    flash({"zgloszenie": "Zgłoszenie do testu wysłane. Hub skontaktuje Cię z autorami innowacji.",
-           "ocena": "Dziękujemy za ocenę!",
-           "usprawnienie": "Dziękujemy! Przekazaliśmy propozycję autorom i Hubowi."}[kind], "success")
+    flash({"zgloszenie": "Zgłoszenie do testu wysłane. Hub skontaktuje Cię z autorami innowacji "
+                         "– zobaczysz to w Powiadomieniach.",
+           "ocena": "Zapisaliśmy Twoją ocenę (jedna ocena na osobę – nowa zastępuje poprzednią).",
+           "usprawnienie": "Dziękujemy! Przekazaliśmy propozycję autorom i Hubowi."}[kind], "sekcja")
+    session["tester_ok"] = True
     return redirect(link)
