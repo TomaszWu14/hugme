@@ -103,7 +103,7 @@ main:focus { outline: none; }
 .brand__name { font-size: 1.6rem; font-weight: 700; letter-spacing: -.02em; }
 .brand__sub { font-size: .8rem; color: var(--ink-soft); border-left: 2px solid var(--line); padding-left: .6rem; }
 .nav { display: flex; flex-wrap: wrap; gap: .25rem; list-style: none; margin: 0; padding: 0; }
-.nav a { display: inline-flex; align-items: center; gap: .35rem; min-height: 44px; padding: .4rem .75rem; border-radius: 999px;
+.nav a { display: inline-flex; align-items: center; gap: .35rem; min-height: 44px; padding: .4rem .6rem; border-radius: 999px;
   color: var(--ink); text-decoration: none; font-weight: 700; }
 .nav a:hover { background: var(--sand); }
 .nav a[aria-current="page"] { background: var(--ink); color: #fff; }

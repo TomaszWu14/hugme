@@ -5,11 +5,11 @@ a nie poprawką na końcu.
 
 ## Wynik audytu automatycznego
 
-`python scripts/axe_audit.py`: axe-core 4.10 (reguły WCAG 2.0/2.1 A i AA) przez Playwright, na **66 widokach**
+`python scripts/axe_audit.py`: axe-core 4.10 (reguły WCAG 2.0/2.1 A i AA) przez Playwright, na **67 widokach**
 (wszystkie ekrany i role) × **desktop 1280 px i telefon 320 px**, plus tryb wysokiego kontrastu i A+; dodatkowo
 kontrola układu (przewijanie w bok, tekst poza kartą) na wszystkich widokach na telefonie z A+.
 
-**136/136 widoków bez naruszeń wykrywanych automatycznie, bez przewijania w poziomie na 320 px – także z A+.**
+**138/138 widoków bez naruszeń wykrywanych automatycznie, bez przewijania w poziomie na 320 px – także z A+.**
 Automaty wykrywają tylko część problemów, dlatego wynik uzupełnia przegląd ręczny (klawiatura, czytnik ekranu) poniżej.
 Audyt działa w CI (job `a11y`) i blokuje scalenie zmiany, która wprowadza naruszenie.
 Ten sam audyt przechodzi główne ścieżki **samą klawiaturą**: pierwszy Tab to „Przejdź do treści” (fokus trafia do
@@ -39,11 +39,30 @@ i `tabindex="0"`), tekst dla czytników ekranu rozpychający stronę na telefoni
 | Heatmapa trendów | skala sekwencyjna w granacie z legendą, progi bezwzględne (1 / 2–3 / 4–6 / 7+), liczby w każdej komórce | 1.4.1, 1.4.11 |
 | Ikony | SVG w kolorze tekstu (`aria-hidden`), bez emoji; grafiki AI i ilustracji ≥ 3:1 | 1.4.11 |
 | Język | `lang="pl"`, angielskie „hug me” oznaczone `lang="en"` | 3.1.1, 3.1.2 |
-| Ruch | brak animacji; respektujemy `prefers-reduced-motion` | 2.3.3 |
+| Ruch | brak animacji poza krótkim (0,14 s) pojawieniem się chmurki podpowiedzi, wyłączanym przez `prefers-reduced-motion` | 2.3.3 |
 | Filmy | YouTube bez śledzenia, z tytułem iframe i opisem tekstowym | 1.2.1 (częściowo) |
 | Czytelna czcionka | Atkinson Hyperlegible (projekt dla osób słabowidzących), 18 px bazowo | – |
 | Tekst łatwy do czytania (ETR) | „Strona dla mnie” w module Razem z ZD: krótkie zdania, piktogramy z podpisem, wybór obrazkiem, „Przeczytaj na głos” | 3.1.5 (AAA, cel) |
 | Prosty język | piszemy do mieszkańca, krótkie formularze, przykład pod każdym polem | 3.1.5 (AAA, cel) |
+
+## Tryb Podpowiedzi
+
+Ikonka „i” przy polach, filtrach, wykresach i wskaźnikach oraz „Przewodnik po tej stronie” (4–5 kroków na 7 ekranach).
+Kod: `app/templates/_podpowiedzi.html`, `app/static/css/podpowiedzi.css`, `app/static/js/podpowiedzi.js`.
+
+| Wymaganie | Realizacja | Kryterium |
+|---|---|---|
+| Działa bez JS | chmurka to natywne `<details>`/`<summary>`: otwiera się Enterem lub Spacją, czytnik ogłasza „rozwinięte/zwinięte”; przełącznik „Podpowiedzi: wł./wył.” to formularz POST z ciasteczkiem, jak A+ i kontrast | 2.1.1, 4.1.2 |
+| Nazwa dla czytnika | „i” jest ukryte przed czytnikiem (`aria-hidden`), a `<summary>` ma tekst „Podpowiedź:” + nazwa pola (np. „Podpowiedź: Powiat”); przełącznik ma `aria-pressed` | 1.1.1, 2.4.6, 4.1.2 |
+| Struktura | trzy części jako lista definicji (`<dl>`): Do czego służy · Przykład albo Jak czytać · Skąd to się bierze | 1.3.1 |
+| Klawiatura i Esc | Esc zamyka chmurkę i wraca fokusem do „i”; naraz otwarta jest jedna; klik obok zamyka; z JS jest też przycisk „Zamknij” | 2.1.2, 2.4.3 |
+| Przewodnik | okno `role="dialog"` z tytułem i opisem, treść kroku w `aria-live`, fokus przechodzi do okna; Wstecz / Dalej / Zakończ, Esc kończy i oddaje fokus przyciskowi „Przewodnik po tej stronie”; kroki bez elementu na ekranie (inna rola) są pomijane; bez JS przycisk się nie pokazuje | 2.1.1, 2.4.3, 4.1.3 |
+| Telefon | poniżej 600 px chmurka i przewodnik wysuwają się jako arkusz przy dolnej krawędzi (do 40% wysokości, z przewijaniem), a strona przewija się tak, żeby opisywane pole było widać nad arkuszem; panel nie wychodzi poza ekran | 1.4.10 |
+| Cele dotykowe | obszar kliknięcia „i” 44 × 44 px, widoczne kółko ok. 22 px | 2.5.5 |
+| Kontrast | tekst granatowy na białym (≈ 14:1), obramowanie 2 px; „i” w kolorze tekstu pomocniczego (7,6:1); w trybie wysokiego kontrastu czerń na bieli, grubsze ramki, bez cieni; podświetlenie kroku – obwódka 4–5 px | 1.4.3, 1.4.11 |
+| Ruch | animacja chmurki tylko przy `prefers-reduced-motion: no-preference`; przy ograniczonym ruchu przewijanie bez płynnego efektu | 2.3.3 |
+| Wybór | podpowiedzi można wyłączyć jednym przyciskiem w pasku; przy druku są ukryte | – |
+| Bezpieczeństwo (CSP) | bez stylów inline i bez skryptów w treści: kroki przewodnika to dane JSON, położenie ustawia CSSOM | – |
 
 ## Co dalej
 

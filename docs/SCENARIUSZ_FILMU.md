@@ -19,6 +19,15 @@ bez klucza AI – film pokazuje, że dopasowanie działa bez sztucznej inteligen
 | 2:49–2:54 | Dostępność | kliknij A+ i Wysoki kontrast | „Duży tekst, wysoki kontrast, klawiatura – 136 widoków bez naruszeń wykrywanych automatycznie.” |
 | 2:54–3:00 | Strona startowa | plansza: logo, hugme.twapp.pl, repozytorium | „HugMe. Twój problem nie zostaje sam.” |
 
+**W aplikacji, poza filmem (zmiany z 4.10, po nagraniu).** Film trwa 2:59 i nie ma rezerwy czasu, więc tych zmian
+w nim nie ma – pokazujemy je na żywo albo w [README](../README.md#scenariusz-demo-5-minut):
+- menu z nazwami modułów z briefu (Szukaj pomocy, Zasobnik wiedzy, Biblioteka innowacji, Tester innowacji,
+  Kreator pomysłów, Pośrednik innowacji, na końcu „Razem z ZD · pilotaż”), dzwonek powiadomień, na starcie kafle
+  „7 modułów HubMi” i „Przewodnik dla jury: 5 kroków”; Trendy i luki na jednym ekranie;
+- **tryb Podpowiedzi**: przełącznik „Podpowiedzi: wł./wył.” w pasku, ikonki „i” przy polach, filtrach i wykresach
+  (do czego służy, przykład albo jak czytać, skąd to się bierze) oraz „Przewodnik po tej stronie” w 4–5 krokach;
+- liczby z dnia oddania: 138 widoków bez naruszeń wykrywanych automatycznie (w filmie: 136), trafność top 3: 16/16.
+
 **Jak powstaje film:** `python scripts/film.py <katalog>` nagrywa przeklikanie (Playwright, rzeczywiste czasy scen
 w `sceny.txt`), a `python scripts/film_napisy.py <katalog> [lektor.mp3]` przyspiesza je do 2:59, wtapia napisy PL
 i dokłada planszę końcową. Tekst i dokładne czasy lektora: [film/lektor.srt](film/lektor.srt) – to samo źródło dla

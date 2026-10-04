@@ -32,7 +32,7 @@
   {% set described = [('h-' ~ name) if hint else '', ('e-' ~ name) if error else '']|select|join(' ') %}
   {% if options is not none %}
   <select id="f-{{ name }}" name="{{ name }}" {% if required %}required{% endif %} {% if described %}aria-describedby="{{ described }}"{% endif %} {% if error %}aria-invalid="true"{% endif %}>
-    {% if not required %}<option value="">— wybierz —</option>{% endif %}
+    {% if not required or not value %}<option value="">— wybierz —</option>{% endif %}
     {% for val, text in options %}<option value="{{ val }}" {% if val == value %}selected{% endif %}>{{ text }}</option>{% endfor %}
   </select>
   {% elif rows %}

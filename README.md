@@ -34,17 +34,21 @@ oraz współpraca międzysektorowa.
 
 ## Moduły z briefu i gdzie są w aplikacji
 
+Menu ma nazwy modułów z briefu, w kolejności zadania: **Szukaj pomocy · Zasobnik wiedzy · Biblioteka innowacji ·
+Tester innowacji · Kreator pomysłów · Pośrednik innowacji**, a na końcu, oddzielony, **Razem z ZD · pilotaż**.
+Na stronie startowej kafle **„7 modułów HubMi”** prowadzą do każdego modułu jednym kliknięciem.
+
 | Moduł z briefu | Gdzie w aplikacji | Kod |
 |---|---|---|
-| **Matchmaking społeczny** (obowiązkowy) | `/` → `/wyniki` → zapis `/zgloszenie/<id>`: dopasowania z trafnością i „dlaczego pasuje”, podobne zgłoszenia, poradniki, eksperci; ocena „pomocne / niepomocne” | `core/match.py`, `core/catalog.py`, `app/views/public.py` |
-| **Zasobnik wiedzy** | `/wiedza` (karty wyzwań), `/biblioteka` (filtry, filmy), `/wiedza/material/<id>`, `/wiedza/sciezka-rodziny` | `app/views/wiedza.py` |
-| **Trendy potrzeb** (tylko admin) | `/admin/trendy`: obszar miesiąc do miesiąca, mapa powiat × obszar | `app/views/admin.py` |
-| **Kreator pomysłów** | `/pomysly/nowy` (fiszka) → `/pomysly/<id>/kanwa` → asystent → `/pomysly/<id>/wniosek/<nabór>` (tylko w trakcie naboru) | `app/views/kreator.py` |
-| **Tester innowacji** | `/biblioteka/<id>#tester`: zgłoszenie do testu, ocena 1–5, usprawnienie (powiadomienie Hubu) | `app/views/wiedza.py` |
-| **Komunikacja** | wątki przy zgłoszeniu, pomyśle i innowacji, `/powiadomienia`, kolejka e-mail, obserwowanie obszarów, `/ekspert` | `app/views/komunikacja.py`, `core/notify.py` |
-| **Panel administratora (ROPS)** | `/admin`: skrzynka, wątki bez odpowiedzi, statusy, edycja i import Biblioteki, nabory, luki, poczta, eksport CSV; `/admin/uzytkownicy` – konta z aktywnością, zmiana roli, blokada, nowe konto; `/admin/role` – macierz uprawnień i dziennik działań | `app/views/admin.py`, `app/views/admin_users.py` |
-| **Pośrednik innowacji** (AI) | `/posrednik` → karta usługi (opis, odbiorcy, zespół, kroki, partnerzy, koszty bez kwot, finansowanie, mierniki, ryzyka) | `app/views/posrednik.py` |
-| **Razem z ZD** (pogłębienie pilotażu) | `/razem`: plan wg 6 etapów życia, wizyty (tylko w przeglądarce), prawa, wzory pism, rodzic-przewodnik, wytchnienie, Dzień Specjalistów, przyjazne miejsca, sprzęt, wydarzenia, „Strona dla mnie” w łatwym tekście; panel `/admin/razem` | `app/views/razem.py`, `data/razem.py` |
+| **Matchmaking społeczny** (obowiązkowy) | menu „Szukaj pomocy”: `/` → `/wyniki` → zapis `/zgloszenie/<id>`: dopasowania z trafnością i „dlaczego pasuje”, podobne zgłoszenia, poradniki, eksperci; ocena „pomocne / niepomocne”; gdy nic dobrze nie pasuje – uczciwy komunikat „nie mamy jeszcze sprawdzonego rozwiązania”, a zgłoszenie trafia do Hubu jako luka | `core/match.py`, `core/catalog.py`, `app/views/public.py` |
+| **Zasobnik wiedzy** | menu „Zasobnik wiedzy” `/wiedza` (karty wyzwań, `/wiedza/material/<id>`, `/wiedza/sciezka-rodziny`) i „Biblioteka innowacji” `/biblioteka` (filtry, filmy) | `app/views/wiedza.py` |
+| **Trendy potrzeb** (tylko admin) | `/admin/trendy`: obszar miesiąc do miesiąca, mapa powiat × obszar, a niżej na tym samym ekranie **luki** (`/admin/trendy#luki`; stary adres `/admin/luki` przekierowuje) | `app/views/admin.py` |
+| **Kreator pomysłów** | menu „Kreator pomysłów” `/pomysly` → `/pomysly/nowy` (fiszka) → `/pomysly/<id>/kanwa` → asystent → `/pomysly/<id>/wniosek/<nabór>` (tylko w trakcie naboru) | `app/views/kreator.py` |
+| **Tester innowacji** | menu „Tester innowacji” `/tester` (osobne wejście: rozwiązania do przetestowania) i `/biblioteka/<id>#tester`: zgłoszenie do testu, ocena 1–5 jednym kliknięciem (jedna ocena na osobę), usprawnienie (powiadomienie Hubu) | `app/views/wiedza.py` |
+| **Komunikacja** | **dzwonek** w pasku u góry (z liczbą nowych) → `/powiadomienia`; wątki przy zgłoszeniu, pomyśle i innowacji, kolejka e-mail, obserwowanie obszarów, `/ekspert` | `app/views/komunikacja.py`, `core/notify.py` |
+| **Panel administratora (ROPS)** | `/admin`: na górze nowe pomysły i sprawy czekające na odpowiedź, skrzynka, wątki bez odpowiedzi, statusy, edycja i import Biblioteki, nabory, poczta, eksport CSV; `/admin/uzytkownicy` – konta z aktywnością, zmiana roli, blokada, nowe konto; `/admin/role` – macierz uprawnień i dziennik działań | `app/views/admin.py`, `app/views/admin_users.py` |
+| **Pośrednik innowacji** (AI) | menu „Pośrednik innowacji” `/posrednik` (także z karty innowacji: `/posrednik?inspiracja=<id>`) → karta usługi (opis, odbiorcy, zespół, kroki, partnerzy, koszty bez kwot, finansowanie, mierniki, ryzyka) z przyciskiem **Drukuj / PDF** | `app/views/posrednik.py` |
+| **Razem z ZD** (pogłębienie pilotażu) | menu „Razem z ZD · pilotaż” `/razem`: plan wg 6 etapów życia, wizyty (tylko w przeglądarce), prawa, wzory pism, rodzic-przewodnik, wytchnienie, Dzień Specjalistów, przyjazne miejsca, sprzęt, wydarzenia, „Strona dla mnie” w łatwym tekście; panel `/admin/razem` | `app/views/razem.py`, `data/razem.py` |
 | **„Jestem potrzebny”** (program pilotażowy) | `/razem/jestem-potrzebny`: osoby z ZD pomagają innym (psy ze schroniska, hospicjum/DPS, młodsze dzieci); zgłoszenie rodzica albo samej osoby w łatwym tekście, oferty miejsc, buddy, zasady; Hub łączy pary i potwierdza misje, dzienniczek z odznakami i dyplomem; panel `/admin/potrzebny` | `app/views/potrzebny.py`, `app/views/admin_potrzebny.py`, `data/potrzebny.py` |
 | **Praca** (mapa + „Poznaj ZD”) | `/razem/praca`: prawdziwe miejsca, w których pracują osoby z ZD (każde ze źródłem), mapa Polski wg województw i Małopolski wg powiatów (własny SVG, bez JS), statystyki ze źródłem, oczekiwania osób z ZD, mity i fakty, jak rozmawiać; zgłaszanie miejsc, Hub zatwierdza | `app/views/praca.py`, `data/praca.py`, `data/mapa.py`, `scripts/mapa_svg.py` |
 | API dla integracji | `POST /api/v1/dopasuj`, `GET /api/v1/innowacje` | `app/views/api.py` |
@@ -56,14 +60,21 @@ ekspert, koordynatorka ROPS. Docelowe logowanie przez **login.gov.pl** albo link
 ## Najważniejsze zasady
 
 - **Matchmaking działa bez AI**: BM25, polski stemming, słownik pojęć (np. lekarz/wizyta/kardiolog → „zdrowie”),
-  premia za pokrycie słów i wyjaśnialne wyniki. Trafność top 3 na zestawie testowym: **11/11**.
+  premia za pokrycie słów i wyjaśnialne wyniki. Trafność top 3 na zestawie testowym: **16/16** (11 przypadków
+  bazowych + 5 zdań potocznym językiem z symulacji jury, np. „Mama ma 82 lata, mieszka sama na wsi…”).
+  Gdy nic dobrze nie pasuje, aplikacja mówi to wprost, a zgłoszenie trafia do Hubu jako luka.
 - **AI jest opcjonalne** (Claude Haiku przez `ANTHROPIC_API_KEY`). Wzbogaca analizę opisu, asystenta pomysłu,
   generator wniosków i Pośrednika. Bez klucza albo przy awarii działają reguły i szablony.
   Treści od AI są zawsze oznaczone w interfejsie.
 - **Prywatność**: PESEL, telefon, e-mail, adres, kod pocztowy, imię po „syn/córka” i nazwisko po „dr” są maskowane
   **przed** zapisem i przed AI. Wszystkie dane są fikcyjne i oznaczone jako „PRZYKŁAD”.
-- **Dostępność (WCAG 2.1 AA)**: 136/136 widoków bez naruszeń wykrywanych automatycznie (axe-core, desktop i 320 px), układ bez przewijania
-  w bok także na telefonie z A+ (66 widoków); audyt w CI blokuje scalenie zmiany, która psuje dostępność;
+- **Podpowiedzi i przewodnik**: przełącznik „Podpowiedzi: wł./wył.” w pasku u góry (domyślnie włączony, działa bez JS
+  jak A+). Ikonka „i” przy polach, filtrach, wykresach i wskaźnikach otwiera chmurkę w 3 częściach: *do czego służy*,
+  *przykład* albo *jak czytać*, *skąd to się bierze* (dane, reguły czy AI; dane przykładowe). Na telefonie chmurka
+  wysuwa się jako arkusz na dole. Przycisk „Przewodnik po tej stronie” prowadzi w 4–5 krokach po 7 głównych ekranach
+  (start, wyniki, innowacja, nowy pomysł, Pośrednik, panel Hubu, trendy). Teksty: `app/podpowiedzi.json`.
+- **Dostępność (WCAG 2.1 AA)**: 138/138 widoków bez naruszeń wykrywanych automatycznie (axe-core, desktop i 320 px), układ bez przewijania
+  w bok także na telefonie z A+ (67 widoków); audyt w CI blokuje scalenie zmiany, która psuje dostępność;
   przyciski A+ i wysokiego kontrastu działają bez JS, cele dotykowe mają co najmniej 44 px.
 - **Bezpieczeństwo**: CSRF, CSP bez zewnętrznych skryptów i bez stylów inline, ciasteczka HttpOnly/SameSite,
   walidacja i role sprawdzane na serwerze.
@@ -88,7 +99,7 @@ Reset danych: usuń plik bazy. AI włączysz zmienną `ANTHROPIC_API_KEY` (przyk
 **Testy i audyt:**
 
 ```bash
-pytest                                   # 212 testów: ścieżki, role, CSRF, prywatność, trafność
+pytest                                   # 313 testów: ścieżki, role, CSRF, prywatność, trafność
 python -m playwright install chromium
 python scripts/axe_audit.py --zrzuty     # raport docs/WCAG_RAPORT.md + docs/zrzuty/
 ```
@@ -110,10 +121,13 @@ repozytorium (build z `Dockerfile`), ustawić `SECRET_KEY` i opcjonalnie `ANTHRO
 To także ściąga do pokazu na żywo. Plan B bez internetu: aplikacja lokalnie (`flask --app app:create_app run`, fonty i style są
 w repo, bez CDN); plan C: [film](docs/film/hugme-przeklikanie.mp4).
 
-1. **Start, gość.** Pole „Co jest trudne? Kogo to dotyczy?” ma już wpisany przykład o wizytach u wielu specjalistów.
+1. **Start, gość.** Menu z nazwami modułów z briefu, niżej kafle „7 modułów HubMi”; w demo ramka „Przewodnik dla jury:
+   5 kroków”. Pole „Co jest trudne? Kogo to dotyczy?” ma już wpisany przykład o wizytach u wielu specjalistów.
    Dopisz „mój syn Kacper, tel. 600 123 456” i kliknij **Znajdź rozwiązania**.
 2. **Wyniki.** Imię i telefon są ukryte, z łagodnym komunikatem. Na górze „Asystent zdrowia rodziny” z oceną
    „Bardzo pasuje” i uzasadnieniem (wspólne słowa i tematy). Obok podobne zgłoszenia, poradniki i eksperci.
+   **Podpowiedzi:** kliknij „i” przy trafności – chmurka mówi, jak czytać procent i skąd się bierze (reguły, bez AI).
+   **Przewodnik po tej stronie** pokazuje ekran w 5 krokach (Esc kończy).
 3. **Zapisz zgłoszenie.** Wybierz konto mieszkanki: opis zostaje zachowany, powstaje wątek z Hubem,
    a koordynatorka dostaje powiadomienie. Oceń dopasowanie „Pomocne”.
 4. **Przełącz na Koordynatorkę ROPS.** Skrzynka pokazuje nowe zgłoszenie. Ustaw status „Połączone z rozwiązaniem”,
@@ -121,20 +135,21 @@ w repo, bez CDN); plan C: [film](docs/film/hugme-przeklikanie.mp4).
 5. **Gmina, Pośrednik.** Opisz kontekst gminy (seniorzy, 5 sołectw, dojazd do przychodni) i dostaniesz kartę
    usługi wzorowaną na „Busie na telefon”, z kosztami bez kwot.
 6. **NGO, Kreator.** Pomysł „Weekendowy klub” → **Zapytaj asystenta** → **Przygotuj wniosek** (trwa nabór) → złóż.
-7. **Admin, Trendy i Luki.** Mapa powiat × obszar, porównanie miesiąc do miesiąca, luki jako kandydaci na konkursy,
-   eksport CSV.
+7. **Admin, Trendy i luki.** `/admin/trendy`: mapa powiat × obszar, porównanie miesiąc do miesiąca, a niżej na tym samym
+   ekranie luki jako kandydaci na konkursy, eksport CSV.
 8. **Razem z ZD.** Mieszkanka: `/razem` → etap „Przedszkole” → plan; „Rodzic-przewodnik” → zgłoszenie. Admin: `/admin/razem` → „Połącz” parę z powiatu wadowickiego. Dorosła osoba z ZD: „Strona dla mnie” → obrazek „Praca” + jedno zdanie.
 9. **Jestem potrzebny.** Gość: `/razem/jestem-potrzebny/latwy` → obrazek „psy” → „Wyślij” (wybór konta mieszkanki).
    Admin: `/admin/potrzebny` → „Połącz” Tomka ze schroniskiem w Wadowicach → „Misja odbyła się”. Mieszkanka:
    `/razem/jestem-potrzebny/dzienniczek` → odznaki i dyplom. `/razem/praca` → klik „małopolskie” na mapie.
 10. **Dostępność.** Włącz **A+** i **Wysoki kontrast**, przejdź stronę klawiszem Tab od linku „Przejdź do treści”.
+    **Podpowiedzi: wył.** w pasku chowa ikonki „i” dla osób, które ich nie potrzebują.
 
 ## Dokumentacja
 
 [ARCHITEKTURA](docs/ARCHITEKTURA.md) · [DANE](docs/DANE.md) · [WCAG](docs/WCAG.md) ·
 [Raport axe](docs/WCAG_RAPORT.md) · [KOSZTY](docs/KOSZTY.md) · [KRYTERIA](docs/KRYTERIA.md) ·
 [ROADMAPA](docs/ROADMAPA.md) · [PYTANIA DO MENTORÓW](docs/PYTANIA_DO_MENTOROW.md) ·
-[SCENARIUSZ FILMU](docs/SCENARIUSZ_FILMU.md) · [makiety](docs/zrzuty/) · decyzje projektowe: [BRAINSTORM.md](BRAINSTORM.md)
+[SCENARIUSZ FILMU](docs/SCENARIUSZ_FILMU.md) · [Symulacja jury](audit/JURY.md) · [makiety](docs/zrzuty/) · decyzje projektowe: [BRAINSTORM.md](BRAINSTORM.md)
 
 ## Stos
 

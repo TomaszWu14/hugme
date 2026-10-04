@@ -66,7 +66,7 @@
     {% if g.user %}
       {% set _ = nav.append(('/moje', 'Moje sprawy')) %}
       {% if g.user.role == 'ekspert' %}{% set _ = nav.append(('/ekspert', 'Pytania do mnie')) %}{% endif %}
-      {% if g.user.role == 'admin' %}{% set _ = nav.append(('/admin', 'Panel Hubu (administratora)')) %}{% endif %}
+      {% if g.user.role == 'admin' %}{% set _ = nav.append(('/admin', 'Panel Hubu')) %}{% endif %}
     {% endif %}
     {% set _ = nav.append(('/razem', 'Razem z ZD · pilotaż')) %}
     {% set nav_items = [] %}

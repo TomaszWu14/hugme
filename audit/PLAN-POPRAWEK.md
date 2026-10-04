@@ -1,5 +1,26 @@
 # Plan poprawek HugMe: 4.10.2026, Etap 2 do 08:00
 
+## Status (4.10, 07:50)
+
+**Zrobione**
+- **PR #8** (https://github.com/TomaszWu14/hugme/pull/8): Etap 2, pakiety P1–P7. Wszystkie pozycje oznaczone „tak” są w kodzie.
+  - Potwierdzone na produkcji: K-04, K-03, K-05, K-06, K-07, K-09, K-02, J1A-01, J1A-02, J1B-01, J1B-08, J2-02, J2-03, J2-07, J3-04, T-3.
+- **PR #9** (https://github.com/TomaszWu14/hugme/pull/9): Etap 3, Podpowiedzi (przełącznik, „i” w 3 częściach, „Przewodnik po tej stronie”). axe 0 na produkcji także z otwartą chmurką.
+- Wynik ważony symulacji jury: **7,17 → 7,40** (szczegóły w `JURY.md`, „Oceny końcowe”).
+
+**Nie zrobione albo niepełne**
+- **BLOKUJE:** T-1 i T-2 nie działają na produkcji, bo baza ma słowa kluczowe innowacji sprzed PR #8 (seniorka daje Przyjaciel na Ławce / Bus na Telefon, wszystko „Słabe”). Naprawa: w terminalu Coolify `python scripts/reset_demo.py --force`, potem curl `POST /api/v1/dopasuj`.
+- Z planu „nie”: J3-07, K-08. Po 08:00: J1A-16, J2-10, J3-13, K-11 M, grupowanie panelu, SMTP, WZ-3/5/7/8.
+- Niepełne: K-01 (brak „Poproś o kontakt”), K-10 (10 zakładek), J2-08 (pasek demo na telefonie ok. 150 px).
+- Nowe z rundy końcowej, nakład S:
+  - menu zalogowanych łamie się na 2 rzędy przy 1366 px;
+  - arkusz chmurki na telefonie zasłania pole;
+  - przewodnik w osobnym rzędzie;
+  - Pośrednik z domyślnym „dzieci i młodzież”;
+  - prompt asystenta (polszczyzna);
+  - `docs/KOSZTY.md` „8 s” zamiast 25 s.
+- Lista z plikami: `JURY.md`, „Czego nie zdążono”.
+
 Źródło: `audit/JURY.md` (ID scalone) i `audit/WZORCE.md`. Wynik ważony przed: **7,17/10**.
 
 **Zasady**

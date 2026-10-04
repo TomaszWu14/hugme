@@ -104,7 +104,7 @@ def test_menu_shows_brief_modules_in_order_and_bell(client):
     html = client.get("/").get_data(as_text=True)
     bell = re.search(r'<a class="bell" href="/powiadomienia" aria-label="Powiadomienia(, nowe: \d+)?"', html)
     assert bell and bell.start() > html.index("</nav>")
-    assert "Panel Hubu (administratora)" in html
+    assert ">Panel Hubu<" in html
 
 
 def test_home_wait_state_and_seven_modules(client):

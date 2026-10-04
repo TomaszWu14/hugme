@@ -24,15 +24,21 @@ i **luki** – problemy bez dobrego rozwiązania, czyli gotowe tematy nowych kon
 
 **Zrobione (działa na https://hugme.twapp.pl):**
 - **7 z 7 modułów z briefu**: matchmaking, zasobnik wiedzy, kreator pomysłów z generatorem wniosków, tester innowacji,
-  komunikacja, panel ROPS (z użytkownikami i rolami), pośrednik innowacji dla gmin i NGO.
-- **Trafność dopasowania 11 z 11 w top 3, bez AI** (test na danych przykładowych).
-- **136 widoków bez naruszeń WCAG 2.1 AA wykrywanych automatycznie** (axe-core, komputer i telefon 320 px), duży
+  komunikacja, panel ROPS (z użytkownikami i rolami), pośrednik innowacji dla gmin i NGO. Menu ma nazwy modułów
+  z briefu (Szukaj pomocy, Zasobnik wiedzy, Biblioteka innowacji, Tester innowacji, Kreator pomysłów, Pośrednik
+  innowacji), a na starcie kafle „7 modułów HubMi”.
+- **Trafność dopasowania 16 z 16 w top 3, bez AI** (11 przypadków z danych przykładowych i 5 zdań potocznym językiem
+  z symulacji jury). Gdy nic dobrze nie pasuje, aplikacja mówi to wprost, a sprawa trafia do Hubu jako luka.
+- **Tryb Podpowiedzi**: ikonka „i” przy polach, filtrach i wykresach mówi, do czego coś służy, jak to czytać i skąd
+  się bierze (dane, reguły czy AI). „Przewodnik po tej stronie” prowadzi po ekranie w 4–5 krokach. Przełącznik
+  w pasku działa bez JavaScriptu.
+- **138 widoków bez naruszeń WCAG 2.1 AA wykrywanych automatycznie** (axe-core, komputer i telefon 320 px), duży
   tekst i wysoki kontrast bez JavaScriptu, font Atkinson Hyperlegible.
 - Pogłębiony pilotaż dla rodzin osób z zespołem Downa: plan na 6 etapów życia, rodzic-przewodnik, wzory pism,
   „Strona dla mnie” w tekście łatwym do czytania, program „Jestem potrzebny” (osoby z ZD pomagają innym)
   i mapa prawdziwych miejsc pracy ze źródłami.
 - Prywatność: dane osobowe są maskowane przed zapisem i przed AI, wizyty zostają tylko w telefonie.
-- Jakość: 212 testów automatycznych, audyt dostępności w CI, automatyczne wdrożenie po zielonych testach.
+- Jakość: 313 testów automatycznych, audyt dostępności w CI, automatyczne wdrożenie po zielonych testach.
 
 **Cel:** pilotaż w 2–3 powiatach w obszarze rodzin osób z zespołem Downa – import prawdziwej Biblioteki Innowacji
 ROPS (działa już z panelu), logowanie przez login.gov.pl, koordynator Hubu odpowiadający w ciągu 3 dni roboczych
