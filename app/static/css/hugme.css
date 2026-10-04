@@ -308,7 +308,7 @@ main:has(.admin-nav) h1 { font-size: 2rem; }
 .filters .field:first-child { grid-column: 1 / -1; }
 .filters .actions { margin: 0; }
 @media (min-width: 40.01em) { .filters .actions { grid-column: span 2; flex-wrap: nowrap; } }
-@media (max-width: 40em) { .filters { grid-template-columns: 1fr 1fr; gap: .6rem .7rem; padding: .8rem; } .filters .actions { grid-column: 1 / -1; } }
+@media (max-width: 40em) { .filters { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .6rem .7rem; padding: .8rem; } .filters .actions { grid-column: 1 / -1; } }
 .table-wrap { position: relative; overflow-x: auto; max-width: 100%; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); margin-bottom: 1.5rem; }
 table { border-collapse: collapse; width: 100%; font-size: .92rem; }
 th, td { text-align: left; padding: .55rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }

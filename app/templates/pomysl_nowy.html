@@ -17,14 +17,14 @@
   {{ csrf() }}
   <fieldset>
     <legend>Fiszka</legend>
-    {{ field('title', '1. Tytuł', value=form.title, error=errors.title, required=true, hint='Weekendowy klub dla nastolatków') }}
+    {{ field('title', '1. Tytuł', value=form.title, error=errors.title, required=true, hint='Weekendowy klub dla nastolatków', help='pomysl.tytul') }}
     {{ field('essence', '2. Istota – na czym polega pomysł?', value=form.essence, error=errors.essence, required=true, rows=3,
-             hint='sobotnie spotkania młodzieży z zespołem Downa, a rodzice mają w tym czasie wolne') }}
-    {{ field('audience', '3. Dla kogo?', options=audiences|pairs, value=form.audience, error=errors.audience, required=true, hint='rodzice i opiekunowie') }}
-    {{ field('stage', '4. Etap', options=stages|pairs, value=form.stage, error=errors.stage, required=true, hint='pomysł – jeszcze nie testowany') }}
+             hint='sobotnie spotkania młodzieży z zespołem Downa, a rodzice mają w tym czasie wolne', help='pomysl.istota') }}
+    {{ field('audience', '3. Dla kogo?', options=audiences|pairs, value=form.audience, error=errors.audience, required=true, hint='rodzice i opiekunowie', help='pomysl.dla_kogo') }}
+    {{ field('stage', '4. Etap', options=stages|pairs, value=form.stage, error=errors.stage, required=true, hint='pomysł – jeszcze nie testowany', help='pomysl.etap') }}
   </fieldset>
   {% set area_opts = [] %}{% for slug, a in AREAS.items() %}{% set _ = area_opts.append((slug, a.name)) %}{% endfor %}
-  {{ field('area', 'Obszar', options=area_opts, value=form.area, hint='Rodziny osób z zespołem Downa') }}
+  {{ field('area', 'Obszar', options=area_opts, value=form.area, hint='Rodziny osób z zespołem Downa', help='pomysl.obszar') }}
   <button type="submit" class="btn btn--primary btn--large">Zapisz fiszkę</button>
 </form>
 {% endblock %}

@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% from "_macros.html" import csrf, field %}
+{% from "_podpowiedzi.html" import help %}
 {% block title %}Kanwa: {{ idea.title }}{% endblock %}
 {% block content %}
 <p><a href="/pomysly/{{ idea.id }}">← {{ idea.title }}</a></p>
 <h1>Plan pomysłu w 10 pytaniach <span class="meta">(Kanwa Innowacji Społecznych)</span></h1>
 <p class="lead">Dziesięć krótkich pól. Wypełnij te, które już wiesz – resztę możesz dopisać później.</p>
-<form method="post" class="card">
-  {{ csrf() }}
+<form method="post" class="card help-corner" data-help="kanwa.pola">
+  {{ csrf() }}{{ help('kanwa.pola') }}
   <fieldset>
     <legend>Kanwa pomysłu „{{ idea.title }}”</legend>
     {% for key, label, question, ex in fields %}

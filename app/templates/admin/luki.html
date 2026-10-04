@@ -2,13 +2,14 @@
 <p>Zgłoszenia, dla których Biblioteka nie ma dobrej odpowiedzi. To kandydaci na nowe konkursy i nabory.
   Zgłoszenia połączone z rozwiązaniem i zamknięte nie są tu liczone.</p>
 <p class="actions"><a class="btn btn--small" href="/admin/eksport/luki.csv">Pobierz luki do Excela (plik CSV)</a></p>
+{% from "_podpowiedzi.html" import help %}
 {% if gap_areas %}
-<h3>Gdzie brakuje rozwiązań najczęściej</h3>
-<ul class="list-plain">{% for area, n in gap_areas %}<li>{{ area_tag(area) if area else 'Bez obszaru' }} – <strong>{{ n }}</strong> {{ n|plural('luka', 'luki', 'luk') }}{% if loop.first %} <span class="badge badge--pilot">Kandydat na konkurs</span>{% endif %}</li>{% endfor %}</ul>
+<div class="help-row"><h3>Gdzie brakuje rozwiązań najczęściej</h3>{{ help('luki.obszary') }}</div>
+<ul class="list-plain" data-help="luki.obszary">{% for area, n in gap_areas %}<li>{{ area_tag(area) if area else 'Bez obszaru' }} – <strong>{{ n }}</strong> {{ n|plural('luka', 'luki', 'luk') }}{% if loop.first %} <span class="badge badge--pilot">Kandydat na konkurs</span>{% endif %}</li>{% endfor %}</ul>
 {% endif %}
-<h3>Zgłoszenia ({{ rows|length }})</h3>
+<div class="help-row"><h3>Zgłoszenia ({{ rows|length }})</h3>{{ help('luki.lista') }}</div>
 {% if rows %}
-<ul class="list-plain">
+<ul class="list-plain" data-help="luki.lista">
   {% for r, why in rows %}
   <li><a href="/zgloszenie/{{ r.id }}">{{ r.body|truncate(120) }}</a><br>
     <span class="meta">{{ status(r.status) }} {{ area_tag(r.area) }} <span>{{ r.powiat }}</span>

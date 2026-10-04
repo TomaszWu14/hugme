@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "_macros.html" import csrf, field %}
+{% from "_podpowiedzi.html" import help %}
 {% block title %}Pośrednik innowacji{% endblock %}
 {% block content %}
 <h1>Pośrednik innowacji</h1>
@@ -16,21 +17,21 @@
 {% endif %}
 <form method="post" class="card" novalidate data-czekaj="Przygotowuję kartę usługi… to może potrwać do pół minuty">
   {{ csrf() }}
-  <fieldset {% if errors.institution %}aria-describedby="e-institution"{% endif %}>
-    <legend>Kim jesteś?</legend>
+  <fieldset class="help-corner" data-help="posrednik.instytucja" {% if errors.institution %}aria-describedby="e-institution"{% endif %}>
+    <legend>Kim jesteś?</legend>{{ help('posrednik.instytucja') }}
     {% if errors.institution %}<p class="error-msg" id="e-institution"><span aria-hidden="true">⚠</span> {{ errors.institution }}</p>{% endif %}
     {% for key, text in institutions.items() %}
     <label class="choice"><input type="radio" name="institution" value="{{ key }}" {% if loop.first %}id="f-institution"{% endif %} {% if ctx.institution == key %}checked{% endif %}> {{ text }}</label>
     {% endfor %}
   </fieldset>
-  {{ field('audience', 'Dla kogo ma być usługa?', options=audiences|pairs, value=ctx.audience, error=errors.audience, required=true, hint='seniorzy') }}
+  {{ field('audience', 'Dla kogo ma być usługa?', options=audiences|pairs, value=ctx.audience, error=errors.audience, required=true, hint='seniorzy', help='posrednik.odbiorcy') }}
   {% set scale_opts = [] %}{% for k, v in scales.items() %}{% set _ = scale_opts.append((k, v)) %}{% endfor %}
-  {{ field('scale', 'Ile osób może skorzystać?', options=scale_opts, value=ctx.scale, error=errors.scale, required=true, hint='20–100 osób') }}
+  {{ field('scale', 'Ile osób może skorzystać?', options=scale_opts, value=ctx.scale, error=errors.scale, required=true, hint='20–100 osób', help='posrednik.skala') }}
   {% set budget_opts = [] %}{% for k, v in budgets.items() %}{% set _ = budget_opts.append((k, v)) %}{% endfor %}
-  {{ field('budget', 'Jaki masz budżet?', options=budget_opts, value=ctx.budget, error=errors.budget, required=true, hint='mały – drobne zakupy') }}
-  {{ field('powiat', 'Powiat', options=powiaty|pairs, value=ctx.powiat, error=errors.powiat, hint='dąbrowski') }}
+  {{ field('budget', 'Jaki masz budżet?', options=budget_opts, value=ctx.budget, error=errors.budget, required=true, hint='mały – drobne zakupy', help='posrednik.budzet') }}
+  {{ field('powiat', 'Powiat', options=powiaty|pairs, value=ctx.powiat, error=errors.powiat, hint='dąbrowski', help='posrednik.powiat') }}
   {{ field('problem', 'Jaki problem chcesz rozwiązać?', rows=3, value=ctx.problem, error=errors.problem, required=true,
-           hint='starsi mieszkańcy pięciu sołectw nie mają jak dojechać do przychodni') }}
+           hint='starsi mieszkańcy pięciu sołectw nie mają jak dojechać do przychodni', help='posrednik.problem') }}
   <button type="submit" class="btn btn--primary btn--large" aria-describedby="h-czas">Przygotuj kartę usługi</button>
   <p class="hint hint--plain" id="h-czas">Odpowiedź może potrwać do 30 sekund.</p>
   {% if not g.user %}<p class="meta">Przed utworzeniem karty wybierzesz konto demo.</p>{% endif %}

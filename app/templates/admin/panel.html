@@ -1,21 +1,23 @@
 {% extends "base.html" %}
 {% from "_macros.html" import area_tag, status, example %}
+{% from "_podpowiedzi.html" import help %}
 {% block title %}Panel Hubu{% endblock %}
 {% block content %}
 <h1>Panel Hubu Innowacji Społecznych</h1>
 {% include "admin/_nav.html" %}
-<ul class="stat-row" aria-label="Najważniejsze liczby">
+<div class="help-row"><p class="meta">Najważniejsze liczby</p>{{ help('admin.liczby') }}</div>
+<ul class="stat-row" aria-label="Najważniejsze liczby" data-help="admin.liczby">
   <li class="stat {{ 'stat--alert' if stats.ideas }}"><a href="/admin?typ=pomysl"><span class="stat__num">{{ stats.ideas }}</span> {{ stats.ideas|plural('nowy pomysł', 'nowe pomysły', 'nowych pomysłów') }} bez odpowiedzi</a></li>
   <li class="stat {{ 'stat--alert' if stats.new }}"><a href="/admin?typ=zgloszenie"><span class="stat__num">{{ stats.new }}</span> {{ stats.new|plural('nowe zgłoszenie', 'nowe zgłoszenia', 'nowych zgłoszeń') }}</a></li>
   <li class="stat {{ 'stat--alert' if stats.unanswered }}"><a href="/admin/watki"><span class="stat__num">{{ stats.unanswered }}</span> {{ stats.unanswered|plural('wątek', 'wątki', 'wątków') }} bez odpowiedzi</a></li>
   <li class="stat"><a href="/admin/trendy"><strong>Trendy potrzeb – ostatnie 30 dni</strong>
     {%- for a, n in stats.trends %}<br>{{ AREAS[a].short }}: {{ n }}{% else %}<br>brak nowych zgłoszeń{% endfor %}</a></li>
   <li class="stat {{ 'stat--alert' if stats.gaps }}"><a href="/admin/trendy#luki"><span class="stat__num">{{ stats.gaps }}</span> {{ stats.gaps|plural('luka', 'luki', 'luk') }} (brak rozwiązania)</a></li>
-  <li class="stat"><span class="stat__num">{{ stats.rate if stats.rate is not none else '–' }}{{ '%' if stats.rate is not none }}</span> dopasowań ocenionych jako pomocne <span class="meta">({{ stats.rated }} {{ stats.rated|plural('ocena', 'oceny', 'ocen') }})</span></li>
+  <li class="stat" data-help="admin.pomocne"><span class="stat__num">{{ stats.rate if stats.rate is not none else '–' }}{{ '%' if stats.rate is not none }}</span> dopasowań ocenionych jako pomocne <span class="meta">({{ stats.rated }} {{ stats.rated|plural('ocena', 'oceny', 'ocen') }})</span> {{ help('admin.pomocne') }}</li>
 </ul>
 
-<section aria-labelledby="dalej-h" class="next-steps">
-  <h2 id="dalej-h" class="h3">Co teraz?</h2>
+<section aria-labelledby="dalej-h" class="next-steps" data-help="admin.co_teraz">
+  <div class="help-row"><h2 id="dalej-h" class="h3">Co teraz?</h2>{{ help('admin.co_teraz') }}</div>
   {% set todo = [] %}
   {% if stats.ideas %}{% set _ = todo.append(('/admin?typ=pomysl', 'Odpowiedz na pomysły', stats.ideas ~ ' ' ~ stats.ideas|plural('nowy pomysł czeka', 'nowe pomysły czekają', 'nowych pomysłów czeka') ~ ' na pierwszą odpowiedź Hubu.')) %}{% endif %}
   {% if stats.unanswered %}{% set _ = todo.append(('/admin/watki', 'Odpisz mieszkańcom', stats.unanswered ~ ' ' ~ stats.unanswered|plural('wątek czeka', 'wątki czekają', 'wątków czeka') ~ ' na odpowiedź Hubu.')) %}{% endif %}
@@ -28,18 +30,18 @@
   <p class="actions"><a class="btn btn--small" href="/admin/biblioteka/nowa">Dodaj innowację</a></p>
 </section>
 
-<h2>Skrzynka</h2>
-<form method="get" action="/admin" class="actions" aria-label="Filtr skrzynki">
+<div class="help-row"><h2>Skrzynka</h2>{{ help('admin.skrzynka') }}</div>
+<form method="get" action="/admin" class="actions" aria-label="Filtr skrzynki" data-help="admin.filtr">
   <label for="typ">Pokaż:</label>
   <select id="typ" name="typ" class="select-inline">
     {% for val, text in [('', 'wszystko'), ('zgloszenie', 'zgłoszenia'), ('pomysl', 'pomysły'), ('test', 'testy'), ('wniosek', 'wnioski'), ('razem', 'Razem z ZD'), ('potrzebny', 'Jestem potrzebny')] %}
     <option value="{{ val }}" {% if kind == val %}selected{% endif %}>{{ text }}</option>{% endfor %}
-  </select>
+  </select>{{ help('admin.filtr') }}
   <button type="submit" class="btn btn--small">Filtruj</button>
   <a class="btn btn--small btn--ghost" href="/admin/eksport/zgloszenia.csv">Pobierz zgłoszenia do Excela (plik CSV)</a>
 </form>
 {% if items %}
-<div class="table-wrap" tabindex="0" role="region" aria-label="Tabela – na małym ekranie przewiń w bok">
+<div data-help="admin.skrzynka" class="table-wrap" tabindex="0" role="region" aria-label="Tabela – na małym ekranie przewiń w bok">
 <table class="table--stack">
   <caption>Wszystkie sprawy ({{ items|length }}), najpierw czekające na odpowiedź</caption>
   <thead><tr><th scope="col">Rodzaj</th><th scope="col">Data</th><th scope="col">Treść</th><th scope="col">Szczegóły</th></tr></thead>

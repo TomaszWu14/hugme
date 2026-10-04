@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "_macros.html" import ai_box %}
+{% from "_podpowiedzi.html" import help %}
 {% from "_cards.html" import innovation_card %}
 {% block title %}Karta usługi{% endblock %}
 {% block content %}
@@ -10,6 +11,7 @@
 <p class="meta"><span>{{ institutions[ctx.institution] }}</span> <span>Dla: {{ ctx.audience }}</span> <span>Skala: {{ scales[ctx.scale] }}</span>
   <span>Budżet: {{ budgets[ctx.budget] }}</span> {% if ctx.powiat %}<span>Powiat: {{ ctx.powiat }}</span>{% endif %}</p>
 <p class="lead">{{ ctx.problem }}</p>
+<div class="help-corner" data-help="karta.usluga">{{ help('karta.usluga') }}
 {% call ai_box(row.by_ai, 'Proponowana usługa') %}
   <dl class="app-doc">
     {% for k in keys if card[k] is string %}
@@ -23,9 +25,10 @@
     {% endfor %}
   </dl>
 {% endcall %}
+</div>
 {% if inspirations %}
-<section aria-labelledby="insp-h">
-  <h2 id="insp-h">Inspiracje z Biblioteki</h2>
+<section aria-labelledby="insp-h" data-help="karta.inspiracje">
+  <div class="help-row"><h2 id="insp-h">Inspiracje z Biblioteki</h2>{{ help('karta.inspiracje') }}</div>
   <div class="grid">{% for i in inspirations %}{{ innovation_card(i) }}{% endfor %}</div>
   <p>Zapytaj autorów w rozmowie przy innowacji – Hub pomoże nawiązać kontakt.</p>
 </section>

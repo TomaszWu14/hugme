@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from "_macros.html" import csrf, field, example, ai_box, area_tag, icon %}
 {% from "_cards.html" import innovation_card, score_bar, why %}
+{% from "_podpowiedzi.html" import help %}
 {% block title %}Co może pomóc{% endblock %}
 {% block content %}
 {% set good = innovations|selectattr('1.score', 'ge', gap)|list %}
@@ -20,7 +21,7 @@
   <div>
     <section aria-labelledby="inn-h">
       <h2 id="inn-h">Rozwiązania z Biblioteki Innowacji</h2>
-      {% if analysis.topics and not analysis.by_ai %}<p class="meta">Rozpoznane tematy: {{ analysis.topics|join(", ") }}</p>{% endif %}
+      {% if analysis.topics and not analysis.by_ai %}<div class="help-row" data-help="wyniki.rozpoznanie"><p class="meta">Rozpoznane tematy: {{ analysis.topics|join(", ") }}</p>{{ help('wyniki.rozpoznanie') }}</div>{% endif %}
       {% if zd_work %}
       <div class="card card--thread thread--rodziny-zd">
         <p><strong>Razem z ZD:</strong> praca dla osób z zespołem Downa ma już swój pilotaż.</p>
@@ -30,7 +31,7 @@
       {% endif %}
       {% if good %}
       <ol class="list-plain">
-        {% for i, res in good %}<li>{{ innovation_card(i, res) }}</li>{% endfor %}
+        {% for i, res in good %}<li>{{ innovation_card(i, res, hints=loop.first) }}</li>{% endfor %}
       </ol>
       {% else %}
       <div class="notice">
@@ -50,8 +51,8 @@
       {% endif %}
     </section>
 
-    <section aria-labelledby="save-h" class="card card--raised">
-      <h2 id="save-h">Zapisz zgłoszenie – Hub odpowie</h2>
+    <section aria-labelledby="save-h" class="card card--raised" data-help="wyniki.zapisz">
+      <div class="help-row"><h2 id="save-h">Zapisz zgłoszenie – Hub odpowie</h2>{{ help('wyniki.zapisz') }}</div>
       <p>Twoje zgłoszenie trafi do koordynatorki Hubu w ROPS. Odpisze Ci, połączy z ludźmi z dopasowanych inicjatyw
         i dopilnuje, żeby problem nie został sam.{% if not g.user %} <strong>Najpierw wybierzesz konto – opis zostanie zachowany.</strong>{% endif %}</p>
       <form method="post" action="/zgloszenie" data-czekaj="Zapisuję zgłoszenie…">
@@ -64,7 +65,7 @@
         <input type="hidden" name="opis" value="{{ draft.opis }}">
         {% endif %}
         {% set area_opts = [] %}{% for slug, a in AREAS.items() %}{% set _ = area_opts.append((slug, a.name)) %}{% endfor %}
-        {{ field('area', 'Obszar', options=area_opts, value=analysis.area or '', hint='rozpoznaliśmy go z opisu – popraw, jeśli trzeba.') }}
+        {{ field('area', 'Obszar', options=area_opts, value=analysis.area or '', hint='rozpoznaliśmy go z opisu – popraw, jeśli trzeba.', help='wyniki.obszar') }}
         {{ field('powiat', 'Powiat', options=powiaty|pairs, value=draft.powiat, hint='nowotarski.') }}
         <button type="submit" class="btn btn--primary btn--large">Zapisz zgłoszenie</button>
       </form>
@@ -72,14 +73,15 @@
   </div>
 
   <aside aria-label="Podobne sprawy, poradniki i ludzie">
-    {% if analysis.by_ai %}
+    {% if analysis.by_ai %}<div class="help-corner" data-help="wyniki.rozpoznanie">{{ help('wyniki.rozpoznanie') }}
     {% call ai_box(true, 'Jak rozumiemy Twoją sytuację') %}
       {% if analysis.summary %}<p>{{ analysis.summary }}</p>{% endif %}
       {% if analysis.keywords %}<p>Szukaliśmy też po słowach: {{ analysis.keywords|join(", ") }}.</p>{% endif %}
     {% endcall %}
     {% endif %}
-    <details class="demo-guide">
+    <details class="demo-guide" data-help="wyniki.podobne">
       <summary>Inni mieli podobnie ({{ reports|length }})</summary>
+      {{ help('wyniki.podobne') }}
       {% if reports %}
       <ul class="list-plain">
         {% for r, res in reports %}

@@ -1,0 +1,391 @@
+{
+  "pola": {
+    "home.opis": {
+      "nazwa": "Opis sytuacji",
+      "po_co": "Tu opisujesz trudną sytuację własnymi słowami. Na tej podstawie szukamy rozwiązań, ludzi i poradników.",
+      "przyklad": "„Rodzice dzieci z zespołem Downa w naszej gminie jeżdżą do wielu specjalistów i są zmęczeni.” Wystarczą 1–2 zdania, bez nazwisk i diagnoz.",
+      "zrodlo": "Tekst piszesz Ty – nic nie zapisujemy, dopóki nie klikniesz „Zapisz zgłoszenie” na następnej stronie. PESEL, telefon, e-mail, adres i imię dziecka ukrywamy automatycznie, zanim cokolwiek zapiszemy."
+    },
+    "home.powiat": {
+      "nazwa": "Powiat",
+      "po_co": "Mówi, gdzie w Małopolsce jest problem. Pole jest nieobowiązkowe.",
+      "przyklad": "„wadowicki” albo „Kraków”.",
+      "zrodlo": "Lista 22 powiatów Małopolski (z miastami Kraków, Nowy Sącz i Tarnów). Hub widzi z tego na mapie potrzeb, gdzie problem wraca najczęściej."
+    },
+    "home.prywatnosc": {
+      "nazwa": "Ochrona danych",
+      "po_co": "Przypomina, że nie musisz podawać danych osobowych ani diagnozy.",
+      "jak_czytac": "Jeśli coś takiego wpiszesz przez przypadek, na następnej stronie zobaczysz, co ukryliśmy. W opisie pojawi się wtedy znacznik zamiast danych.",
+      "zrodlo": "Ukrywanie robią reguły w naszym kodzie, bez AI i przed zapisem. Do AI (jeśli jest włączone) trafia już tylko tekst bez tych danych."
+    },
+    "home.szukaj": {
+      "nazwa": "Znajdź rozwiązania",
+      "po_co": "Pokazuje, co może pomóc: sprawdzone rozwiązania, podobne zgłoszenia, poradniki i ekspertów.",
+      "przyklad": "Kliknij „Znajdź rozwiązania” – na razie tylko szukamy, nic nie zapisujemy.",
+      "zrodlo": "Wyniki dobiera porównanie słów z Twojego opisu ze słowami w Bibliotece innowacji, bez AI. AI (gdy jest włączone) może tylko dopisać streszczenie i dodatkowe słowa do szukania."
+    },
+    "home.obszary": {
+      "nazwa": "Wyzwania Małopolski",
+      "po_co": "Siedem obszarów, którymi zajmuje się Hub Innowacji Społecznych.",
+      "jak_czytac": "Kliknij obszar, żeby zobaczyć rozwiązania, poradniki i otwarte nabory z tego tematu. „Obszar pilotażowy” to temat, który w prototypie jest opracowany najdokładniej.",
+      "zrodlo": "Obszary przygotowaliśmy na podstawie wyzwań Małopolskiego Hubu Innowacji Społecznych (ROPS w Krakowie). Treści w obszarach są przykładowe."
+    },
+
+    "wyniki.rozpoznanie": {
+      "nazwa": "Jak rozumiemy Twoją sytuację",
+      "po_co": "Pokazuje, jakie tematy rozpoznaliśmy w Twoim opisie.",
+      "jak_czytac": "Bez AI widać listę „Rozpoznane tematy” ze słownika pojęć. Miętowa ramka „Wygenerowane przez AI” to streszczenie od modelu – sprawdź je, zanim mu zaufasz.",
+      "zrodlo": "Tematy i obszar wyznaczają nasze reguły ze słownika pojęć. Gdy AI jest włączone, model Claude Haiku dostaje opis z ukrytymi danymi osobowymi i dopisuje streszczenie oraz słowa do szukania."
+    },
+    "dopasowanie.trafnosc": {
+      "nazwa": "Trafność",
+      "po_co": "Pokazuje, jak bardzo rozwiązanie pasuje do opisu problemu.",
+      "jak_czytac": "Im dłuższy pasek i wyższy procent, tym lepiej: od 60% „Bardzo pasuje”, od 45% „Pasuje”, od 35% „Może pasować”. Poniżej 35% to słabe dopasowanie, a Hub widzi takie zgłoszenie jako lukę.",
+      "zrodlo": "Liczymy bez AI: porównujemy słowa z opisu (także w innej odmianie, np. „rodzice” i „rodziców”) i wspólne tematy ze słownika pojęć. Połowa wyniku to siła tego porównania, druga połowa – jaka część Twoich słów występuje w opisie rozwiązania."
+    },
+    "dopasowanie.dlaczego": {
+      "nazwa": "Dlaczego pasuje",
+      "po_co": "Wyjaśnia, skąd wzięło się dopasowanie.",
+      "jak_czytac": "Zaznaczone słowa są i w Twoim opisie, i w opisie rozwiązania. „Wspólne tematy” to sprawy rozpoznane ze słownika, np. „zdrowie i wizyty u lekarzy”.",
+      "zrodlo": "To ten sam wynik porównania słów co trafność, bez AI. Dzięki temu każde dopasowanie da się sprawdzić samemu."
+    },
+    "wyniki.podobne": {
+      "nazwa": "Inni mieli podobnie",
+      "po_co": "Pokazuje zgłoszenia innych osób w podobnej sprawie.",
+      "jak_czytac": "Kliknij, żeby zobaczyć, jakie rozwiązania dostała ta osoba. Plakietka „PRZYKŁAD” oznacza zgłoszenie fikcyjne.",
+      "zrodlo": "Tylko zgłoszenia zatwierdzone przez Hub, dobrane tym samym porównaniem słów. W demo wszystkie są przykładowe."
+    },
+    "wyniki.zapisz": {
+      "nazwa": "Zapisz zgłoszenie",
+      "po_co": "Zapisuje Twoją sprawę, żeby odpisał Ci człowiek z Hubu.",
+      "przyklad": "Sprawdź obszar i powiat, potem kliknij „Zapisz zgłoszenie”. Bez konta najpierw wybierzesz konto demo – opis zostanie zachowany.",
+      "zrodlo": "Zgłoszenie trafia do skrzynki koordynatorki Hubu w ROPS, a o odpowiedzi dostaniesz powiadomienie. Zapisujemy tekst z już ukrytymi danymi osobowymi."
+    },
+    "wyniki.obszar": {
+      "nazwa": "Obszar zgłoszenia",
+      "po_co": "Kieruje zgłoszenie do właściwego tematu w Hubie i do statystyk.",
+      "przyklad": "„Rodziny osób z zespołem Downa”.",
+      "zrodlo": "Wybraliśmy go z Twojego opisu na podstawie słownika pojęć (a gdy go nie rozpoznamy, może podpowiedzieć AI). Możesz go zmienić."
+    },
+
+    "zgloszenie.status": {
+      "nazwa": "Status zgłoszenia",
+      "po_co": "Pokazuje, na jakim etapie jest sprawa.",
+      "jak_czytac": "„Nowe” czeka na Hub, „W analizie” – Hub szuka pomocy, „Połączone z rozwiązaniem” – jest pomoc. „Luka” znaczy, że brakuje rozwiązania, a „Zamknięte” – sprawa zakończona.",
+      "zrodlo": "Status ustawia ręcznie koordynatorka Hubu. Przy każdej zmianie autor dostaje powiadomienie."
+    },
+    "zgloszenie.ocena": {
+      "nazwa": "Czy to pomocne?",
+      "po_co": "Mówisz nam, czy proponowane rozwiązanie naprawdę pomaga.",
+      "przyklad": "Kliknij „Pomocne” albo „Niepomocne” przy każdej propozycji – ocenę możesz zmienić.",
+      "zrodlo": "Ocena trafia do wskaźnika „dopasowań ocenionych jako pomocne” w panelu Hubu. Gdy oceny są tylko „Niepomocne”, zgłoszenie trafia na listę luk."
+    },
+    "zgloszenie.watek": {
+      "nazwa": "Rozmowa z Hubem",
+      "po_co": "Tu rozmawiasz z Hubem i ekspertami o swojej sprawie.",
+      "przyklad": "„Czy ktoś testował to w małej gminie? Ile osób potrzeba do startu?”",
+      "zrodlo": "Wiadomości widzą tylko autor, Hub i eksperci. Hub może ukryć wpis, który łamie zasady."
+    },
+    "zgloszenie.decyzja": {
+      "nazwa": "Decyzja Hubu",
+      "po_co": "Tu Hub zmienia status zgłoszenia i decyduje, czy pokazać je innym.",
+      "przyklad": "Ustaw „Połączone z rozwiązaniem” i zaznacz „Opublikuj”, żeby zgłoszenie pomogło innym jako podobne.",
+      "zrodlo": "Po zapisie autor dostaje powiadomienie. Opublikowane zgłoszenie pojawia się innym w „Inni mieli podobnie”."
+    },
+
+    "biblioteka.q": {
+      "nazwa": "Szukaj słowami",
+      "po_co": "Szuka rozwiązań po słowach z tytułu, opisu i słów kluczowych.",
+      "przyklad": "„transport” albo „samotność seniorów”.",
+      "zrodlo": "Porównujemy słowa także w innej odmianie, bez AI. Wyniki są ułożone od najlepiej pasujących."
+    },
+    "biblioteka.obszar": {
+      "nazwa": "Filtr: obszar",
+      "po_co": "Zawęża listę do jednego z siedmiu wyzwań Małopolski.",
+      "przyklad": "„Seniorzy” – zobaczysz tylko rozwiązania dla seniorów.",
+      "zrodlo": "Obszar nadaje Hub, gdy dodaje innowację do Biblioteki."
+    },
+    "biblioteka.powiat": {
+      "nazwa": "Filtr: powiat",
+      "po_co": "Pokazuje tylko innowacje działające w wybranym powiecie.",
+      "przyklad": "„tarnowski” – przydatne, gdy szukasz partnera blisko siebie.",
+      "zrodlo": "Powiat wpisuje Hub przy dodawaniu innowacji."
+    },
+    "biblioteka.etap": {
+      "nazwa": "Filtr: etap",
+      "po_co": "Pokazuje, jak daleko zaszło rozwiązanie.",
+      "przyklad": "„wdrożenie” – działa na stałe; „pomysł” – dopiero plan.",
+      "zrodlo": "Cztery etapy: pomysł, prototyp, test, wdrożenie. Etap ustawia Hub."
+    },
+    "biblioteka.grupa": {
+      "nazwa": "Filtr: dla kogo",
+      "po_co": "Pokazuje rozwiązania dla wybranej grupy ludzi.",
+      "przyklad": "„rodzice i opiekunowie”.",
+      "zrodlo": "Pięć grup odbiorców, tych samych w całym serwisie. Grupę ustawia Hub."
+    },
+    "biblioteka.ocena": {
+      "nazwa": "Ocena testujących",
+      "po_co": "Pokazuje, jak rozwiązanie oceniły osoby, które je wypróbowały.",
+      "jak_czytac": "Średnia od 1 (słabo) do 5 (świetnie), obok liczba ocen. Mało ocen znaczy, że wynik jest mniej pewny.",
+      "zrodlo": "Oceny wystawiają zalogowane osoby w „Testerze innowacji” na stronie rozwiązania. W demo oceny są przykładowe."
+    },
+
+    "innowacja.karta": {
+      "nazwa": "Opis innowacji",
+      "po_co": "Opis sprawdzonego rozwiązania: na czym polega, gdzie działa i kto je prowadzi.",
+      "jak_czytac": "Pod tytułem są obszar, powiat, etap i grupa odbiorców. Plakietka „PRZYKŁAD” oznacza dane fikcyjne.",
+      "zrodlo": "Dane z Biblioteki innowacji, którą prowadzi Hub. W demo są przykładowe, docelowo z importu Biblioteki Innowacji ROPS (plik CSV lub JSON)."
+    },
+    "innowacja.tester": {
+      "nazwa": "Tester innowacji",
+      "po_co": "Tu możesz wypróbować rozwiązanie u siebie, ocenić je albo zaproponować poprawkę.",
+      "przyklad": "Wybierz jedną z trzech kart: „Chcę przetestować”, „Oceń jednym kliknięciem” albo „Mam pomysł na usprawnienie”.",
+      "zrodlo": "Każda akcja trafia do skrzynki Hubu i jest widoczna niżej w „Głosach testujących”. Potrzebne jest konto demo."
+    },
+    "innowacja.zgloszenie_testu": {
+      "nazwa": "Chcę przetestować",
+      "po_co": "Zgłaszasz, że chcesz wypróbować to rozwiązanie u siebie.",
+      "przyklad": "„w 3 sołectwach gminy od stycznia, razem z OPS” – co najmniej 10 znaków.",
+      "zrodlo": "Hub dostaje powiadomienie i kontaktuje Cię z autorami. Tekst będzie widoczny na tej stronie, a dane osobowe ukrywamy automatycznie."
+    },
+    "innowacja.ocena": {
+      "nazwa": "Oceń jednym kliknięciem",
+      "po_co": "Oceniasz, jak sprawdziło się rozwiązanie.",
+      "przyklad": "Wybierz od 1 (słabo) do 5 (świetnie); komentarz jest nieobowiązkowy, np. „Działa, ale potrzeba etatu w CUS”.",
+      "zrodlo": "Twoja ocena wchodzi do średniej „Ocena testujących” widocznej też w Bibliotece. Hub dostaje powiadomienie."
+    },
+    "innowacja.usprawnienie": {
+      "nazwa": "Pomysł na usprawnienie",
+      "po_co": "Proponujesz, co w rozwiązaniu poprawić.",
+      "przyklad": "„dodać dowóz uczestników z okolicznych wsi”.",
+      "zrodlo": "Propozycja trafia do Hubu i pojawia się w „Głosach testujących” na tej stronie. Dane osobowe ukrywamy automatycznie."
+    },
+    "innowacja.watek": {
+      "nazwa": "Rozmowa o innowacji",
+      "po_co": "Publiczna rozmowa o tym rozwiązaniu – pytania do autorów, Hubu i ekspertów.",
+      "przyklad": "„Czy ktoś testował to w małej gminie?”",
+      "zrodlo": "Odpowiadają Hub i eksperci z tego obszaru. Wpisy widzą wszyscy odwiedzający, a Hub może ukryć wpis łamiący zasady."
+    },
+
+    "pomysl.tytul": {
+      "nazwa": "Tytuł pomysłu",
+      "po_co": "Krótka nazwa, po której inni rozpoznają Twój pomysł.",
+      "przyklad": "„Weekendowy klub dla nastolatków”.",
+      "zrodlo": "Wpisujesz go sam. Pomysł jest widoczny publicznie w „Kreatorze pomysłów”."
+    },
+    "pomysl.istota": {
+      "nazwa": "Istota pomysłu",
+      "po_co": "W jednym-dwóch zdaniach: na czym polega pomysł.",
+      "przyklad": "„Sobotnie spotkania młodzieży z zespołem Downa, a rodzice mają w tym czasie wolne.”",
+      "zrodlo": "Twój tekst – dane osobowe ukrywamy przed zapisem. Na jego podstawie asystent podpowie kolejne kroki: z reguł albo z AI, zawsze z oznaczeniem."
+    },
+    "pomysl.dla_kogo": {
+      "nazwa": "Dla kogo",
+      "po_co": "Grupa ludzi, której pomysł ma pomóc.",
+      "przyklad": "„rodzice i opiekunowie”.",
+      "zrodlo": "Ta sama lista pięciu grup co w filtrach Biblioteki innowacji."
+    },
+    "pomysl.etap": {
+      "nazwa": "Etap",
+      "po_co": "Jak daleko jesteś z pomysłem.",
+      "przyklad": "„pomysł – jeszcze nie testowany”.",
+      "zrodlo": "Ta sama skala co w Bibliotece: pomysł, prototyp, test, wdrożenie."
+    },
+    "pomysl.obszar": {
+      "nazwa": "Obszar",
+      "po_co": "Którego wyzwania Małopolski dotyczy pomysł.",
+      "przyklad": "„Rodziny osób z zespołem Downa”.",
+      "zrodlo": "Lista siedmiu obszarów Hubu Innowacji Społecznych – ta sama co na stronie startowej."
+    },
+
+    "kanwa.pola": {
+      "nazwa": "Kanwa Innowacji Społecznych",
+      "po_co": "Dziesięć krótkich pytań, które porządkują pomysł: problem, odbiorcy, rozwiązanie, zasoby, koszty i inne.",
+      "przyklad": "Pod każdym polem jest przykład, np. „ok. 40 rodzin z powiatu krakowskiego”. Wypełnij to, co już wiesz – resztę dopiszesz później.",
+      "zrodlo": "Pytania i przykłady przygotował zespół HugMe na wzór kanwy używanej przy innowacjach społecznych. Z kanwy korzysta asystent pomysłu i formularz wniosku."
+    },
+
+    "posrednik.instytucja": {
+      "nazwa": "Kim jesteś?",
+      "po_co": "Rodzaj instytucji zmienia proponowane źródła finansowania na karcie.",
+      "przyklad": "„Gmina / urząd” albo „Organizacja pozarządowa”.",
+      "zrodlo": "Listy źródeł dla każdego rodzaju przygotowaliśmy na stałe (np. Fundusze Europejskie dla Małopolski, konkursy ROPS). To ogólne wskazówki – aktualne nabory trzeba sprawdzić."
+    },
+    "posrednik.odbiorcy": {
+      "nazwa": "Dla kogo ma być usługa?",
+      "po_co": "Grupa, której usługa ma pomóc.",
+      "przyklad": "„seniorzy”.",
+      "zrodlo": "Razem z opisem problemu służy do znalezienia najbliższej innowacji z Biblioteki – porównaniem słów, bez AI."
+    },
+    "posrednik.skala": {
+      "nazwa": "Ile osób może skorzystać?",
+      "po_co": "Od liczby osób zależy proponowany zespół.",
+      "przyklad": "„20–100 osób”.",
+      "zrodlo": "W wersji bez AI skala wybiera gotowy opis zespołu, np. „koordynator, 1–2 specjalistów, wolontariusze”."
+    },
+    "posrednik.budzet": {
+      "nazwa": "Budżet",
+      "po_co": "Ile pieniędzy możesz przeznaczyć na start.",
+      "przyklad": "„mały – drobne zakupy, kilka tysięcy”.",
+      "zrodlo": "Budżet zmienia listę rodzajów kosztów na karcie. Karta nigdy nie podaje kwot – koszty trzeba wycenić na miejscu."
+    },
+    "posrednik.powiat": {
+      "nazwa": "Powiat",
+      "po_co": "Gdzie ma działać usługa. Pole nieobowiązkowe.",
+      "przyklad": "„dąbrowski”.",
+      "zrodlo": "Pojawia się na karcie w opisie odbiorców."
+    },
+    "posrednik.problem": {
+      "nazwa": "Jaki problem chcesz rozwiązać?",
+      "po_co": "Najważniejsze pole – od niego zależy cała karta usługi.",
+      "przyklad": "„starsi mieszkańcy pięciu sołectw nie mają jak dojechać do przychodni”.",
+      "zrodlo": "Na podstawie opisu szukamy najbliższej innowacji z Biblioteki i na niej opieramy kartę. Dane osobowe ukrywamy przed zapisem."
+    },
+
+    "karta.usluga": {
+      "nazwa": "Proponowana usługa",
+      "po_co": "Gotowy szkic usługi: opis, zespół, kroki, partnerzy, koszty, finansowanie, mierniki i ryzyka.",
+      "jak_czytac": "Miętowa ramka „Wygenerowane przez AI” to tekst od modelu – sprawdź go. Ramka „Podpowiedź z szablonu (bez AI)” to tekst z gotowych reguł.",
+      "zrodlo": "Wzorem jest najlepiej dopasowana innowacja z Biblioteki; AI (Claude Haiku), gdy jest włączone, pisze tekst od nowa. Kwoty usuwamy w kodzie, także z odpowiedzi AI."
+    },
+    "karta.inspiracje": {
+      "nazwa": "Inspiracje z Biblioteki",
+      "po_co": "Innowacje, które najbardziej pasują do Twojego problemu.",
+      "jak_czytac": "Pierwsza na liście posłużyła za wzór karty. Otwórz ją i zapytaj autorów w rozmowie.",
+      "zrodlo": "Do trzech wyników porównania słów z opisu problemu i grupy odbiorców, bez AI."
+    },
+
+    "admin.liczby": {
+      "nazwa": "Najważniejsze liczby",
+      "po_co": "Pokazuje na jeden rzut oka, co czeka na Hub.",
+      "jak_czytac": "Pole z koralową ramką oznacza, że jest coś do zrobienia. Kliknij liczbę, żeby przejść do listy.",
+      "zrodlo": "Liczone na bieżąco z bazy przy każdym wejściu, bez AI. W demo dane są przykładowe."
+    },
+    "admin.pomocne": {
+      "nazwa": "Dopasowania ocenione jako pomocne",
+      "po_co": "Mówi, czy proponowane rozwiązania naprawdę pomagają ludziom.",
+      "jak_czytac": "Procent ocen „Pomocne” wśród wszystkich ocen, obok liczba ocen. Kreska „–” znaczy, że nikt jeszcze nie ocenił.",
+      "zrodlo": "Z przycisków „Pomocne” i „Niepomocne” przy zgłoszeniach, od początku działania. Liczymy bez AI; w demo oceny są przykładowe."
+    },
+    "admin.co_teraz": {
+      "nazwa": "Co teraz?",
+      "po_co": "Lista zadań na dziś, od najpilniejszych.",
+      "jak_czytac": "Każdy punkt to link do miejsca, w którym zrobisz zadanie. Gdy lista jest pusta, wszystko jest odpowiedziane i wysłane.",
+      "zrodlo": "Układana automatycznie z liczb powyżej, bez AI."
+    },
+    "admin.filtr": {
+      "nazwa": "Filtr skrzynki",
+      "po_co": "Zawęża skrzynkę do jednego rodzaju spraw.",
+      "przyklad": "„zgłoszenia” – tylko nowe albo jeszcze niezatwierdzone zgłoszenia.",
+      "zrodlo": "Filtr tylko ukrywa inne sprawy na liście – niczego nie usuwa."
+    },
+    "admin.skrzynka": {
+      "nazwa": "Skrzynka",
+      "po_co": "Wszystkie nowe sprawy w jednym miejscu – najpierw te, które czekają na odpowiedź.",
+      "jak_czytac": "Przy zgłoszeniach kolumna „Szczegóły” pokazuje status, obszar, powiat i czy zgłoszenie jest zatwierdzone. Kliknij treść, żeby otworzyć sprawę.",
+      "zrodlo": "Zbiera nowe lub niezatwierdzone zgłoszenia, pomysły i testy z 30 dni, złożone wnioski oraz nowe sprawy z „Razem z ZD” i „Jestem potrzebny”. W demo dane są przykładowe."
+    },
+
+    "trendy.tabela": {
+      "nazwa": "Zgłoszenia według obszaru",
+      "po_co": "Pokazuje, w których obszarach przybywa zgłoszeń.",
+      "jak_czytac": "Ostatnie 30 dni porównujemy z poprzednimi 30 dniami. ▲ znaczy więcej zgłoszeń niż wcześniej, ▼ – mniej.",
+      "zrodlo": "Liczone z dat zgłoszeń w bazie, bez treści i bez autorów. W demo dane są przykładowe."
+    },
+    "trendy.mapa": {
+      "nazwa": "Mapa potrzeb",
+      "po_co": "Pokazuje, w którym powiecie i w jakim obszarze jest najwięcej zgłoszeń.",
+      "jak_czytac": "Wiersz to powiat, kolumna to obszar; im ciemniejsza kratka, tym więcej zgłoszeń. Kropka „·” znaczy zero.",
+      "zrodlo": "Zliczamy wszystkie zgłoszenia z podanym powiatem, od początku działania. Powiaty bez żadnego zgłoszenia nie są pokazane."
+    },
+    "trendy.legenda": {
+      "nazwa": "Legenda mapy",
+      "po_co": "Tłumaczy kolory kratek na mapie potrzeb.",
+      "jak_czytac": "Od jasnej kratki (0 zgłoszeń) do najciemniejszej (7 i więcej). Każdy kolor ma też liczbę w kratce, więc nie trzeba rozróżniać barw.",
+      "zrodlo": "Progi 0, 1, 2–3, 4–6 i 7+ są ustawione na stałe, żeby małe liczby też było widać."
+    },
+
+    "luki.obszary": {
+      "nazwa": "Gdzie brakuje rozwiązań",
+      "po_co": "Pokazuje obszary z największą liczbą luk.",
+      "jak_czytac": "Obszar na górze listy ma plakietkę „Kandydat na konkurs” – tam rozwiązań brakuje najbardziej.",
+      "zrodlo": "Liczba luk według obszaru zgłoszenia, bez AI."
+    },
+    "luki.lista": {
+      "nazwa": "Luki",
+      "po_co": "Zgłoszenia, na które Biblioteka nie ma dobrej odpowiedzi – kandydaci na nowe konkursy.",
+      "jak_czytac": "„Powód” mówi, czemu sprawa jest luką. „Najlepsze dopasowanie” to najwyższa trafność spośród propozycji.",
+      "zrodlo": "Luka powstaje sama, gdy najlepsze dopasowanie ma mniej niż 35%, gdy autor ocenił propozycje tylko jako niepomocne albo gdy Hub nadał status „Luka”. Zgłoszenia zamknięte i połączone z rozwiązaniem pomijamy."
+    },
+
+    "admin_innowacja.streszczenie": {
+      "nazwa": "Streszczenie",
+      "po_co": "Jedno zdanie widoczne na kartach w wynikach i w Bibliotece.",
+      "przyklad": "„Gminny bus przyjeżdża na zamówienie.”",
+      "zrodlo": "Streszczenie liczy się też przy dopasowaniu do opisów mieszkańców (porównanie słów, bez AI)."
+    },
+    "admin_innowacja.film": {
+      "nazwa": "Film z YouTube",
+      "po_co": "Link do filmu o innowacji.",
+      "przyklad": "https://www.youtube.com/watch?v=… – inne serwisy niż YouTube nie są przyjmowane.",
+      "zrodlo": "Film pokazujemy z youtube-nocookie.com, czyli bez śledzących ciasteczek. Pole jest nieobowiązkowe."
+    },
+    "admin_innowacja.slowa": {
+      "nazwa": "Słowa kluczowe",
+      "po_co": "Dodatkowe słowa, po których wyszukiwarka i dopasowanie znajdą tę innowację.",
+      "przyklad": "„transport dojazd wieś lekarz” – oddziel spacjami, dopisz też potoczne nazwy.",
+      "zrodlo": "Słowa dokładamy do tytułu i opisu przy porównywaniu słów. Nie są widoczne publicznie."
+    }
+  },
+
+  "przewodnik": {
+    "public.home": [
+      {"klucz": "home.opis", "tytul": "Opisz sytuację", "tekst": "Napisz własnymi słowami, co jest trudne i kogo dotyczy. Przykład jest już wpisany – możesz go zostawić."},
+      {"klucz": "home.powiat", "tytul": "Wybierz powiat", "tekst": "Nie musisz, ale to pomaga Hubowi zobaczyć, gdzie problem wraca."},
+      {"klucz": "home.prywatnosc", "tytul": "Twoje dane są bezpieczne", "tekst": "PESEL, telefon czy adres ukryjemy, zanim cokolwiek zapiszemy."},
+      {"klucz": "home.szukaj", "tytul": "Znajdź rozwiązania", "tekst": "Na razie tylko szukamy. Zgłoszenie zapiszesz w następnym kroku, jeśli zechcesz."},
+      {"klucz": "home.obszary", "tytul": "Wyzwania Małopolski", "tekst": "Możesz też przeglądać pomoc według tematów."}
+    ],
+    "public.results": [
+      {"klucz": "wyniki.rozpoznanie", "tytul": "Co zrozumieliśmy", "tekst": "Tu widać tematy rozpoznane w Twoim opisie. Ramka mówi, czy to reguły, czy AI."},
+      {"klucz": "dopasowanie.trafnosc", "tytul": "Trafność", "tekst": "Pasek i procent mówią, jak bardzo rozwiązanie pasuje. Najlepsze są na górze."},
+      {"klucz": "dopasowanie.dlaczego", "tytul": "Dlaczego pasuje", "tekst": "Zaznaczone słowa są wspólne dla Twojego opisu i rozwiązania – sprawdzisz to sam."},
+      {"klucz": "wyniki.podobne", "tytul": "Inni mieli podobnie", "tekst": "Zobacz, co dostały osoby z podobną sprawą."},
+      {"klucz": "wyniki.zapisz", "tytul": "Zapisz zgłoszenie", "tekst": "Jeśli chcesz, żeby odpisał Ci człowiek z Hubu, zapisz zgłoszenie."}
+    ],
+    "wiedza.innovation": [
+      {"klucz": "innowacja.karta", "tytul": "Opis rozwiązania", "tekst": "Co to jest, gdzie działa, dla kogo i kto prowadzi."},
+      {"klucz": "biblioteka.ocena", "tytul": "Ocena testujących", "tekst": "Średnia ocen od osób, które wypróbowały to rozwiązanie."},
+      {"klucz": "innowacja.tester", "tytul": "Tester innowacji", "tekst": "Wypróbuj, oceń albo zaproponuj poprawkę – wszystko trafia do Hubu."},
+      {"klucz": "innowacja.zgloszenie_testu", "tytul": "Chcę przetestować", "tekst": "Napisz, gdzie i kiedy chcesz testować. Hub połączy Cię z autorami."},
+      {"klucz": "innowacja.watek", "tytul": "Rozmowa", "tekst": "Zadaj pytanie autorom, Hubowi albo ekspertom."}
+    ],
+    "kreator.new": [
+      {"klucz": "pomysl.tytul", "tytul": "Tytuł", "tekst": "Krótka nazwa pomysłu."},
+      {"klucz": "pomysl.istota", "tytul": "Na czym polega", "tekst": "Jedno-dwa zdania – resztę dopiszesz w kanwie."},
+      {"klucz": "pomysl.dla_kogo", "tytul": "Dla kogo", "tekst": "Wybierz grupę, której pomysł pomoże."},
+      {"klucz": "pomysl.etap", "tytul": "Etap", "tekst": "Jak daleko jesteś – od pomysłu do wdrożenia."},
+      {"klucz": "pomysl.obszar", "tytul": "Obszar", "tekst": "Którego wyzwania Małopolski dotyczy pomysł."}
+    ],
+    "posrednik.form": [
+      {"klucz": "posrednik.instytucja", "tytul": "Kim jesteś", "tekst": "Od tego zależą proponowane źródła finansowania."},
+      {"klucz": "posrednik.odbiorcy", "tytul": "Dla kogo", "tekst": "Wybierz grupę odbiorców usługi."},
+      {"klucz": "posrednik.skala", "tytul": "Ile osób", "tekst": "Od skali zależy proponowany zespół."},
+      {"klucz": "posrednik.budzet", "tytul": "Budżet", "tekst": "Zmienia listę kosztów. Kwot na karcie nie będzie."},
+      {"klucz": "posrednik.problem", "tytul": "Problem", "tekst": "Opisz go w 1–2 zdaniach – na nim opieramy kartę usługi."}
+    ],
+    "admin.panel": [
+      {"klucz": "admin.liczby", "tytul": "Najważniejsze liczby", "tekst": "Koralowa ramka znaczy: jest coś do zrobienia. Kliknij liczbę."},
+      {"klucz": "admin.pomocne", "tytul": "Czy dopasowania pomagają", "tekst": "Procent ocen „Pomocne” od autorów zgłoszeń."},
+      {"klucz": "admin.co_teraz", "tytul": "Co teraz", "tekst": "Zadania na dziś, od najpilniejszych."},
+      {"klucz": "admin.filtr", "tytul": "Filtr", "tekst": "Pokaż tylko jeden rodzaj spraw."},
+      {"klucz": "admin.skrzynka", "tytul": "Skrzynka", "tekst": "Wszystkie nowe sprawy – kliknij treść, żeby otworzyć."}
+    ],
+    "admin.trends": [
+      {"klucz": "admin.pomocne", "tytul": "Czy dopasowania pomagają", "tekst": "Procent ocen „Pomocne” – najlepszy sprawdzian trafności."},
+      {"klucz": "trendy.tabela", "tytul": "Trendy według obszaru", "tekst": "▲ więcej zgłoszeń niż miesiąc wcześniej, ▼ mniej."},
+      {"klucz": "trendy.mapa", "tytul": "Mapa potrzeb", "tekst": "Powiat × obszar: ciemniej znaczy więcej zgłoszeń."},
+      {"klucz": "trendy.legenda", "tytul": "Legenda", "tekst": "Progi kolorów od 0 do 7 i więcej zgłoszeń."}
+    ]
+  }
+}

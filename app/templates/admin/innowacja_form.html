@@ -14,15 +14,15 @@
   {{ csrf() }}
   {% set area_opts = [] %}{% for slug, a in AREAS.items() %}{% set _ = area_opts.append((slug, a.name)) %}{% endfor %}
   {{ field('title', 'Tytuł', value=form.title, error=errors.title, required=true, hint='Bus na telefon') }}
-  {{ field('summary', 'Jedno zdanie streszczenia', value=form.summary, error=errors.summary, required=true, hint='Gminny bus przyjeżdża na zamówienie.') }}
+  {{ field('summary', 'Jedno zdanie streszczenia', value=form.summary, error=errors.summary, required=true, hint='Gminny bus przyjeżdża na zamówienie.', help='admin_innowacja.streszczenie') }}
   {{ field('description', 'Opis', value=form.description, error=errors.description, required=true, rows=4, hint='jak działa, kto prowadzi, co daje') }}
   {{ field('area', 'Obszar', options=area_opts, value=form.area, error=errors.area, required=true) }}
   {{ field('powiat', 'Powiat', options=powiaty|pairs, value=form.powiat, error=errors.powiat, required=true) }}
   {{ field('stage', 'Etap', options=stages|pairs, value=form.stage, error=errors.stage, required=true) }}
   {{ field('audience', 'Dla kogo', options=audiences|pairs, value=form.audience, error=errors.audience, required=true) }}
   {{ field('org', 'Kto prowadzi', value=form.org, error=errors.org, required=true, hint='Stowarzyszenie Razem') }}
-  {{ field('video_url', 'Film z YouTube', value=form.video_url, error=errors.video_url, type='url', hint='https://www.youtube.com/watch?v=…') }}
-  {{ field('keywords', 'Słowa kluczowe dla wyszukiwarki', value=form.keywords, hint='transport dojazd wieś lekarz') }}
+  {{ field('video_url', 'Film z YouTube', value=form.video_url, error=errors.video_url, type='url', hint='https://www.youtube.com/watch?v=…', help='admin_innowacja.film') }}
+  {{ field('keywords', 'Słowa kluczowe dla wyszukiwarki', value=form.keywords, hint='transport dojazd wieś lekarz', help='admin_innowacja.slowa') }}
   <button type="submit" class="btn btn--primary btn--large">Zapisz</button>
 </form>
 {% endblock %}

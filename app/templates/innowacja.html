@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% from "_macros.html" import csrf, field, example, area_tag %}
 {% from "_cards.html" import thread_block, ocen, avg5, as_role %}
+{% from "_podpowiedzi.html" import help %}
 {% block title %}{{ i.title }}{% endblock %}
 {% block content %}
 <p><a href="/biblioteka">← Biblioteka innowacji</a></p>
-<article class="card card--thread thread--{{ i.area }}">
+<article class="card card--thread thread--{{ i.area }} help-corner" data-help="innowacja.karta">
+  {{ help('innowacja.karta') }}
   <h1>{{ i.title }}</h1>
   <p class="meta">{{ area_tag(i.area) }} <span>Powiat: {{ i.powiat }}</span> <span>Etap: {{ i.stage }}</span>
     <span>Dla kogo: {{ i.audience }}</span> {% if i.is_example %}{{ example() }}{% endif %}</p>
@@ -17,7 +19,7 @@
   <p class="lead">{{ i.summary }}</p>
   <p>{{ i.description }}</p>
   <p><strong>Prowadzi:</strong> {{ i.org }}</p>
-  {% if rating.n %}<p><strong>Ocena testujących:</strong> {{ avg5(rating) }} ({{ ocen(rating.n) }})</p>{% endif %}
+  {% if rating.n %}<p data-help="biblioteka.ocena"><strong>Ocena testujących:</strong> {{ avg5(rating) }} ({{ ocen(rating.n) }})</p>{% endif %}
 </article>
 
 {{ thread_block(thread, flashes=not tester_ok) }}
@@ -35,22 +37,22 @@
 </section>
 {% endif %}
 
-<section id="tester" aria-labelledby="tester-h">
-  <h2 id="tester-h">Tester innowacji</h2>
+<section id="tester" aria-labelledby="tester-h" data-help="innowacja.tester">
+  <div class="help-row"><h2 id="tester-h">Tester innowacji</h2>{{ help('innowacja.tester') }}</div>
   {% if tester_ok %}{% for m in get_flashed_messages(category_filter=['sekcja']) %}<p class="flash flash--success" role="status"><span aria-hidden="true">✔</span> {{ m }}</p>{% endfor %}{% endif %}
   <p>Wypróbuj ten pomysł u siebie, oceń go albo zaproponuj poprawkę. Każda akcja trafia do Hubu.</p>
   {% if g.user %}
   <div class="grid">
-    <form method="post" action="/biblioteka/{{ i.id }}/test" class="card">
-      {{ csrf() }}<input type="hidden" name="kind" value="zgloszenie">
+    <form method="post" action="/biblioteka/{{ i.id }}/test" class="card help-corner" data-help="innowacja.zgloszenie_testu">
+      {{ csrf() }}<input type="hidden" name="kind" value="zgloszenie">{{ help('innowacja.zgloszenie_testu') }}
       <h3>Chcę przetestować</h3>
       <div class="field"><label for="f-test">Gdzie i kiedy chcesz testować?</label>
         <p class="hint" id="h-test">w 3 sołectwach gminy od stycznia, razem z OPS</p>
         <textarea id="f-test" name="tresc" rows="3" required minlength="10" aria-describedby="h-test"></textarea></div>
       <button type="submit" class="btn btn--primary">Zgłoś do testu</button>
     </form>
-    <form method="post" action="/biblioteka/{{ i.id }}/test" class="card">
-      {{ csrf() }}<input type="hidden" name="kind" value="ocena">
+    <form method="post" action="/biblioteka/{{ i.id }}/test" class="card help-corner" data-help="innowacja.ocena">
+      {{ csrf() }}<input type="hidden" name="kind" value="ocena">{{ help('innowacja.ocena') }}
       <h3>Oceń jednym kliknięciem</h3>
       <div class="field"><label for="f-ocena-tresc">Komentarz <span class="optional">(nieobowiązkowe)</span></label>
         <p class="hint" id="h-ocena-tresc">„Działa, ale potrzeba etatu w CUS”</p>
@@ -61,8 +63,8 @@
       </fieldset>
       <p class="meta">Jedna ocena na osobę – nowa zastępuje poprzednią.</p>
     </form>
-    <form method="post" action="/biblioteka/{{ i.id }}/test" class="card">
-      {{ csrf() }}<input type="hidden" name="kind" value="usprawnienie">
+    <form method="post" action="/biblioteka/{{ i.id }}/test" class="card help-corner" data-help="innowacja.usprawnienie">
+      {{ csrf() }}<input type="hidden" name="kind" value="usprawnienie">{{ help('innowacja.usprawnienie') }}
       <h3>Mam pomysł na usprawnienie</h3>
       <div class="field"><label for="f-usp">Co można poprawić?</label>
         <p class="hint" id="h-usp">dodać dowóz uczestników z okolicznych wsi</p>

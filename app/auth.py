@@ -9,7 +9,7 @@ from core import db
 
 bp = Blueprint("auth", __name__)
 
-PREF_COOKIES = {"duzy-tekst": "a11y_size", "kontrast": "a11y_contrast"}
+PREF_COOKIES = {"duzy-tekst": "a11y_size", "kontrast": "a11y_contrast", "podpowiedzi": "hints_off"}
 
 # Gdzie trafia osoba po wyborze konta demo, gdy nie przyszła z konkretnej strony (pozostałe role: start).
 ROLE_HOME = {"admin": "/admin", "gmina": "/posrednik", "ekspert": "/ekspert"}

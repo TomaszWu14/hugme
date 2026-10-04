@@ -1,0 +1,39 @@
+{# Tryb „Podpowiedzi” – teksty: app/podpowiedzi.json, logika: app/podpowiedzi.py, ulepszenia: static/js/podpowiedzi.js.
+   Celowo bez importu z _macros.html (tamten plik importuje ten – unikamy cyklu); CSRF wpisany wprost. #}
+
+{# Chmurka „i”: natywny <details> (Enter/Spacja bez JS). Nie wstawiaj w <label>, <button>, <legend>, <p> ani nagłówek. #}
+{% macro help(key) -%}
+{% set h = podpowiedz(key) if key else none %}{% if h %}
+<details class="help" data-help-for="{{ key }}">
+  <summary><span class="help__i" aria-hidden="true">i</span><span class="sr-only">Podpowiedź: {{ h.nazwa }}</span></summary>
+  <div class="help__panel">
+    <p class="help__name" aria-hidden="true">{{ h.nazwa }}</p>
+    <dl class="help__dl">
+      <dt>Do czego służy</dt><dd>{{ h.po_co }}</dd>
+      {% if h.przyklad %}<dt>Przykład</dt><dd>{{ h.przyklad }}</dd>{% else %}<dt>Jak czytać</dt><dd>{{ h.jak_czytac }}</dd>{% endif %}
+      <dt>Skąd to się bierze</dt><dd>{{ h.zrodlo }}</dd>
+    </dl>
+    <button type="button" class="btn btn--small help__close" hidden>Zamknij</button>
+  </div>
+</details>
+{%- endif %}
+{%- endmacro %}
+
+{# Przełącznik w pasku u góry – ten sam mechanizm co A+ i „Wysoki kontrast” (POST /ustawienia, ciasteczko). #}
+{% macro toggle() -%}
+{% set on = podpowiedzi_wl() %}
+<form method="post" action="{{ url_for('auth.toggle_pref') }}">
+  <input type="hidden" name="_csrf" value="{{ csrf_token() }}"><input type="hidden" name="pref" value="podpowiedzi"><input type="hidden" name="next" value="{{ request.full_path }}">
+  <button type="submit" class="btn btn--small btn--ghost" aria-pressed="{{ 'true' if on else 'false' }}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg> Podpowiedzi: {{ 'wł.' if on else 'wył.' }}</button>
+</form>
+{%- endmacro %}
+
+{# Przycisk przewodnika: ukryty w HTML, odkrywa go JS, gdy na stronie są elementy z krokami. Dane jako JSON (nie wykonywany – CSP OK). #}
+{% macro tour() -%}
+{% set kroki = przewodnik() %}{% if kroki %}
+<div class="tour-start">
+  <button type="button" class="btn btn--small" id="przewodnik-start" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></svg> Przewodnik po tej stronie</button>
+</div>
+<script type="application/json" id="przewodnik-dane">{{ kroki|tojson }}</script>
+{%- endif %}
+{%- endmacro %}

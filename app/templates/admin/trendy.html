@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 {% from "_macros.html" import area_tag, status %}
+{% from "_podpowiedzi.html" import help %}
 {% block title %}Trendy i luki{% endblock %}
 {% block content %}
 <h1>Trendy potrzeb i luki</h1>
 {% include "admin/_nav.html" %}
-<p class="notice">Widok tylko dla Hubu. Dane zagregowane – bez treści zgłoszeń i bez autorów. Wszystkich zgłoszeń: {{ total }}.
+<div class="help-row" data-help="admin.pomocne"><p class="notice">Widok tylko dla Hubu. Dane zagregowane – bez treści zgłoszeń i bez autorów. Wszystkich zgłoszeń: {{ total }}.
   {% if rate is not none %}Dopasowania ocenione jako pomocne: <strong>{{ rate }}%</strong> ({{ rated }} {{ rated|plural('ocena', 'oceny', 'ocen') }}).{% endif %}
-  <a href="#luki">Przejdź do luk</a>.</p>
+  <a href="#luki">Przejdź do luk</a>.</p>{{ help('admin.pomocne') }}</div>
 
+<div class="help-corner" data-help="trendy.tabela">{{ help('trendy.tabela') }}
 <div class="table-wrap" tabindex="0" role="region" aria-label="Tabela obszarów – na małym ekranie przewiń w bok">
 <table>
   <caption>Zgłoszenia według obszaru – najwięcej w ostatnich 30 dniach na górze</caption>
@@ -22,7 +24,9 @@
   </tbody>
 </table>
 </div>
+</div>
 
+<div class="help-corner" data-help="trendy.mapa">{{ help('trendy.mapa') }}
 <div class="table-wrap heat" tabindex="0" role="region" aria-label="Mapa potrzeb – na małym ekranie przewiń w bok">
 <table>
   <caption>Mapa potrzeb: powiat × obszar – liczba zgłoszeń (ciemniej = więcej)</caption>
@@ -37,13 +41,14 @@
   </tbody>
 </table>
 </div>
-<ul class="legend" aria-label="Legenda mapy potrzeb">
+</div>
+<div class="help-row" data-help="trendy.legenda"><ul class="legend" aria-label="Legenda mapy potrzeb">
   <li><span class="legend__sw heat-0" aria-hidden="true"></span> 0</li>
   <li><span class="legend__sw heat-1" aria-hidden="true"></span> 1</li>
   <li><span class="legend__sw heat-2" aria-hidden="true"></span> 2–3</li>
   <li><span class="legend__sw heat-3" aria-hidden="true"></span> 4–6</li>
   <li><span class="legend__sw heat-4" aria-hidden="true"></span> 7 i więcej zgłoszeń</li>
-</ul>
+</ul></div>
 
 <section aria-labelledby="luki">
   <h2 id="luki">Luki – gdzie brakuje rozwiązań</h2>

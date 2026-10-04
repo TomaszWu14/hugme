@@ -1,0 +1,83 @@
+/* Tryb „Podpowiedzi”: chmurki „i” (details.help) i przewodnik po stronie (.tour). Tokeny z hugme.css. */
+
+/* Wiersz „etykieta + i” (makro field) i „nagłówek/akapit + i” */
+/* baseline: „i” na wysokości pierwszej linii tekstu (marginesy nagłówków nie przesuwają go w górę); nowrap: „i” nie spada do osobnej linii */
+.field-head, .help-row { display: flex; align-items: baseline; gap: .15rem; }
+/* pasek trafności w wierszu z „i” nie może się zwinąć do zera */
+.field-head > :first-child, .help-row > :first-child { min-width: 0; }  /* tekst zawija się zamiast przewijać stronę w bok (320 px, A+) */
+.help-row > .score { flex: 1 1 auto; }
+.help-row > .score .score__bar { flex: 1 1 3rem; min-width: 3rem; max-width: 12rem; }
+.field-head > label { margin-bottom: 0; }
+.field-head { margin-bottom: .2rem; }
+.help-row > h2, .help-row > h3, .help-row > p { margin-bottom: 0; }
+.help-row { margin-bottom: 1em; }
+
+/* Chmurka: cel dotykowy 44×44 (2.75rem), widoczne kółko ~22 px, stonowane */
+.help { position: relative; display: inline-block; vertical-align: middle; font-size: 1rem; font-weight: 400; line-height: 1.5; }
+.help > summary { display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem;
+  margin: -.6875rem 0; list-style: none; cursor: pointer; border-radius: 999px; }
+.help > summary::-webkit-details-marker { display: none; }
+.help > summary::marker { content: ""; }
+.help__i { display: inline-flex; align-items: center; justify-content: center; width: 1.375rem; height: 1.375rem;
+  border: 1.5px solid var(--ink-soft); border-radius: 999px; color: var(--ink-soft); background: var(--paper);
+  font: 700 .8rem/1 Georgia, "Times New Roman", serif; font-style: italic; }
+.help > summary:hover .help__i { border-color: var(--ink); color: var(--ink); }
+.help[open] .help__i { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+.help__panel { position: absolute; z-index: 40; top: calc(100% + .25rem); left: 0; width: min(22rem, calc(100vw - 2rem));
+  background: var(--paper); color: var(--ink); border: 2px solid var(--ink); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: .8rem 1rem; text-align: left; white-space: normal; }
+.help__name { font-weight: 700; margin: 0 0 .4rem; }
+.help__dl { margin: 0; }
+.help__dl dt { font-size: .82rem; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .03em; }
+.help__dl dd { margin: 0 0 .55rem; }
+.help__dl dd:last-child { margin-bottom: 0; }
+.help__close { margin-top: .6rem; }
+
+/* Telefon: arkusz przy dolnej krawędzi – nie wisi nad polem, które opisuje */
+@media (max-width: 37.5em) {
+  .help__panel { position: fixed; z-index: 90; top: auto; left: 0; right: 0; bottom: 0; width: auto; max-height: 55vh; overflow-y: auto;
+    border-width: 2px 0 0; border-radius: var(--radius) var(--radius) 0 0; box-shadow: 0 -6px 24px rgba(27,37,64,.25);
+    padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom, 0px)); }
+  .help__close { width: 100%; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .help[open] .help__panel { animation: help-in .14s ease-out; }
+}
+@keyframes help-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* Przewodnik */
+.tour-start { display: flex; justify-content: flex-end; }
+.tour-start .btn:not([hidden]) { margin: 0 0 .4rem; }
+.tour-target { position: relative; z-index: 60; outline: 4px solid var(--coral); outline-offset: 4px; border-radius: 6px;
+  box-shadow: 0 0 0 8px var(--paper), 0 0 0 100vmax rgba(27,37,64,.4); scroll-margin: 6rem; }
+.tour { position: absolute; z-index: 70; width: min(24rem, calc(100vw - 2rem)); background: var(--paper); color: var(--ink);
+  border: 2px solid var(--ink); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1rem 1.1rem; }
+.tour:focus { outline: none; }
+.tour:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.tour__count { margin: 0 0 .2rem; font-size: .85rem; font-weight: 700; color: var(--ink-soft); }
+.tour__title { margin: 0 0 .4rem; font-size: 1.2rem; }
+.tour__text { margin: 0 0 .8rem; }
+.tour__actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.tour__actions .tour__end { margin-left: auto; }
+@media (max-width: 37.5em) {
+  .tour { position: fixed; left: 0; right: 0; bottom: 0; top: auto !important; width: auto; z-index: 90;
+    border-width: 2px 0 0; border-radius: var(--radius) var(--radius) 0 0; box-shadow: 0 -6px 24px rgba(27,37,64,.25);
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* Wysoki kontrast: czerń na bieli, bez przyciemnienia i cieni */
+html.a11y-contrast .help__i { border-width: 2px; }
+html.a11y-contrast .help__panel, html.a11y-contrast .tour { border-width: 3px; box-shadow: none; }
+html.a11y-contrast .tour-target { outline-color: #000; outline-width: 5px; box-shadow: 0 0 0 8px #fff; }
+
+@media print { .help, .tour-start, .tour { display: none !important; } .tour-target { outline: 0; box-shadow: none; } }
+
+/* „i” w prawym górnym rogu karty/ramki/tabeli (rodzic dostaje klasę help-corner) – poza kontenerem z przewijaniem */
+.help-corner { position: relative; }
+.help-corner > .help { position: absolute; top: .4rem; right: .4rem; z-index: 2; }
+@media (min-width: 37.51em) { .help-corner > .help > .help__panel { left: auto; right: 0; } }
+.help-corner > .help + :is(h1, h2, h3) { padding-right: 2.5rem; }
+/* Telefon: „i” w osobnym wierszu nad treścią, żeby nie zasłaniało tytułu ani podpisu tabeli */
+@media (max-width: 37.5em) { .help-corner > .help { position: static; display: block; text-align: right; } }

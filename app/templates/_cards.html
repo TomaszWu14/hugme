@@ -1,14 +1,15 @@
 {% from "_macros.html" import example, area_tag, hide_button %}
+{% from "_podpowiedzi.html" import help %}
 
 {% macro score_bar(score, label) -%}
-<p class="score"><span>{{ label }}</span>
+<p class="score" data-help="dopasowanie.trafnosc"><span>{{ label }}</span>
   <span class="score__bar" aria-hidden="true"><span class="score__fill w-{{ (score * 10)|round|int }}"></span></span>
   <span class="sr-only">trafność {{ (score * 100)|round|int }}%</span></p>
 {%- endmacro %}
 
 {% macro why(res) -%}
 {% if res and (res.words or res.topics) %}
-<p class="why"><strong>{{ 'Dlaczego pasuje:' if res.score >= 0.35 else 'Co łączy z Twoim opisem:' }}</strong>
+<p class="why" data-help="dopasowanie.dlaczego"><strong>{{ 'Dlaczego pasuje:' if res.score >= 0.35 else 'Co łączy z Twoim opisem:' }}</strong>
   {% if res.words %}wspólne słowa: {% for w in res.words[:4] %}<mark>{{ w }}</mark>{{ ", " if not loop.last }}{% endfor %}{% endif %}
   {%- if res.words and res.topics %}; {% endif %}
   {%- if res.topics %}wspólne tematy: {{ res.topics|join(", ") }}{% endif %}.</p>
@@ -29,12 +30,12 @@
   <button type="submit" class="btn btn--small">{{ label }}</button></form>
 {%- endmacro %}
 
-{% macro innovation_card(i, res=none, heading='h3', actions=false, rating=none) -%}
+{% macro innovation_card(i, res=none, heading='h3', actions=false, rating=none, hints=false) -%}
 <article class="card card--thread thread--{{ i.area }} match" aria-labelledby="inn-{{ i.id }}">
   <{{ heading }} id="inn-{{ i.id }}"><a href="/biblioteka/{{ i.id }}">{{ i.title }}</a></{{ heading }}>
   <p class="meta">{{ area_tag(i.area) }} <span>Powiat: {{ i.powiat }}</span> <span>Etap: {{ i.stage }}</span> {% if i.is_example %}{{ example() }}{% endif %}
-    {% if rating and rating.n %}<span class="badge"><span aria-hidden="true">★</span><span class="sr-only">Ocena testujących:</span> {{ avg5(rating) }} · {{ ocen(rating.n) }}</span>{% endif %}</p>
-  {% if res %}{{ score_bar(res.score, res.label) }}{% endif %}
+    {% if rating and rating.n %}<span class="badge" data-help="biblioteka.ocena"><span aria-hidden="true">★</span><span class="sr-only">Ocena testujących:</span> {{ avg5(rating) }} · {{ ocen(rating.n) }}</span>{% endif %}</p>
+  {% if res %}{% if hints %}<div class="help-row">{{ score_bar(res.score, res.label) }}{{ help('dopasowanie.trafnosc') }}</div>{% else %}{{ score_bar(res.score, res.label) }}{% endif %}{% endif %}
   <p>{{ i.summary }}</p>
   {{ why(res) }}
   <p class="meta"><span>Prowadzi: {{ i.org }}</span></p>
@@ -48,8 +49,9 @@
 {%- endmacro %}
 
 {% macro thread_block(tv, can_post=true, flashes=true) -%}
-<section id="watek" aria-labelledby="watek-h" class="thread-section">
-  <h2 id="watek-h">Rozmowa{% if tv.subject_type == 'zgloszenie' %} z Hubem{% else %} i pytania do ekspertów{% endif %}</h2>
+{% set hk = {'zgloszenie': 'zgloszenie.watek', 'innowacja': 'innowacja.watek'}.get(tv.subject_type, '') %}
+<section id="watek" aria-labelledby="watek-h" class="thread-section"{% if hk %} data-help="{{ hk }}"{% endif %}>
+  <div class="help-row"><h2 id="watek-h">Rozmowa{% if tv.subject_type == 'zgloszenie' %} z Hubem{% else %} i pytania do ekspertów{% endif %}</h2>{{ help(hk) }}</div>
   {% if flashes %}{% for m in get_flashed_messages(category_filter=['sekcja']) %}<p class="flash flash--success" role="status"><span aria-hidden="true">✔</span> {{ m }}</p>{% endfor %}{% endif %}
   {% if tv.messages %}
   <ol class="thread">

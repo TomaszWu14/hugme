@@ -1,4 +1,4 @@
-{% from "_macros.html" import csrf, compact_nav, icon %}<!doctype html>
+{% from "_macros.html" import csrf, compact_nav, icon %}{% from "_podpowiedzi.html" import toggle as hints_toggle, tour %}<!doctype html>
 <html lang="pl" class="{{ 'a11y-size' if pref_size }} {{ 'a11y-contrast' if pref_contrast }}">
 <head>
   <meta charset="utf-8">
@@ -7,6 +7,8 @@
   <meta name="description" content="HugMe – platforma dla HubMi.pl. Łączy problemy mieszkańców Małopolski z rozwiązaniami, ludźmi i finansowaniem.">
   <link rel="icon" href="{{ url_for('static', filename='img/logo.svg') }}" type="image/svg+xml">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/hugme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/podpowiedzi.css') }}">
+  <script src="{{ url_for('static', filename='js/podpowiedzi.js') }}" defer></script>
   <link rel="stylesheet" href="{{ url_for('public.area_css') }}">
 </head>
 <body>
@@ -35,6 +37,7 @@
         {{ csrf() }}<input type="hidden" name="pref" value="kontrast"><input type="hidden" name="next" value="{{ request.full_path }}">
         <button type="submit" class="btn btn--small btn--ghost" aria-pressed="{{ 'true' if pref_contrast else 'false' }}"><span aria-hidden="true">◑</span> Wysoki kontrast</button>
       </form>
+      {{ hints_toggle() }}
       {% if g.user %}
       <form method="post" action="{{ url_for('auth.logout') }}">
         {{ csrf() }}<button type="submit" class="btn btn--small btn--ghost">Wyloguj</button>
@@ -80,6 +83,7 @@
 </header>
 
 <main id="tresc" tabindex="-1" class="wrap {% block main_class %}{% endblock %}">
+  {{ tour() }}
   {% with msgs = get_flashed_messages(with_categories=true) %}
   {% if msgs|rejectattr(0, 'equalto', 'sekcja')|first %}
   <div class="flashes">
