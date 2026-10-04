@@ -7,3 +7,6 @@ graphify-out/
 .pytest_cache/
 .idea/workspace.xml
 scripts/.cache/
+
+# materiały demo: wyniki budowania (finalne kopie są w docs/)
+demo/out/

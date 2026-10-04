@@ -7,7 +7,7 @@
 Prototyp platformy dla **Małopolskiego Hubu Innowacji Społecznych** (Regionalny Ośrodek Polityki Społecznej
 w Krakowie), przygotowany na **HackYeah 2026**, zadanie **HubMi.pl**.
 
-**Zobacz:** [działające demo – hugme.twapp.pl](https://hugme.twapp.pl) · [film (MP4, do 3 min)](docs/film/hugme-przeklikanie.mp4) ·
+**Zobacz:** [działające demo – hugme.twapp.pl](https://hugme.twapp.pl) · [film: 2 scenariusze w 1:15 (MP4)](docs/film/hugme-scenariusze.mp4) ·
 [prezentacja PDF](docs/HugMe_prezentacja.pdf) · [opisy zgłoszenia](docs/HACKTRIBE.md).
 
 **Najprościej: wejdź na [/demo](https://hugme.twapp.pl/demo) i wybierz scenariusz – pasek na górze poprowadzi Cię
@@ -133,7 +133,7 @@ repozytorium (build z `Dockerfile`), ustawić `SECRET_KEY` i opcjonalnie `ANTHRO
 **Najprościej: wejdź na [/demo](https://hugme.twapp.pl/demo) i wybierz scenariusz – pasek na górze poprowadzi Cię krok
 po kroku (ok. 1,5 min każdy).** Kroki obu scenariuszy są opisane wyżej, pod „Zobacz”. Poniżej dłuższa ścieżka ręczna –
 to także ściąga do pokazu na żywo. Plan B bez internetu: aplikacja lokalnie (`flask --app app:create_app run`, fonty
-i style są w repo, bez CDN), `/demo` działa tak samo; plan C: [film](docs/film/hugme-przeklikanie.mp4).
+i style są w repo, bez CDN), `/demo` działa tak samo; plan C: [film](docs/film/hugme-scenariusze.mp4) (dłuższy przegląd: [hugme-przeklikanie.mp4](docs/film/hugme-przeklikanie.mp4)).
 
 1. **Start, gość.** Menu z nazwami modułów z briefu, na starcie przyciski „Zobacz demo w 1,5 minuty”, niżej kafle
    „7 modułów HubMi”. Pole „Co jest trudne? Kogo to dotyczy?” ma już wpisany przykład o wizytach u wielu specjalistów.
