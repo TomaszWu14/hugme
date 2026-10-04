@@ -307,3 +307,11 @@ def test_family_requests_only_from_resident_account(client):
     assert r.status_code == 403
     html = client.get("/razem/wytchnienie").get_data(as_text=True)
     assert "zmień konto" in html and 'name="body"' not in html.split("zmień konto")[0][-200:] or "Wyślij prośbę" not in html
+
+
+def test_module_nav_has_five_items_and_more(client):
+    html = client.get("/razem").get_data(as_text=True)
+    nav = html[html.index('aria-label="Moduł Razem z ZD"'):html.index("</nav>", html.index('aria-label="Moduł Razem z ZD"'))]
+    desktop = nav[nav.index('class="nav nav-d'):]
+    assert desktop[:desktop.index("</ul>")].count("<li>") == 5
+    assert "Więcej" in nav and 'href="/razem/prawa"' in nav and 'class="btn btn--small" href="/razem/moje-sprawy"' in nav

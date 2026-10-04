@@ -22,6 +22,8 @@ def test_broker_rule_card_without_ai(client, app):
 def test_broker_validation_and_guest(client):
     token = csrf_of(client, "/posrednik")
     assert "/konto" in client.post("/posrednik", data={"_csrf": token, **CTX}).headers["Location"]
+    # Gość z innowacji po wyborze konta wraca do formularza z tą samą inspiracją.
+    assert "inspiracja%3D1" in client.post("/posrednik?inspiracja=1", data={"_csrf": token, **CTX}).headers["Location"]
     token = login(client, "ngo")
     resp = client.post("/posrednik", data={"_csrf": token, **CTX, "scale": "ogromna", "problem": "x"})
     assert resp.status_code == 422 and "error-summary" in resp.get_data(as_text=True)
@@ -86,3 +88,28 @@ def test_api_innovations_and_filters(client):
 def test_static_pages(client):
     assert "WCAG 2.1" in client.get("/dostepnosc").get_data(as_text=True)
     assert "PESEL" in client.get("/prywatnosc").get_data(as_text=True)
+
+
+def test_broker_defaults_by_role_and_inspiration(client, app):
+    login(client, "gmina")
+    html = client.get("/posrednik").get_data(as_text=True)
+    assert 'value="gmina" id="f-institution" checked' in html
+    assert '<option value="srednia" selected' in html and '<option value="maly" selected' in html
+    with app.app_context():
+        title = db.one("SELECT title FROM innovations WHERE id = 1")["title"]
+    html = client.get("/posrednik?inspiracja=1").get_data(as_text=True)
+    assert f"Chcemy wdrożyć u nas: {title}." in html and "Na podstawie:" in html
+    assert 'data-czekaj="' in html and "Odpowiedź może potrwać do 30 sekund." in html
+    for bad in ("999", "abc"):
+        resp = client.get(f"/posrednik?inspiracja={bad}")
+        assert resp.status_code == 200 and "Na podstawie:" not in resp.get_data(as_text=True)
+    login(client, "ngo")
+    assert 'value="ngo"  checked' in client.get("/posrednik").get_data(as_text=True)
+
+
+def test_broker_card_print_button_and_inspiration_cards(client):
+    token = login(client, "gmina")
+    html = client.get(client.post("/posrednik", data={"_csrf": token, **CTX}).headers["Location"]).get_data(as_text=True)
+    assert "data-druk" in html and "js/druk.js" in html and "Ctrl" not in html
+    assert '<div class="no-print" hidden>' in html  # bez JS przycisk nic nie robi – pokazuje go dopiero druk.js
+    assert 'class="card card--thread' in html and "Prowadzi:" in html

@@ -8,7 +8,7 @@
   {% if reports %}
   <ul class="list-plain">
     {% for r in reports %}
-    <li><a href="/zgloszenie/{{ r.id }}">{{ r.body|truncate(100) }}</a><br>
+    <li>{% if r.hub_replied %}<span class="badge badge--pilot">Nowa odpowiedź Hubu</span> {% endif %}<a href="/zgloszenie/{{ r.id }}{{ '#watek' if r.hub_replied }}">{{ r.body|truncate(100) }}</a><br>
       <span class="meta">{{ status(r.status) }} {{ area_tag(r.area) }} <span>{{ r.created_at|date }}</span></span></li>
     {% endfor %}
   </ul>

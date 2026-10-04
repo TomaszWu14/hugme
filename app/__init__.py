@@ -116,7 +116,15 @@ def _security(app):
         return resp
 
 
+def plural(n, one, few, many):
+    """Polska odmiana po liczbie: 1 wątek, 2–4 wątki (ale 12–14 wątków), 0 i 5+ wątków."""
+    if n == 1:
+        return one
+    return few if n % 10 in (2, 3, 4) and n % 100 not in (12, 13, 14) else many
+
+
 def _template_globals(app):
+    app.jinja_env.filters["plural"] = plural
     app.jinja_env.filters["pairs"] = lambda xs: [(x, x) for x in xs]
     app.jinja_env.filters["date"] = lambda s: f"{s[8:10]}.{s[5:7]}.{s[:4]}" if s else ""
     app.jinja_env.globals.update(

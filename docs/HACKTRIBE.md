@@ -32,7 +32,7 @@ i **luki** – problemy bez dobrego rozwiązania, czyli gotowe tematy nowych kon
   „Strona dla mnie” w tekście łatwym do czytania, program „Jestem potrzebny” (osoby z ZD pomagają innym)
   i mapa prawdziwych miejsc pracy ze źródłami.
 - Prywatność: dane osobowe są maskowane przed zapisem i przed AI, wizyty zostają tylko w telefonie.
-- Jakość: 211 testów automatycznych, audyt dostępności w CI, automatyczne wdrożenie po zielonych testach.
+- Jakość: 212 testów automatycznych, audyt dostępności w CI, automatyczne wdrożenie po zielonych testach.
 
 **Cel:** pilotaż w 2–3 powiatach w obszarze rodzin osób z zespołem Downa – import prawdziwej Biblioteki Innowacji
 ROPS (działa już z panelu), logowanie przez login.gov.pl, koordynator Hubu odpowiadający w ciągu 3 dni roboczych

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% from "_macros.html" import csrf, field, example, area_tag %}
-{% from "_cards.html" import thread_block %}
+{% from "_cards.html" import thread_block, ocen, avg5, as_role %}
 {% block title %}{{ i.title }}{% endblock %}
 {% block content %}
 <p><a href="/biblioteka">← Biblioteka innowacji</a></p>
@@ -8,12 +8,21 @@
   <h1>{{ i.title }}</h1>
   <p class="meta">{{ area_tag(i.area) }} <span>Powiat: {{ i.powiat }}</span> <span>Etap: {{ i.stage }}</span>
     <span>Dla kogo: {{ i.audience }}</span> {% if i.is_example %}{{ example() }}{% endif %}</p>
+  <div class="actions">
+    <a class="btn btn--primary" href="#watek">Zadaj pytanie</a>
+    <a class="btn" href="#tester">Testuj i oceń</a>
+    <a class="btn" href="/posrednik?inspiracja={{ i.id }}">Dopasuj do mojej gminy</a>
+    {% if g.user and g.user.role == 'admin' %}<a class="btn btn--ghost" href="/admin/biblioteka/{{ i.id }}">Edytuj w panelu</a>{% endif %}
+  </div>
   <p class="lead">{{ i.summary }}</p>
   <p>{{ i.description }}</p>
   <p><strong>Prowadzi:</strong> {{ i.org }}</p>
-  {% if rating.n %}<p><strong>Ocena testujących:</strong> {{ rating.avg }}/5 ({{ rating.n }})</p>{% endif %}
+  {% if rating.n %}<p><strong>Ocena testujących:</strong> {{ avg5(rating) }} ({{ ocen(rating.n) }})</p>{% endif %}
 </article>
 
+{{ thread_block(thread, flashes=not tester_ok) }}
+
+{% if video or (g.user and g.user.role == 'admin') %}
 <section aria-labelledby="film-h">
   <h2 id="film-h">Film</h2>
   {% if video %}
@@ -24,9 +33,11 @@
   <p class="meta">Film pojawi się po imporcie Biblioteki Innowacji ROPS (Hub dodaje go w panelu jednym polem).</p>
   {% endif %}
 </section>
+{% endif %}
 
 <section id="tester" aria-labelledby="tester-h">
   <h2 id="tester-h">Tester innowacji</h2>
+  {% if tester_ok %}{% for m in get_flashed_messages(category_filter=['sekcja']) %}<p class="flash flash--success" role="status"><span aria-hidden="true">✔</span> {{ m }}</p>{% endfor %}{% endif %}
   <p>Wypróbuj ten pomysł u siebie, oceń go albo zaproponuj poprawkę. Każda akcja trafia do Hubu.</p>
   {% if g.user %}
   <div class="grid">
@@ -35,41 +46,53 @@
       <h3>Chcę przetestować</h3>
       <div class="field"><label for="f-test">Gdzie i kiedy chcesz testować?</label>
         <p class="hint" id="h-test">w 3 sołectwach gminy od stycznia, razem z OPS</p>
-        <textarea id="f-test" name="tresc" rows="3" required aria-describedby="h-test"></textarea></div>
+        <textarea id="f-test" name="tresc" rows="3" required minlength="10" aria-describedby="h-test"></textarea></div>
       <button type="submit" class="btn btn--primary">Zgłoś do testu</button>
     </form>
     <form method="post" action="/biblioteka/{{ i.id }}/test" class="card">
       {{ csrf() }}<input type="hidden" name="kind" value="ocena">
-      <fieldset>
-        <legend>Twoja ocena (1 – słabo, 5 – świetnie)</legend>
-        {% for n in range(1, 6) %}
-        <label class="choice"><input type="radio" name="rating" value="{{ n }}" {% if n == 5 %}required{% endif %}> {{ n }} {{ '★' * n }}<span class="sr-only"> na 5</span></label>
-        {% endfor %}
-      </fieldset>
+      <h3>Oceń jednym kliknięciem</h3>
       <div class="field"><label for="f-ocena-tresc">Komentarz <span class="optional">(nieobowiązkowe)</span></label>
         <p class="hint" id="h-ocena-tresc">„Działa, ale potrzeba etatu w CUS”</p>
         <textarea id="f-ocena-tresc" name="tresc" rows="2" aria-describedby="h-ocena-tresc"></textarea></div>
-      <button type="submit" class="btn btn--primary">Oceń</button>
+      <fieldset>
+        <legend>Twoja ocena (1 – słabo, 5 – świetnie)</legend>
+        <div class="actions">{% for n in range(1, 6) %}<button type="submit" name="rating" value="{{ n }}" class="btn btn--small" aria-label="Oceń na {{ n }} z 5">★ {{ n }}</button>{% endfor %}</div>
+      </fieldset>
+      <p class="meta">Jedna ocena na osobę – nowa zastępuje poprzednią.</p>
     </form>
     <form method="post" action="/biblioteka/{{ i.id }}/test" class="card">
       {{ csrf() }}<input type="hidden" name="kind" value="usprawnienie">
       <h3>Mam pomysł na usprawnienie</h3>
       <div class="field"><label for="f-usp">Co można poprawić?</label>
         <p class="hint" id="h-usp">dodać dowóz uczestników z okolicznych wsi</p>
-        <textarea id="f-usp" name="tresc" rows="3" required aria-describedby="h-usp"></textarea></div>
+        <textarea id="f-usp" name="tresc" rows="3" required minlength="10" aria-describedby="h-usp"></textarea></div>
       <button type="submit" class="btn btn--primary">Wyślij propozycję</button>
     </form>
   </div>
   {% else %}
-  <p><a class="btn btn--primary" href="/konto?next={{ request.path }}">Wybierz konto, żeby testować i oceniać</a></p>
+  {% if rating.n %}<p>Średnia ocen testujących: <strong>{{ avg5(rating) }}</strong> ({{ ocen(rating.n) }}).</p>
+  {% else %}<p>Nikt jeszcze nie ocenił tej innowacji – możesz być pierwszą osobą.</p>{% endif %}
+  <ol class="steps">
+    <li><strong>Wypróbuj</strong> – zgłoś się do testu w swojej gminie albo organizacji.</li>
+    <li><strong>Oceń 1–5</strong> – jednym kliknięciem gwiazdki.</li>
+    <li><strong>Zaproponuj poprawkę</strong> – Hub przekaże ją autorom.</li>
+  </ol>
+  {% if config.DEMO_MODE %}
+  <p>Wybierz konto demo jednym kliknięciem – wrócisz tutaj i od razu ocenisz.</p>
+  <div class="actions">
+    {{ as_role(1, request.path ~ '#tester', 'Testuj jako mieszkanka (demo)') }}
+    {{ as_role(2, request.path ~ '#tester', 'Testuj jako organizacja (demo)') }}
+  </div>
+  {% else %}
+  <p><a class="btn btn--primary" href="/konto?next={{ (request.path ~ '#tester')|urlencode }}">Wybierz konto, żeby testować i oceniać</a></p>
+  {% endif %}
   {% endif %}
   {% if tests %}
   <h3>Głosy testujących</h3>
   <ul class="list-plain">
-    {% for t in tests %}<li><strong>{{ kinds[t.kind] }}</strong>{% if t.rating %}: {{ t.rating }}/5{% endif %} – {{ t.name.split(' – ')[0] }} {{ example() }}{% if t.body %}<br>{{ t.body }}{% endif %}</li>{% endfor %}
+    {% for t in tests %}<li><strong>{{ kinds[t.kind] }}</strong>{% if t.rating %}: {{ t.rating }} na 5{% endif %} – {{ t.name.split(' – ')[0] }} {{ example() }}{% if t.body %}<br>{{ t.body }}{% endif %}</li>{% endfor %}
   </ul>
   {% endif %}
 </section>
-
-{{ thread_block(thread) }}
 {% endblock %}

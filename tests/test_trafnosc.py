@@ -1,6 +1,6 @@
 """Test trafności matchmakingu: opis problemu → oczekiwana innowacja w top 3.
 Metryka: odsetek trafień w top 3 (hit@3). Próg zaliczenia: >= 80%."""
-from core.match import Index, detect_area, innovation_text
+from core.match import Index, Result, detect_area, innovation_text
 from data.seed_data import INNOVATIONS
 
 FIELDS = ("title", "summary", "description", "area", "powiat", "stage", "audience", "org", "keywords")
@@ -31,6 +31,22 @@ CASES = [
     ("Chcemy, żeby gmina, fundacje i firmy zaczęły razem współpracować przy usługach społecznych.",
      {"Gminne Laboratorium Innowacji", "Inkubator Partnerstw dla NGO"}),
 ]
+
+# Zdania z audytu jury (T-1, J3-10): potoczny język mieszkańca, bez słów ze słownika.
+SENIORKA = {"Telefon Życzliwości", "Dzienny Dom Seniora w remizie"}
+AUDIT_CASES = [
+    ("Moja mama ma 82 lata i mieszka sama na wsi, prawie z nikim nie rozmawia", SENIORKA),
+    ("Babcia mieszka sama na wsi i jest jej smutno", SENIORKA),
+    ("Depresja u nastolatków w małej gminie, brak psychologa",
+     {"Przyjaciel na Ławce", "Szkolny Punkt Pierwszego Kontaktu"}),
+    ("Mój syn ma 22 lata i zespół Downa, szukamy pierwszej pracy", {"Kawiarnia Treningowa „Po Szkole”"}),
+    ("W gminie brakuje transportu do lekarza dla osób z niepełnosprawnością", {"Bus na Telefon"}),
+]
+CASES += AUDIT_CASES
+
+
+def top3(query):
+    return [DOCS[r.doc_id]["title"] for r in INDEX.search(query, k=3)]
 
 
 def test_hit_at_3_at_least_80_percent():
@@ -64,3 +80,49 @@ def test_unrelated_text_is_a_gap():
 def test_detect_area():
     assert detect_area(CASES[0][0]) == "rodziny-zd"
     assert detect_area(CASES[5][0]) in {"wies", "seniorzy"}
+
+
+def test_every_audit_sentence_hits_top_3():
+    misses = [(q, top3(q)) for q, expected in AUDIT_CASES if not expected & set(top3(q))]
+    assert not misses
+
+
+def test_teen_depression_shows_both_youth_innovations():
+    assert {"Przyjaciel na Ławce", "Szkolny Punkt Pierwszego Kontaktu"} <= set(top3(AUDIT_CASES[2][0]))
+
+
+def test_lonely_mother_from_jury_gets_loneliness_not_transport():
+    q = ("Moja mama ma 82 lata i mieszka sama na wsi pod Limanową. Od śmierci taty prawie z nikim nie rozmawia, "
+         "dzieci są daleko, a sąsiedzi rzadko zaglądają.")
+    results = INDEX.search(q, k=3)
+    assert "Telefon Życzliwości" in [DOCS[r.doc_id]["title"] for r in results]
+    assert all("dojazd i transport" not in r.topics for r in results)
+
+
+def test_explanation_skips_common_words():
+    q = ("W naszej małej gminie coraz więcej nastolatków ma depresję. Psycholog bywa w szkole raz w tygodniu. "
+         "Mój syn skończył szkołę i szuka pierwszej pracy.")
+    shown = {w for r in INDEX.search(q, k=5) for w in r.words}
+    assert not shown & {"gminie", "raz", "tygodniu", "pierwszej", "przed"}
+
+
+def test_church_roof_has_no_good_match():
+    results = INDEX.search("Dach zabytkowego kościoła przecieka", k=5)
+    assert all(r.label == "Słabe dopasowanie" for r in results)
+
+
+def test_same_percent_gives_same_label():
+    by_percent = {}
+    for s in (0.345, 0.349, 0.35, 0.354, 0.445, 0.449, 0.45, 0.595, 0.599, 0.6):
+        r = Result(0, s)
+        by_percent.setdefault(r.percent, set()).add(r.label)
+    assert all(len(labels) == 1 for labels in by_percent.values()), by_percent
+    assert Result(0, 0.349).label == "Może pasować"
+
+
+def test_score_threshold_agrees_with_label():
+    # Szablony i luki porównują score z progiem 0,35 – wynik musi być już zaokrąglony do pokazywanego %.
+    for q, _ in CASES:
+        for r in INDEX.search(q, k=10):
+            assert r.score == r.percent / 100
+            assert (r.score >= 0.35) == (r.label != "Słabe dopasowanie")

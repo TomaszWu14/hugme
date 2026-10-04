@@ -77,7 +77,9 @@ def post_message(stype, sid):
         notify.notify_admins(f"Nowa wiadomość w wątku: {label[:60]}", link, exclude=g.user["id"])
     if stype != "zgloszenie" and g.user["role"] != "ekspert" and subject["area"]:
         notify.notify_experts(subject["area"], f"Pytanie do ekspertów: {label[:60]}", link, exclude=g.user["id"])
-    flash("Wiadomość wysłana." + (" Ukryliśmy dane osobowe, które się w niej znalazły." if found else ""), "success")
+    nxt = ("" if g.user["role"] in ("admin", "ekspert")
+           else " Odpowie Hub albo ekspert, zwykle w ciągu 3 dni roboczych – zobaczysz to w Powiadomieniach.")
+    flash("Wiadomość wysłana." + nxt + (" Ukryliśmy dane osobowe, które się w niej znalazły." if found else ""), "sekcja")
     return redirect(link)
 
 

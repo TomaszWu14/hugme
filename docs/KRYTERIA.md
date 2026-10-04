@@ -32,7 +32,7 @@ statystyki GUS/PFRON, „Poznaj ZD” dla pracodawców i instytucji.
 - **Koszt**: ok. 75 zł miesięcznie technologii z AI, a bez AI pełna funkcjonalność ([KOSZTY](KOSZTY.md)).
 - **Skalowalność i elastyczność**: dowolne obszary i powiaty (konfiguracja w `core/domain.py`), słownik pojęć
   edytowalny bez programowania, import Biblioteki ROPS, API JSON dla bazy grantowej.
-- **Gotowość**: Docker + Coolify, healthcheck, 211 testów automatycznych, audyt dostępności w CI (blokuje scalenie zmian).
+- **Gotowość**: Docker + Coolify, healthcheck, 212 testów automatycznych, audyt dostępności w CI (blokuje scalenie zmian).
 - **Ścieżka do produkcji**: login.gov.pl, RODO, DPIA opisane w [ARCHITEKTURA](ARCHITEKTURA.md) i [DANE](DANE.md).
 
 ## Dostępność i intuicyjność (20%)

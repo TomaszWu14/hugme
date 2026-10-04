@@ -11,7 +11,10 @@
   <ul>{% for k, msg in errors.items() %}<li><a href="#f-{{ k }}">{{ msg }}</a></li>{% endfor %}</ul>
 </div>
 {% endif %}
-<form method="post" class="card" novalidate>
+{% if inspiration %}
+<p class="notice">Na podstawie: <a href="/biblioteka/{{ inspiration.id }}">{{ inspiration.title }}</a>. Opis wypełniliśmy za Ciebie – dopasuj go do swojej gminy.</p>
+{% endif %}
+<form method="post" class="card" novalidate data-czekaj="Przygotowuję kartę usługi… to może potrwać do pół minuty">
   {{ csrf() }}
   <fieldset {% if errors.institution %}aria-describedby="e-institution"{% endif %}>
     <legend>Kim jesteś?</legend>
@@ -28,7 +31,8 @@
   {{ field('powiat', 'Powiat', options=powiaty|pairs, value=ctx.powiat, error=errors.powiat, hint='dąbrowski') }}
   {{ field('problem', 'Jaki problem chcesz rozwiązać?', rows=3, value=ctx.problem, error=errors.problem, required=true,
            hint='starsi mieszkańcy pięciu sołectw nie mają jak dojechać do przychodni') }}
-  <button type="submit" class="btn btn--primary btn--large">Przygotuj kartę usługi</button>
+  <button type="submit" class="btn btn--primary btn--large" aria-describedby="h-czas">Przygotuj kartę usługi</button>
+  <p class="hint hint--plain" id="h-czas">Odpowiedź może potrwać do 30 sekund.</p>
   {% if not g.user %}<p class="meta">Przed utworzeniem karty wybierzesz konto demo.</p>{% endif %}
 </form>
 {% if mine %}

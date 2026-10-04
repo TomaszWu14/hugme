@@ -1,17 +1,24 @@
 {% from "_macros.html" import csrf, icon, compact_nav %}
 
 {% macro module_nav() -%}
-{% set items = [] %}
-{% for href, text in [('/razem', 'Plan rodziny'), ('/razem/wizyty', 'Wizyty'), ('/razem/prawa', 'Prawa'),
-                      ('/razem/przewodnik', 'Rodzic-przewodnik'), ('/razem/wytchnienie', 'Wytchnienie'),
-                      ('/razem/miejsca', 'Przyjazne miejsca'), ('/razem/wydarzenia', 'Wydarzenia'),
-                      ('/razem/jestem-potrzebny', 'Jestem potrzebny'), ('/razem/praca', 'Praca'),
-                      ('/razem/moje-sprawy', 'Strona dla mnie (łatwy tekst)')] %}
+{# J1A-08: 5 głównych pozycji, reszta pod „Więcej”, łatwy tekst jako przycisk przy nazwie modułu. #}
+{% set items, more = [], [] %}
+{% for href, text in [('/razem', 'Plan rodziny'), ('/razem/wizyty', 'Wizyty'), ('/razem/wytchnienie', 'Wytchnienie'),
+                      ('/razem/jestem-potrzebny', 'Jestem potrzebny'), ('/razem/praca', 'Praca')] %}
 {% set _ = items.append((href, text, request.path == href or (href != '/razem' and request.path.startswith(href)))) %}
 {% endfor %}
+{% for href, text in [('/razem/prawa', 'Prawa i świadczenia'), ('/razem/przewodnik', 'Rodzic-przewodnik'),
+                      ('/razem/miejsca', 'Przyjazne miejsca'), ('/razem/wydarzenia', 'Wydarzenia')] %}
+{% set _ = more.append((href, text, request.path.startswith(href))) %}
+{% endfor %}
 <nav aria-label="Moduł Razem z ZD" class="razem-nav no-print">
-  <p class="razem-nav__brand"><a href="/razem">{{ icon('serce') }} Razem z ZD</a> <span class="meta">– dla osób z zespołem Downa i ich rodzin</span></p>
+  <p class="razem-nav__brand"><a href="/razem">{{ icon('serce') }} Razem z ZD</a> <span class="meta">– dla osób z zespołem Downa i ich rodzin</span>
+    <a class="btn btn--small" href="/razem/moje-sprawy" {% if request.path.startswith('/razem/moje-sprawy') %}aria-current="page"{% endif %}>Strona dla mnie (łatwy tekst)</a></p>
   {{ compact_nav(items, 'Menu modułu') }}
+  <details {% if more|selectattr(2)|list %}open{% endif %}>
+    <summary>Więcej <span aria-hidden="true">▾</span></summary>
+    <ul class="nav nav--small">{% for href, text, cur in more %}<li><a href="{{ href }}" {% if cur %}aria-current="page"{% endif %}>{{ text }}</a></li>{% endfor %}</ul>
+  </details>
 </nav>
 {%- endmacro %}
 

@@ -3,31 +3,54 @@
 {% macro score_bar(score, label) -%}
 <p class="score"><span>{{ label }}</span>
   <span class="score__bar" aria-hidden="true"><span class="score__fill w-{{ (score * 10)|round|int }}"></span></span>
-  <span>trafność {{ (score * 100)|round|int }}%</span></p>
+  <span class="sr-only">trafność {{ (score * 100)|round|int }}%</span></p>
 {%- endmacro %}
 
 {% macro why(res) -%}
 {% if res and (res.words or res.topics) %}
-<p class="why"><strong>Dlaczego pasuje:</strong>
-  {% if res.words %}wspólne słowa: {% for w in res.words %}<mark>{{ w }}</mark>{{ ", " if not loop.last }}{% endfor %}{% endif %}{% if res.words and res.topics %}; {% endif %}
-  {% if res.topics %}wspólne tematy: {{ res.topics|join(", ") }}{% endif %}.</p>
+<p class="why"><strong>{{ 'Dlaczego pasuje:' if res.score >= 0.35 else 'Co łączy z Twoim opisem:' }}</strong>
+  {% if res.words %}wspólne słowa: {% for w in res.words[:4] %}<mark>{{ w }}</mark>{{ ", " if not loop.last }}{% endfor %}{% endif %}
+  {%- if res.words and res.topics %}; {% endif %}
+  {%- if res.topics %}wspólne tematy: {{ res.topics|join(", ") }}{% endif %}.</p>
 {% endif %}
 {%- endmacro %}
 
-{% macro innovation_card(i, res=none, heading='h3') -%}
+{# Liczba ocen po polsku: 1 ocena, 2–4 oceny, 5+ ocen (12–14 ocen) #}
+{% macro ocen(n) -%}
+{{ n }} {{ 'ocena' if n == 1 else ('oceny' if n % 10 in (2, 3, 4) and n % 100 not in (12, 13, 14) else 'ocen') }}
+{%- endmacro %}
+
+{% macro avg5(r) -%}{{ ('%.1f'|format(r.avg)).replace('.', ',') }} na 5{%- endmacro %}
+
+{# Demo: wejście na konto jednym kliknięciem i powrót do sekcji (next z kotwicą) #}
+{% macro as_role(uid, next, label) -%}
+<form method="post" action="{{ url_for('auth.demo') }}" class="inline-form"><input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+  <input type="hidden" name="user_id" value="{{ uid }}"><input type="hidden" name="next" value="{{ next }}">
+  <button type="submit" class="btn btn--small">{{ label }}</button></form>
+{%- endmacro %}
+
+{% macro innovation_card(i, res=none, heading='h3', actions=false, rating=none) -%}
 <article class="card card--thread thread--{{ i.area }} match" aria-labelledby="inn-{{ i.id }}">
   <{{ heading }} id="inn-{{ i.id }}"><a href="/biblioteka/{{ i.id }}">{{ i.title }}</a></{{ heading }}>
-  <p class="meta">{{ area_tag(i.area) }} <span>Powiat: {{ i.powiat }}</span> <span>Etap: {{ i.stage }}</span> {% if i.is_example %}{{ example() }}{% endif %}</p>
+  <p class="meta">{{ area_tag(i.area) }} <span>Powiat: {{ i.powiat }}</span> <span>Etap: {{ i.stage }}</span> {% if i.is_example %}{{ example() }}{% endif %}
+    {% if rating and rating.n %}<span class="badge"><span aria-hidden="true">★</span><span class="sr-only">Ocena testujących:</span> {{ avg5(rating) }} · {{ ocen(rating.n) }}</span>{% endif %}</p>
   {% if res %}{{ score_bar(res.score, res.label) }}{% endif %}
   <p>{{ i.summary }}</p>
   {{ why(res) }}
   <p class="meta"><span>Prowadzi: {{ i.org }}</span></p>
+  {% if actions or res %}
+  <div class="actions">
+    <a class="btn btn--small" href="/biblioteka/{{ i.id }}#watek">Zapytaj autorów<span class="sr-only">: {{ i.title }}</span></a>
+    <a class="btn btn--small" href="/biblioteka/{{ i.id }}#tester">Testuj<span class="sr-only">: {{ i.title }}</span></a>
+  </div>
+  {% endif %}
 </article>
 {%- endmacro %}
 
-{% macro thread_block(tv, can_post=true) -%}
+{% macro thread_block(tv, can_post=true, flashes=true) -%}
 <section id="watek" aria-labelledby="watek-h" class="thread-section">
   <h2 id="watek-h">Rozmowa{% if tv.subject_type == 'zgloszenie' %} z Hubem{% else %} i pytania do ekspertów{% endif %}</h2>
+  {% if flashes %}{% for m in get_flashed_messages(category_filter=['sekcja']) %}<p class="flash flash--success" role="status"><span aria-hidden="true">✔</span> {{ m }}</p>{% endfor %}{% endif %}
   {% if tv.messages %}
   <ol class="thread">
     {% for m in tv.messages %}
@@ -52,8 +75,14 @@
     </div>
     <button type="submit" class="btn btn--primary">Wyślij</button>
   </form>
+  {% elif not g.user and config.DEMO_MODE %}
+  <p>Wybierz konto demo jednym kliknięciem – wrócisz tutaj i od razu napiszesz.</p>
+  <div class="actions">
+    {{ as_role(1, request.path ~ '#watek', 'Napisz jako mieszkanka (demo)') }}
+    {{ as_role(2, request.path ~ '#watek', 'Napisz jako organizacja (demo)') }}
+  </div>
   {% elif not g.user %}
-  <p><a href="/konto?next={{ request.path }}">Wybierz konto</a>, żeby napisać.</p>
+  <p><a class="btn" href="/konto?next={{ (request.path ~ '#watek')|urlencode }}">Wybierz konto, żeby napisać</a></p>
   {% endif %}
 </section>
 {%- endmacro %}

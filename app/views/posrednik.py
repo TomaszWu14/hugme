@@ -13,7 +13,7 @@ from core.privacy import mask
 
 bp = Blueprint("posrednik", __name__)
 
-INSTITUTIONS = {"gmina": "Gmina / urząd", "cus": "CUS / OPS", "ngo": "Organizacja pozarządowa", "szkola": "Szkoła / placówka"}
+INSTITUTIONS = {"gmina": "Gmina / urząd", "cus": "Ośrodek pomocy społecznej (OPS, CUS)", "ngo": "Organizacja pozarządowa", "szkola": "Szkoła / placówka"}
 SCALES = {"mala": "do 20 osób", "srednia": "20–100 osób", "duza": "100–500 osób", "bardzo-duza": "ponad 500 osób"}
 BUDGETS = {"brak": "bez budżetu – zasoby własne i wolontariat", "maly": "mały – drobne zakupy, kilka tysięcy",
            "sredni": "średni – kilkadziesiąt tysięcy, część etatu", "duzy": "duży – etaty i stała usługa"}
@@ -95,11 +95,20 @@ def ai_card(ctx, best):
 
 @bp.route("/posrednik", methods=["GET", "POST"])
 def form():
-    ctx = {"institution": "", "audience": "", "scale": "", "budget": "", "powiat": "", "problem": ""}
+    # Domyślne wartości skracają ścieżkę gminy: instytucja według roli, typowa skala i budżet.
+    role = g.user["role"] if g.user else ""
+    ctx = {"institution": {"gmina": "gmina", "ngo": "ngo"}.get(role, ""), "audience": "", "scale": "srednia",
+           "budget": "maly", "powiat": "", "problem": ""}
+    iid = request.args.get("inspiracja", type=int)
+    inspiration = db.one("SELECT id, title, summary, audience FROM innovations WHERE id = ?", (iid,)) if iid else None
+    if inspiration:
+        ctx["problem"] = f"Chcemy wdrożyć u nas: {inspiration['title']}. {inspiration['summary']}"
+        if inspiration["audience"] in AUDIENCES:
+            ctx["audience"] = inspiration["audience"]
     errors = {}
     if request.method == "POST":
         if g.user is None:
-            return redirect(url_for("auth.demo", next=url_for("posrednik.form")))
+            return redirect(url_for("auth.demo", next=url_for("posrednik.form", inspiracja=inspiration["id"] if inspiration else None)))
         ctx = {k: request.form.get(k, "").strip() for k in ctx}
         for key, allowed, msg in [("institution", INSTITUTIONS, "Wybierz typ instytucji."),
                                   ("audience", AUDIENCES, "Wybierz grupę odbiorców."),
@@ -124,7 +133,7 @@ def form():
             return redirect(url_for("posrednik.card", cid=cid))
     mine = db.query("SELECT id, context, created_at FROM broker_cards WHERE user_id = ? ORDER BY id DESC",
                     (g.user["id"],)) if g.user else []
-    return render_template("posrednik.html", ctx=ctx, errors=errors, institutions=INSTITUTIONS, scales=SCALES,
+    return render_template("posrednik.html", ctx=ctx, errors=errors, inspiration=inspiration, institutions=INSTITUTIONS, scales=SCALES,
                            budgets=BUDGETS, audiences=AUDIENCES, powiaty=POWIATY,
                            mine=[(m["id"], json.loads(m["context"]), m["created_at"]) for m in mine]), \
         (422 if errors else 200)
@@ -138,5 +147,10 @@ def card(cid):
         abort(404)
     if row["user_id"] != g.user["id"] and g.user["role"] != "admin":
         abort(403)
-    return render_template("karta.html", row=row, ctx=json.loads(row["context"]), card=json.loads(row["card"]),
+    card = json.loads(row["card"])
+    # Pełne wiersze innowacji dla makra innovation_card (w karcie zapisane są tylko id i tytuł).
+    ids = [i["id"] for i in card.get("_inspiracje", [])]
+    by_id = {r["id"]: r for r in db.query(f"SELECT * FROM innovations WHERE id IN ({','.join('?' * len(ids))})", ids)} if ids else {}
+    inspirations = [by_id[i] for i in ids if i in by_id]
+    return render_template("karta.html", row=row, ctx=json.loads(row["context"]), card=card, inspirations=inspirations,
                            keys=CARD_KEYS, labels=CARD_LABELS, institutions=INSTITUTIONS, scales=SCALES, budgets=BUDGETS)

@@ -69,3 +69,13 @@ def test_application_print_restricted(client, app):
     assert client.get(url).status_code == 403
     login(client, "admin")
     assert client.get(url).status_code == 200
+
+
+def test_idea_page_plain_language_canvas_grid_and_single_primary(client):
+    login(client, "ngo")
+    html = client.get("/pomysly/1").get_data(as_text=True)
+    assert "Plan pomysłu w 10 pytaniach" in html and "Kanwa Innowacji Społecznych" in html
+    assert '<progress id="kanwa-postep"' in html and "Co znaczą etapy?" in html
+    assert "Pomoc w napisaniu wniosku" in html and "(nabór)" in html
+    # J1B-12: przy kilku naborach „Przygotuj wniosek” jest konturem, nie ceglastym primary
+    assert 'class="btn btn--primary" href="/pomysly/1/wniosek/' not in html

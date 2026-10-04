@@ -3,26 +3,13 @@
 {% block title %}Twój problem nie zostaje sam{% endblock %}
 {% block main_class %}home{% endblock %}
 {% block content %}
-{% if config.DEMO_MODE and not g.user %}
 {% macro as_role(uid, next, label) -%}
 <form method="post" action="{{ url_for('auth.demo') }}" class="inline-form">{{ csrf() }}
   <input type="hidden" name="user_id" value="{{ uid }}"><input type="hidden" name="next" value="{{ next }}">
   <button type="submit" class="btn btn--small">{{ label }}</button></form>
 {%- endmacro %}
-<details class="notice demo-guide">
-  <summary>Oglądasz demo? Zobacz wszystko w 4 krokach (ok. 3 minuty)</summary>
-  <ol class="demo-guide__steps">
-    <li><strong>Opisz problem</strong> w polu poniżej – przykład już jest wpisany. Kliknij „Znajdź rozwiązania”.</li>
-    <li><strong>Hub Innowacji Społecznych</strong>: skrzynka zgłoszeń, trendy i luki. {{ as_role(5, '/admin', 'Wejdź jako koordynatorka Hubu') }}</li>
-    <li><strong>Gmina</strong>: karta usługi do wdrożenia u siebie. {{ as_role(3, '/posrednik', 'Wejdź jako gmina') }}</li>
-    <li><strong>Asystent pomysłów</strong>: miętowa ramka to AI, bez niej działa wersja regułowa. {{ as_role(2, '/pomysly/1', 'Wejdź jako organizacja') }}</li>
-  </ol>
-  <p class="meta">Konta demo nie mają haseł – rolę zmienisz też w pasku u góry. Demo odnawia się samo po 20 minutach bez nowych wpisów.</p>
-</details>
-{% endif %}
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero__text">
-    <p class="eyebrow">HugMe – platforma dla HubMi.pl</p>
     <h1 id="hero-title">Twój problem nie&nbsp;zostaje sam</h1>
     <p class="lead">Opisz, co jest trudne, własnymi słowami. Pokażemy, co już działa w Małopolsce,
       kto może pomóc i skąd wziąć pieniądze. Odpowie Ci też człowiek z Hubu Innowacji Społecznych.</p>
@@ -44,6 +31,20 @@
   </figure>
 </section>
 
+{% if config.DEMO_MODE and not g.user %}
+<details class="notice demo-guide">
+  <summary>Oglądasz demo? Przewodnik dla jury: 5 kroków, ok. 3 min</summary>
+  <ol class="demo-guide__steps">
+    <li><strong>Opisz problem</strong> w polu poniżej – przykład już jest wpisany. Kliknij „Znajdź rozwiązania”.</li>
+    <li><strong>Hub Innowacji Społecznych</strong>: skrzynka zgłoszeń, trendy i luki. {{ as_role(5, '/admin', 'Wejdź jako koordynatorka Hubu') }}</li>
+    <li><strong>Gmina</strong>: karta usługi do wdrożenia u siebie. {{ as_role(3, '/posrednik', 'Wejdź jako gmina') }}</li>
+    <li><strong>Asystent pomysłów</strong>: miętowa ramka to AI, bez niej działa wersja regułowa. {{ as_role(2, '/pomysly/1', 'Wejdź jako organizacja') }}</li>
+    <li><strong>Tester innowacji</strong>: przetestuj i oceń. {{ as_role(2, '/tester', 'Wejdź jako organizacja') }}</li>
+  </ol>
+  <p class="meta">Konta demo nie mają haseł – rolę zmienisz też w pasku u góry. Demo odnawia się samo po 20 minutach bez nowych wpisów.</p>
+</details>
+{% endif %}
+
 <section class="ask card card--raised" aria-labelledby="ask-title">
   <h2 id="ask-title">Co jest trudne? Kogo to dotyczy?</h2>
   {% if error %}
@@ -52,7 +53,7 @@
     <p><a href="#f-opis">{{ error }}</a></p>
   </div>
   {% endif %}
-  <form method="post" action="/szukaj" novalidate>
+  <form method="post" action="/szukaj" novalidate data-czekaj="Szukam rozwiązań… to może potrwać do pół minuty">
     {{ csrf() }}
     {{ field('opis', 'Opisz sytuację własnymi słowami', rows=5, required=true, value=example, error=error,
              hint='Przykład jest już wpisany – możesz go zmienić. Pisz o sytuacji grupy: „rodzice dzieci w naszej gminie…”.', plain_hint=true) }}
@@ -63,16 +64,24 @@
       <button type="submit" class="btn btn--primary btn--large">Znajdź rozwiązania</button>
       <span class="meta">Najpierw tylko szukamy. Zgłoszenie zapiszesz dopiero w następnym kroku – jeśli zechcesz.</span>
     </p>
+    <p class="hint hint--plain">Odpowiedź może potrwać do 30 sekund.</p>
   </form>
 </section>
 
-<section class="card card--thread thread--rodziny-zd home-razem" aria-labelledby="razem-title">
-  <div>
-    <p class="eyebrow">Obszar pilotażowy</p>
-    <h2 id="razem-title">Razem z ZD – dla osób z zespołem Downa i ich rodzin</h2>
-    <p>Plan na każdy etap życia, rodzic-przewodnik, chwila wytchnienia, strona w prostym języku – oraz program <a href="/razem/jestem-potrzebny">„Jestem potrzebny”</a>, w którym osoby z ZD pomagają innym, i <a href="/razem/praca">mapa miejsc pracy</a>.</p>
-  </div>
-  <p><a class="btn btn--primary" href="/razem">Otwórz „Razem z ZD”</a></p>
+<section aria-labelledby="mod-title" class="modules">
+  <h2 id="mod-title">7 modułów HubMi</h2>
+  <ul class="mod-grid">
+    <li><a class="mod" href="#ask-title"><span class="mod__name">Matchmaking społeczny</span><span class="mod__desc">opisz problem, dopasujemy pomoc</span></a></li>
+    <li><a class="mod" href="/wiedza"><span class="mod__name">Zasobnik wiedzy</span><span class="mod__desc">poradniki i dobre praktyki</span></a></li>
+    <li><a class="mod" href="/pomysly"><span class="mod__name">Kreator pomysłów</span><span class="mod__desc">od pomysłu do fiszki projektu</span></a></li>
+    <li><a class="mod" href="/tester"><span class="mod__name">Tester innowacji</span><span class="mod__desc">przetestuj i oceń rozwiązanie</span></a></li>
+    <li><a class="mod" href="/moje"><span class="mod__name">Platforma komunikacji</span><span class="mod__desc">rozmowy z Hubem i ekspertami</span></a></li>
+    <li>{% if config.DEMO_MODE and not (g.user and g.user.role == 'admin') %}<form method="post" action="{{ url_for('auth.demo') }}" class="mod-form">{{ csrf() }}
+      <input type="hidden" name="user_id" value="5"><input type="hidden" name="next" value="/admin">
+      <button type="submit" class="mod"><span class="mod__name">Panel administratora</span><span class="mod__desc">wejdź jako koordynatorka Hubu</span></button></form>
+      {%- else %}<a class="mod" href="/admin"><span class="mod__name">Panel administratora</span><span class="mod__desc">skrzynka, trendy i luki Hubu</span></a>{% endif %}</li>
+    <li><a class="mod" href="/posrednik"><span class="mod__name">Pośrednik innowacji</span><span class="mod__desc">gotowe usługi dla gmin</span></a></li>
+  </ul>
 </section>
 
 <section aria-labelledby="how-title" class="how">
@@ -82,6 +91,15 @@
     <li><strong>Widzisz</strong>, co już działa: sprawdzone pomysły, podobne zgłoszenia, ekspertów i poradniki.</li>
     <li><strong>Zapisujesz</strong> zgłoszenie, a Hub ROPS odpisuje i łączy Cię z ludźmi.</li>
   </ol>
+</section>
+
+<section class="card card--thread thread--rodziny-zd home-razem" aria-labelledby="razem-title">
+  <div>
+    <p class="eyebrow">Obszar pilotażowy</p>
+    <h2 id="razem-title">Razem z ZD – dla osób z zespołem Downa i ich rodzin</h2>
+    <p>Plan na każdy etap życia, rodzic-przewodnik, chwila wytchnienia, strona w prostym języku – oraz program <a href="/razem/jestem-potrzebny">„Jestem potrzebny”</a>, w którym osoby z ZD pomagają innym, i <a href="/razem/praca">mapa miejsc pracy</a>.</p>
+  </div>
+  <p><a class="btn btn--primary" href="/razem">Otwórz „Razem z ZD”</a></p>
 </section>
 
 <section aria-labelledby="areas-title">

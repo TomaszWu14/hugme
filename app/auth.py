@@ -11,6 +11,9 @@ bp = Blueprint("auth", __name__)
 
 PREF_COOKIES = {"duzy-tekst": "a11y_size", "kontrast": "a11y_contrast"}
 
+# Gdzie trafia osoba po wyborze konta demo, gdy nie przyszła z konkretnej strony (pozostałe role: start).
+ROLE_HOME = {"admin": "/admin", "gmina": "/posrednik", "ekspert": "/ekspert"}
+
 
 def init(app):
     @app.before_request
@@ -31,8 +34,13 @@ def init(app):
 
 
 def safe_next(target, default="/"):
-    """Przekierowanie tylko w obrębie serwisu (chroni przed open redirect)."""
-    if target and target.startswith("/") and not target.startswith("//"):
+    """Przekierowanie tylko w obrębie serwisu (chroni przed open redirect).
+
+    Wolno: ścieżkę od pojedynczego „/”, z zapytaniem i fragmentem (/biblioteka/1#watek).
+    Nie wolno: „//host”, schematu, ukośnika wstecznego ani znaków sterujących – przeglądarka
+    zamienia „/\\host” i „/<tab>/host” na adres innej domeny."""
+    if (target and target.startswith("/") and not target.startswith("//")
+            and not any(c == "\\" or ord(c) < 32 or ord(c) == 127 for c in target)):
         return target
     return default
 
@@ -63,7 +71,7 @@ def role_required(*roles):
 def demo():
     if request.method == "POST":
         uid = request.form.get("user_id", type=int)
-        user = db.one("SELECT id, is_active FROM users WHERE id = ?", (uid,)) if uid else None
+        user = db.one("SELECT id, is_active, role FROM users WHERE id = ?", (uid,)) if uid else None
         if uid and user is None:
             abort(400)
         if user and not user["is_active"]:
@@ -74,7 +82,8 @@ def demo():
         session.update(kept)
         if user:
             session["uid"] = user["id"]
-        return redirect(safe_next(request.form.get("next"), url_for("public.home")))
+        home = ROLE_HOME.get(user["role"] if user else None, url_for("public.home"))
+        return redirect(safe_next(request.form.get("next"), home))
     return render_template("konto.html", next=safe_next(request.args.get("next"), ""))
 
 

@@ -19,7 +19,7 @@
   <p class="meta">Skopiuj to, co Ci pasuje, do pól poniżej.</p>
 {% endcall %}
 {% endif %}
-<form method="post" class="card" novalidate>
+<form method="post" class="card" novalidate {% if ai_enabled %}data-czekaj="Chwila… z AI to może potrwać do pół minuty"{% endif %}>
   {{ csrf() }}
   <fieldset>
     <legend>Pola wniosku</legend>
@@ -37,5 +37,6 @@
     {% if ai_enabled %}<button type="submit" name="akcja" value="ai" class="btn btn--ai"><span aria-hidden="true">✦</span> Podpowiedz opisy (AI)</button> {{ ai_note() }}{% endif %}
     <button type="submit" name="akcja" value="zloz" class="btn btn--primary">Złóż wniosek</button>
   </div>
+  {% if ai_enabled %}<p class="hint hint--plain">Odpowiedź może potrwać do 30 sekund.</p>{% endif %}
 </form>
 {% endblock %}

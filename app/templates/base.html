@@ -1,4 +1,4 @@
-{% from "_macros.html" import csrf, compact_nav %}<!doctype html>
+{% from "_macros.html" import csrf, compact_nav, icon %}<!doctype html>
 <html lang="pl" class="{{ 'a11y-size' if pref_size }} {{ 'a11y-contrast' if pref_contrast }}">
 <head>
   <meta charset="utf-8">
@@ -17,19 +17,19 @@
     <form method="post" action="{{ url_for('auth.demo') }}" class="role-switch">
       {{ csrf() }}
       <input type="hidden" name="next" value="{{ request.path }}">
-      <label for="role-switch">Tryb demo – <span class="sr-only-sm">oglądasz </span>jako:</label>
+      <label for="role-switch" class="sr-only-sm">Tryb demo – jako:</label>
       <select id="role-switch" name="user_id">
-        {% if not g.user %}<option value="">gość (niezalogowany)</option>{% endif %}
+        {% if not g.user %}<option value="">Gość</option>{% endif %}
         {% for u in demo_users %}
         <option value="{{ u.id }}" {% if g.user and g.user.id == u.id %}selected{% endif %}>{{ ROLES[u.role] }} – {{ u.name.split(' – ')[0] }}</option>
         {% endfor %}
       </select>
-      <button type="submit" class="btn btn--small">Zmień</button>
+      <button type="submit" class="btn btn--small">Przełącz konto</button>
     </form>
     <div class="prefs">
       <form method="post" action="{{ url_for('auth.toggle_pref') }}">
         {{ csrf() }}<input type="hidden" name="pref" value="duzy-tekst"><input type="hidden" name="next" value="{{ request.full_path }}">
-        <button type="submit" class="btn btn--small btn--ghost" aria-pressed="{{ 'true' if pref_size else 'false' }}">A+ <span class="sr-only-sm">większy tekst</span></button>
+        <button type="submit" class="btn btn--small btn--ghost" aria-pressed="{{ 'true' if pref_size else 'false' }}">A+ większy tekst</button>
       </form>
       <form method="post" action="{{ url_for('auth.toggle_pref') }}">
         {{ csrf() }}<input type="hidden" name="pref" value="kontrast"><input type="hidden" name="next" value="{{ request.full_path }}">
@@ -51,33 +51,40 @@
       <span class="brand__name">HugMe</span>
       <span class="brand__sub">platforma dla HubMi.pl</span>
     </a>
+    {# Moduły z briefu HubMi w kolejności zadania; pilotaż „Razem z ZD” zawsze na końcu, oddzielony (CSS: a[href="/razem"]) #}
     {% set nav = [
       ('/', 'Szukaj pomocy'),
-      ('/razem', 'Razem z ZD'),
-      ('/wiedza', 'Wiedza'),
+      ('/wiedza', 'Zasobnik wiedzy'),
       ('/biblioteka', 'Biblioteka innowacji'),
-      ('/pomysly', 'Pomysły'),
-      ('/posrednik', 'Pośrednik'),
+      ('/tester', 'Tester innowacji'),
+      ('/pomysly', 'Kreator pomysłów'),
+      ('/posrednik', 'Pośrednik innowacji'),
     ] %}
     {% if g.user %}
       {% set _ = nav.append(('/moje', 'Moje sprawy')) %}
-      {% set _ = nav.append(('/powiadomienia', 'Powiadomienia')) %}
       {% if g.user.role == 'ekspert' %}{% set _ = nav.append(('/ekspert', 'Pytania do mnie')) %}{% endif %}
-      {% if g.user.role == 'admin' %}{% set _ = nav.append(('/admin', 'Panel Hubu')) %}{% endif %}
+      {% if g.user.role == 'admin' %}{% set _ = nav.append(('/admin', 'Panel Hubu (administratora)')) %}{% endif %}
     {% endif %}
+    {% set _ = nav.append(('/razem', 'Razem z ZD · pilotaż')) %}
     {% set nav_items = [] %}
-    {% for href, text in nav %}{% set _ = nav_items.append((href, text, request.path == href or (href != '/' and request.path.startswith(href)), g.unread if href == '/powiadomienia' else 0)) %}{% endfor %}
-    <nav aria-label="Główne menu" class="site-nav">
-      {{ compact_nav(nav_items, 'Menu') }}
-    </nav>
+    {% for href, text in nav %}{% set _ = nav_items.append((href, text, request.path == href or (href != '/' and request.path.startswith(href ~ '/')))) %}{% endfor %}
+    <div class="site-header__bar">
+      <nav aria-label="Główne menu" class="site-nav">
+        {{ compact_nav(nav_items, 'Menu') }}
+      </nav>
+      {% if g.user %}
+      <a class="bell" href="/powiadomienia" aria-label="{{ 'Powiadomienia, nowe: %d'|format(g.unread) if g.unread else 'Powiadomienia' }}"{% if request.path == '/powiadomienia' %} aria-current="page"{% endif %}>{{ icon('dzwonek') }}{% if g.unread %}<span class="count">{{ g.unread }}</span>{% endif %}</a>
+      {% endif %}
+    </div>
   </div>
 </header>
 
 <main id="tresc" tabindex="-1" class="wrap {% block main_class %}{% endblock %}">
   {% with msgs = get_flashed_messages(with_categories=true) %}
-  {% if msgs %}
+  {% if msgs|rejectattr(0, 'equalto', 'sekcja')|first %}
   <div class="flashes">
-    {% for cat, msg in msgs %}
+    {# kategoria „sekcja” jest pokazywana w sekcji docelowej strony (np. #tester), nie na górze #}
+    {% for cat, msg in msgs if cat != 'sekcja' %}
     <p class="flash flash--{{ cat }}" role="{{ 'alert' if cat == 'error' else 'status' }}"><span aria-hidden="true">{{ '⚠' if cat == 'error' else '✔' }}</span> {{ msg }}</p>
     {% endfor %}
   </div>
@@ -90,8 +97,9 @@
   <div class="wrap">
     <p><strong>HugMe – platforma dla HubMi.pl.</strong> „Hub + Mi(łopolska)” czyta się jak <span lang="en">„hug me”</span> – „przytul mnie”. Twój problem nie zostaje sam.</p>
     <p>Prototyp na HackYeah 2026 dla Małopolskiego Hubu Innowacji Społecznych (ROPS w Krakowie). Wszystkie osoby, organizacje i zgłoszenia są fikcyjne (oznaczenie „PRZYKŁAD”).</p>
-    <p><a href="/dostepnosc">Deklaracja dostępności</a> · <a href="/prywatnosc">Prywatność</a> · <a href="/api/v1/innowacje">API</a></p>
+    <p><a href="/dostepnosc">Deklaracja dostępności</a> · <a href="/prywatnosc">Prywatność</a> · <a href="/api/v1/innowacje">Dane otwarte (dla programistów)</a></p>
   </div>
 </footer>
+<script src="{{ url_for('static', filename='js/czekaj.js') }}" defer></script>
 </body>
 </html>

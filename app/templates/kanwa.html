@@ -3,7 +3,7 @@
 {% block title %}Kanwa: {{ idea.title }}{% endblock %}
 {% block content %}
 <p><a href="/pomysly/{{ idea.id }}">← {{ idea.title }}</a></p>
-<h1>Kanwa Innowacji Społecznych</h1>
+<h1>Plan pomysłu w 10 pytaniach <span class="meta">(Kanwa Innowacji Społecznych)</span></h1>
 <p class="lead">Dziesięć krótkich pól. Wypełnij te, które już wiesz – resztę możesz dopisać później.</p>
 <form method="post" class="card">
   {{ csrf() }}
