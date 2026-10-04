@@ -114,7 +114,7 @@
       <ul>
         <li><b>BM25 + polski stemming + słownik pojęć</b> (lekarz, wizyta, kardiolog → „zdrowie”).</li>
         <li>Każdy wynik: trafność i <b>„dlaczego pasuje”</b>; ocena „pomocne” mierzy trafność.</li>
-        <li><b>11/11 w top 3</b> na danych przykładowych.</li>
+        <li><b>16/16 w top 3</b> – także zdania potoczne z symulacji jury; gdy nic nie pasuje, mówimy to wprost.</li>
         <li>Demo: przykłady z plakietką – <b>import Biblioteki ROPS</b> już działa (CSV/JSON).</li>
       </ul>
       <p class="ai" style="margin-top:14px">✦ AI (Claude Haiku) działa w demo, ale tylko wzbogaca – zawsze oznaczone, z dziennym limitem; bez AI wszystko działa.</p>
@@ -126,18 +126,18 @@
 <section class="s" data-n="5">
   <div class="thread"></div>
   <p class="eyebrow">Wszystkie moduły z briefu</p>
-  <h2>7 z 7 modułów – działające, przetestowane</h2>
+  <h2>7 z 7 modułów – w menu pod nazwami z briefu</h2>
   <div class="grid">
-    <div class="card"><b>Matchmaking</b>opis → dopasowania z uzasadnieniem, zapis, wątek, ocena trafności</div>
-    <div class="card"><b>Zasobnik wiedzy</b>wyzwania, Biblioteka z filtrami i filmami, materiały, ścieżka rodziny</div>
-    <div class="card"><b>Trendy potrzeb</b>obszar m/m, mapa powiat × obszar – tylko dla Hubu</div>
+    <div class="card"><b>Matchmaking</b>„Szukaj pomocy”: opis → dopasowania z uzasadnieniem, zapis, wątek, ocena trafności</div>
+    <div class="card"><b>Zasobnik wiedzy</b>wyzwania, Biblioteka innowacji z filtrami i filmami, materiały, ścieżka rodziny</div>
+    <div class="card"><b>Trendy potrzeb</b>obszar m/m, mapa powiat × obszar i luki na jednym ekranie – dla Hubu</div>
     <div class="card"><b>Kreator pomysłów</b>fiszka, Kanwa, asystent, generator wniosków w trakcie naboru</div>
-    <div class="card"><b>Tester innowacji</b>zgłoszenie do testu, ocena 1–5, usprawnienie → powiadomienie Hubu</div>
-    <div class="card"><b>Komunikacja</b>wątki, pytania do ekspertów, powiadomienia, e-mail, obserwowanie obszarów</div>
+    <div class="card"><b>Tester innowacji</b>osobne wejście w menu, ocena 1–5 jednym kliknięciem, usprawnienie</div>
+    <div class="card"><b>Komunikacja</b>dzwonek powiadomień, wątki, pytania do ekspertów, e-mail, obserwowanie</div>
     <div class="card"><b>Panel ROPS</b>skrzynka, statusy, edycja i import Biblioteki, nabory, luki, CSV, konta i role</div>
     <div class="card"><b>Pośrednik innowacji</b>karta usługi dla gminy, CUS i NGO – koszty bez wymyślonych kwot</div>
   </div>
-  <p style="margin-top:22px">5 ról demo · API JSON dla bazy grantowej · <b>212 testów automatycznych</b> (ścieżki, role, CSRF, prywatność)</p>
+  <p style="margin-top:22px">Na starcie kafle „7 modułów HubMi” · 5 ról demo · API JSON · <b>313 testów automatycznych</b> (ścieżki, role, CSRF, prywatność)</p>
 </section>
 
 <section class="s" data-n="6">
@@ -181,11 +181,11 @@
   <h2>Dla każdego – także dla seniorów</h2>
   <div class="row">
     <div class="col">
-      <div class="stat"><span class="big">136/136</span><p>widoków bez naruszeń WCAG 2.1 AA wykrywanych automatycznie (axe-core) – desktop i telefon 320 px, audyt w CI</p></div>
+      <div class="stat"><span class="big">138/138</span><p>widoków bez naruszeń WCAG 2.1 AA wykrywanych automatycznie (axe-core) – desktop i telefon 320 px, audyt w CI</p></div>
       <ul style="margin-top:18px">
-        <li>A+ i wysoki kontrast bez JavaScriptu, cele ≥ 44 px</li>
-        <li>Atkinson Hyperlegible, 18 px, prosty język, przykład pod polem</li>
-        <li>Statusy symbolem i słowem, nie tylko kolorem</li>
+        <li><b>Podpowiedzi „i”</b>: do czego służy, jak czytać, skąd dane – i <b>przewodnik</b> po ekranie w 5 krokach</li>
+        <li>A+, wysoki kontrast i podpowiedzi bez JavaScriptu, cele ≥ 44 px</li>
+        <li>Atkinson Hyperlegible, 18 px, prosty język, statusy symbolem i słowem</li>
       </ul>
     </div>
     <div class="col">

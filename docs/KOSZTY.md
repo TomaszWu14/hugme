@@ -30,7 +30,7 @@ Cennik: **1 USD za milion tokenów wejścia, 5 USD za milion tokenów wyjścia**
 **Miesięcznie** (założenie pilotażu: 2000 wyszukiwań, 300 rozmów z asystentem, 150 podpowiedzi do wniosków,
 100 kart Pośrednika): ok. 3,0 + 1,3 + 0,5 + 0,7 = **ok. 5,5 USD (ok. 25 zł)**.
 Skala całego regionu (×10): ok. **55 USD (ok. 230 zł)** miesięcznie.
-Cache odpowiedzi w aplikacji i limit 8 s na zapytanie ograniczają koszt awarii i powtórzeń.
+Cache odpowiedzi w aplikacji i limit 25 s na zapytanie ograniczają koszt awarii i powtórzeń.
 
 **Sufit kosztu jest wpisany w kod.** Zmienna `AI_DAILY_LIMIT` (domyślnie 300 zapytań na dobę) zatrzymuje AI po
 wyczerpaniu puli – platforma działa dalej na szablonach, a powtórzone pytania z pamięci podręcznej nie zużywają limitu.

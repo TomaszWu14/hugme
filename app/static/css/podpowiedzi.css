@@ -36,7 +36,7 @@
 
 /* Telefon: arkusz przy dolnej krawędzi – nie wisi nad polem, które opisuje */
 @media (max-width: 37.5em) {
-  .help__panel { position: fixed; z-index: 90; top: auto; left: 0; right: 0; bottom: 0; width: auto; max-height: 55vh; overflow-y: auto;
+  .help__panel { position: fixed; z-index: 90; top: auto; left: 0; right: 0; bottom: 0; width: auto; max-height: 40vh; overflow-y: auto;
     border-width: 2px 0 0; border-radius: var(--radius) var(--radius) 0 0; box-shadow: 0 -6px 24px rgba(27,37,64,.25);
     padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom, 0px)); }
   .help__close { width: 100%; }
