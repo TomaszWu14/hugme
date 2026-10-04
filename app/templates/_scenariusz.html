@@ -1,0 +1,22 @@
+{# Pasek scenariusza demo (app/scenariusze.py) – wstawiany w base.html na początku <main>. Działa bez JS;
+   JS (podpowiedzi.js) tylko podświetla element z data-cel i do niego przewija. #}
+{% from "_macros.html" import csrf %}
+{% set s = scenariusz() %}{% if s %}
+{# data-cel tylko na ekranie kroku – po przejściu linkiem gdzie indziej (np. /zgloszenie/N) nic nie obwodzimy #}
+<section class="scen-bar no-print" aria-label="Scenariusz demo" data-cel="{{ s.krok.cel if s.krok.cel and request.path == s.krok.path.split('?')[0] else '' }}">
+  <p class="scen-bar__count"><span class="scen-bar__scen">Scenariusz {{ s.nr }} z {{ s.ile_scen }} · {{ s.scen.tytul }} · </span><strong>Krok {{ s.n }} z {{ s.N }}</strong></p>
+  <p class="scen-bar__title"><strong>{{ s.krok.tytul }}</strong></p>
+  <p class="scen-bar__text">{{ s.krok.tekst }}</p>
+  <div class="scen-bar__actions">
+    {% if s.n > 1 %}<form method="post" action="/demo/{{ s.sid }}/{{ s.n - 1 }}">{{ csrf() }}
+      <button type="submit" class="btn btn--small"><span aria-hidden="true">←</span> Wstecz</button></form>{% endif %}
+    {% if s.nastepny %}<form method="post" action="/demo/{{ s.sid }}/{{ s.n + 1 }}">{{ csrf() }}
+      {# krok z akcją: „Dalej” mały, żeby nie kusił do pominięcia akcji (pasek przechodzi sam po jej wykonaniu) #}
+      <button type="submit" class="btn {{ 'btn--small' if s.krok.akcja else 'btn--primary' }}"><span>Dalej<span class="scen-bar__next">: {{ s.nastepny.tytul }}</span></span> <span aria-hidden="true">→</span></button></form>
+    <form method="post" action="/demo/koniec" class="scen-bar__end">{{ csrf() }}
+      <button type="submit" class="btn btn--small btn--ghost">Zakończ</button></form>
+    {% else %}<form method="post" action="/demo/koniec">{{ csrf() }}
+      <button type="submit" class="btn btn--primary">Zakończ scenariusz</button></form>{% endif %}
+  </div>
+</section>
+{% endif %}

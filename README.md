@@ -9,8 +9,20 @@ w Krakowie), przygotowany na **HackYeah 2026**, zadanie **HubMi.pl**.
 
 **Zobacz:** [działające demo – hugme.twapp.pl](https://hugme.twapp.pl) · [film (MP4, do 3 min)](docs/film/hugme-przeklikanie.mp4) ·
 [prezentacja PDF](docs/HugMe_prezentacja.pdf) · [opisy zgłoszenia](docs/HACKTRIBE.md).
-Konta demo nie mają haseł – rolę (mieszkanka, organizacja, gmina, ekspert, koordynatorka Hubu) wybierasz w pasku
-u góry albo w ramce „Oglądasz demo?” na stronie startowej. Demo odnawia się samo po 20 minutach bez nowych wpisów.
+
+**Najprościej: wejdź na [/demo](https://hugme.twapp.pl/demo) i wybierz scenariusz – pasek na górze poprowadzi Cię
+krok po kroku (ok. 1,5 min każdy).** Te same dwa przyciski są na stronie startowej. Pasek „Krok n z N” sam przełącza
+konto, a „Dalej” prowadzi do następnego ekranu:
+
+- **Rodzic osoby z zespołem Downa – „Jestem potrzebny”** (6 kroków): czym jest program → mama zgłasza syna Bartka →
+  zgłoszenie czeka na Hub → koordynatorka łączy Bartka ze schroniskiem → odpowiedź Hubu i miejsce w dzienniczku →
+  praca i zajęcia dla osób z ZD.
+- **Gmina → Hub** (6 kroków): gmina opisuje problem seniorów z 5 sołectw → „Bus na Telefon” z oceną „Bardzo pasuje” →
+  Pośrednik robi kartę usługi (Drukuj / PDF) → Hub widzi zgłoszenie i odpowiada → trendy i luki → gmina dostaje odpowiedź.
+
+Kroki zależą od siebie (np. Bartek pojawia się u Hubu dopiero po zgłoszeniu), więc najlepiej iść po kolei.
+Konta demo nie mają haseł – rolę (mieszkanka, organizacja, gmina, ekspert, koordynatorka Hubu) możesz też wybrać
+sam w pasku u góry. Demo odnawia się samo po 20 minutach bez nowych wpisów.
 
 ![Strona startowa HugMe: pole „Co jest trudne? Kogo to dotyczy?” i ilustracja splotu](docs/zrzuty/01-start-desktop.png)
 
@@ -118,11 +130,13 @@ repozytorium (build z `Dockerfile`), ustawić `SECRET_KEY` i opcjonalnie `ANTHRO
 
 ## Scenariusz demo (5 minut)
 
-To także ściąga do pokazu na żywo. Plan B bez internetu: aplikacja lokalnie (`flask --app app:create_app run`, fonty i style są
-w repo, bez CDN); plan C: [film](docs/film/hugme-przeklikanie.mp4).
+**Najprościej: wejdź na [/demo](https://hugme.twapp.pl/demo) i wybierz scenariusz – pasek na górze poprowadzi Cię krok
+po kroku (ok. 1,5 min każdy).** Kroki obu scenariuszy są opisane wyżej, pod „Zobacz”. Poniżej dłuższa ścieżka ręczna –
+to także ściąga do pokazu na żywo. Plan B bez internetu: aplikacja lokalnie (`flask --app app:create_app run`, fonty
+i style są w repo, bez CDN), `/demo` działa tak samo; plan C: [film](docs/film/hugme-przeklikanie.mp4).
 
-1. **Start, gość.** Menu z nazwami modułów z briefu, niżej kafle „7 modułów HubMi”; w demo ramka „Przewodnik dla jury:
-   5 kroków”. Pole „Co jest trudne? Kogo to dotyczy?” ma już wpisany przykład o wizytach u wielu specjalistów.
+1. **Start, gość.** Menu z nazwami modułów z briefu, na starcie przyciski „Zobacz demo w 1,5 minuty”, niżej kafle
+   „7 modułów HubMi”. Pole „Co jest trudne? Kogo to dotyczy?” ma już wpisany przykład o wizytach u wielu specjalistów.
    Dopisz „mój syn Kacper, tel. 600 123 456” i kliknij **Znajdź rozwiązania**.
 2. **Wyniki.** Imię i telefon są ukryte, z łagodnym komunikatem. Na górze „Asystent zdrowia rodziny” z oceną
    „Bardzo pasuje” i uzasadnieniem (wspólne słowa i tematy). Obok podobne zgłoszenia, poradniki i eksperci.

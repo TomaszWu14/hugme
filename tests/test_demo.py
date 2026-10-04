@@ -40,11 +40,12 @@ def test_reset_waits_for_quiet_and_keeps_ai_counter(app):
         assert con.execute("SELECT calls FROM ai_usage").fetchone()[0] == 42
 
 
-def test_demo_guide_for_guests_only_in_demo_mode(tmp_path):
+def test_home_demo_buttons_and_reset_note_only_in_demo_mode(tmp_path):
     on = create_app({"TESTING": True, "DATABASE": str(tmp_path / "on.db"), "SECRET_KEY": "t", "DEMO_MODE": True}).test_client()
     off = create_app({"TESTING": True, "DATABASE": str(tmp_path / "off.db"), "SECRET_KEY": "t"}).test_client()
     html = on.get("/").get_data(as_text=True)
-    assert "Oglądasz demo?" in html and 'value="/admin"' in html and "odnawia się" in on.get("/konto").get_data(as_text=True)
-    assert "Oglądasz demo?" not in off.get("/").get_data(as_text=True)
-    login(on, "ngo")
-    assert "Oglądasz demo?" not in on.get("/").get_data(as_text=True)
+    assert 'action="/demo/rodzic/1"' in html and 'action="/demo/gmina/1"' in html
+    assert "nie mają haseł" in html and "odnawia się samo" in html and "odnawia się" in on.get("/konto").get_data(as_text=True)
+    html = off.get("/").get_data(as_text=True)
+    assert 'action="/demo/gmina/1"' in html and "nie mają haseł" in html and "odnawia się" not in html
+    assert "Oglądasz demo?" not in html  # dawna ramka zastąpiona przyciskami scenariuszy

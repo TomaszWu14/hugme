@@ -37,9 +37,9 @@ statystyki GUS/PFRON, „Poznaj ZD” dla pracodawców i instytucji.
 
 ## Dostępność i intuicyjność (20%)
 
-- WCAG 2.1 AA: **138/138 widoków bez naruszeń wykrywanych automatycznie** (axe-core, desktop i 320 px, tryb kontrastu i A+), układ telefonu z A+ na wszystkich 67 widokach – [WCAG](WCAG.md).
+- WCAG 2.1 AA: **142/142 widoków bez naruszeń wykrywanych automatycznie** (axe-core, desktop i 320 px, tryb kontrastu i A+), układ telefonu z A+ na wszystkich 69 widokach – [WCAG](WCAG.md).
 - Menu nazwane tak jak moduły w briefie (Szukaj pomocy, Zasobnik wiedzy, Biblioteka innowacji, Tester innowacji,
-  Kreator pomysłów, Pośrednik innowacji), na starcie kafle „7 modułów HubMi” i „Przewodnik dla jury: 5 kroków”.
+  Kreator pomysłów, Pośrednik innowacji), na starcie „Zobacz demo w 1,5 minuty” (dwa scenariusze, pasek prowadzi krok po kroku; wszystkie kroki na /demo) i kafle „7 modułów HubMi”.
 - **Tryb Podpowiedzi**: ikonka „i” przy polach, filtrach, wykresach i wskaźnikach – chmurka mówi, do czego coś służy,
   jak to czytać i skąd się bierze (dane, reguły czy AI). „Przewodnik po tej stronie” w 4–5 krokach na 7 ekranach.
   Działa z klawiatury i bez JS, można go wyłączyć jednym przyciskiem ([WCAG](WCAG.md#tryb-podpowiedzi)).

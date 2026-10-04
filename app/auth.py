@@ -67,6 +67,16 @@ def role_required(*roles):
     return deco
 
 
+def switch_account(uid):
+    """Zmiana konta demo (None = gość): nowa sesja (ochrona przed session fixation), ale szkice
+    i aktywny scenariusz demo przeżywają logowanie."""
+    kept = {k: session[k] for k in ("draft", "razem_draft", "scen") if k in session}
+    session.clear()
+    session.update(kept)
+    if uid:
+        session["uid"] = uid
+
+
 @bp.route("/konto", methods=["GET", "POST"])
 def demo():
     if request.method == "POST":
@@ -77,11 +87,7 @@ def demo():
         if user and not user["is_active"]:
             flash("To konto jest zablokowane przez Hub – wybierz inne.", "error")
             return redirect(url_for("auth.demo"))
-        kept = {k: session[k] for k in ("draft", "razem_draft") if k in session}  # szkice przeżywają logowanie
-        session.clear()  # nowa sesja przy zmianie konta (ochrona przed session fixation)
-        session.update(kept)
-        if user:
-            session["uid"] = user["id"]
+        switch_account(user["id"] if user else None)
         home = ROLE_HOME.get(user["role"] if user else None, url_for("public.home"))
         return redirect(safe_next(request.form.get("next"), home))
     return render_template("konto.html", next=safe_next(request.args.get("next"), ""))

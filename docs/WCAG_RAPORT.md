@@ -3,11 +3,11 @@
 Wygenerowany przez `python scripts/axe_audit.py`. Reguły axe: wcag2a, wcag2aa, wcag21a, wcag21aa.
 Widoki: desktop 1280 px i telefon 320 px; dodatkowo tryb wysokiego kontrastu i A+.
 
-**Sprawdzonych widoków:** 138 · **z naruszeniami axe:** 0 · **z przewijaniem w poziomie:** 0 · **układ na telefonie z A+ (wszystkie widoki):** bez problemów ✔
+**Sprawdzonych widoków:** 142 · **z naruszeniami axe:** 0 · **z przewijaniem w poziomie:** 0 · **układ na telefonie z A+ (wszystkie widoki):** bez problemów ✔
 
 | Ekran | Rola | Ścieżka | Naruszenia axe | Reguły zaliczone | Przewijanie w bok | Małe cele dotykowe |
 |---|---|---|---|---|---|---|
-| desktop | gość | `/` | brak ✔ | 30 | nie ✔ | brak ✔ |
+| desktop | gość | `/` | brak ✔ | 29 | nie ✔ | brak ✔ |
 | desktop | gość | `/wyniki` | brak ✔ | 25 | nie ✔ | brak ✔ |
 | desktop | gość | `/wiedza` | brak ✔ | 23 | nie ✔ | brak ✔ |
 | desktop | gość | `/wiedza/obszar/rodziny-zd` | brak ✔ | 24 | nie ✔ | brak ✔ |
@@ -53,30 +53,32 @@ Widoki: desktop 1280 px i telefon 320 px; dodatkowo tryb wysokiego kontrastu i A
 | desktop | gość | `/razem/jestem-potrzebny/zasady` | brak ✔ | 24 | nie ✔ | brak ✔ |
 | desktop | gość | `/razem/praca#mapa-pl-h` | brak ✔ | 33 | nie ✔ | brak ✔ |
 | desktop | gość | `/razem/praca?woj=malopolskie` | brak ✔ | 33 | nie ✔ | brak ✔ |
+| desktop | gość | `/demo` | brak ✔ | 23 | nie ✔ | brak ✔ |
+| desktop | gość | `/razem/jestem-potrzebny` | brak ✔ | 24 | nie ✔ | brak ✔ |
 | desktop | mieszkaniec | `/razem/przewodnik` | brak ✔ | 25 | nie ✔ | brak ✔ |
 | desktop | mieszkaniec | `/razem/jestem-potrzebny/dzienniczek` | brak ✔ | 24 | nie ✔ | brak ✔ |
 | desktop | mieszkaniec | `/razem/jestem-potrzebny/dzienniczek/dyplom/1` | brak ✔ | 24 | nie ✔ | brak ✔ |
 | desktop | mieszkaniec | `/razem/wytchnienie` | brak ✔ | 25 | nie ✔ | brak ✔ |
 | desktop | mieszkaniec | `/razem/wydarzenia` | brak ✔ | 24 | nie ✔ | brak ✔ |
 | desktop | admin | `/admin` | brak ✔ | 30 | nie ✔ | brak ✔ |
-| desktop | admin | `/admin/watki` | brak ✔ | 23 | nie ✔ | brak ✔ |
+| desktop | admin | `/admin/watki` | brak ✔ | 24 | nie ✔ | brak ✔ |
 | desktop | admin | `/admin/trendy#luki` | brak ✔ | 30 | nie ✔ | brak ✔ |
 | desktop | admin | `/admin/trendy` | brak ✔ | 30 | nie ✔ | brak ✔ |
-| desktop | admin | `/admin/biblioteka` | brak ✔ | 28 | nie ✔ | brak ✔ |
+| desktop | admin | `/admin/biblioteka` | brak ✔ | 29 | nie ✔ | brak ✔ |
 | desktop | admin | `/admin/biblioteka/1` | brak ✔ | 25 | nie ✔ | brak ✔ |
-| desktop | admin | `/admin/import` | brak ✔ | 24 | nie ✔ | brak ✔ |
-| desktop | admin | `/admin/nabory` | brak ✔ | 24 | nie ✔ | brak ✔ |
-| desktop | admin | `/admin/poczta` | brak ✔ | 27 | nie ✔ | brak ✔ |
+| desktop | admin | `/admin/import` | brak ✔ | 25 | nie ✔ | brak ✔ |
+| desktop | admin | `/admin/nabory` | brak ✔ | 25 | nie ✔ | brak ✔ |
+| desktop | admin | `/admin/poczta` | brak ✔ | 28 | nie ✔ | brak ✔ |
 | desktop | admin | `/zgloszenie/1` | brak ✔ | 25 | nie ✔ | brak ✔ |
-| desktop | admin | `/admin/razem` | brak ✔ | 29 | nie ✔ | brak ✔ |
-| desktop | admin | `/admin/potrzebny` | brak ✔ | 28 | nie ✔ | brak ✔ |
-| desktop | admin | `/admin/uzytkownicy` | brak ✔ | 29 | nie ✔ | brak ✔ |
-| desktop | admin | `/admin/uzytkownicy/2` | brak ✔ | 24 | nie ✔ | brak ✔ |
-| desktop | admin | `/admin/uzytkownicy/nowy` | brak ✔ | 24 | nie ✔ | brak ✔ |
-| desktop | admin | `/admin/role` | brak ✔ | 28 | nie ✔ | brak ✔ |
-| desktop | gość (kontrast) | `/` | brak ✔ | 30 | nie ✔ | brak ✔ |
-| desktop | gość (duzy-tekst) | `/` | brak ✔ | 30 | nie ✔ | brak ✔ |
-| telefon | gość | `/` | brak ✔ | 30 | nie ✔ | brak ✔ |
+| desktop | admin | `/admin/razem` | brak ✔ | 30 | nie ✔ | brak ✔ |
+| desktop | admin | `/admin/potrzebny` | brak ✔ | 29 | nie ✔ | brak ✔ |
+| desktop | admin | `/admin/uzytkownicy` | brak ✔ | 30 | nie ✔ | brak ✔ |
+| desktop | admin | `/admin/uzytkownicy/2` | brak ✔ | 25 | nie ✔ | brak ✔ |
+| desktop | admin | `/admin/uzytkownicy/nowy` | brak ✔ | 25 | nie ✔ | brak ✔ |
+| desktop | admin | `/admin/role` | brak ✔ | 29 | nie ✔ | brak ✔ |
+| desktop | gość (kontrast) | `/` | brak ✔ | 29 | nie ✔ | brak ✔ |
+| desktop | gość (duzy-tekst) | `/` | brak ✔ | 29 | nie ✔ | brak ✔ |
+| telefon | gość | `/` | brak ✔ | 25 | nie ✔ | brak ✔ |
 | telefon | gość | `/wyniki` | brak ✔ | 25 | nie ✔ | brak ✔ |
 | telefon | gość | `/wiedza` | brak ✔ | 24 | nie ✔ | brak ✔ |
 | telefon | gość | `/wiedza/obszar/rodziny-zd` | brak ✔ | 25 | nie ✔ | brak ✔ |
@@ -122,6 +124,8 @@ Widoki: desktop 1280 px i telefon 320 px; dodatkowo tryb wysokiego kontrastu i A
 | telefon | gość | `/razem/jestem-potrzebny/zasady` | brak ✔ | 24 | nie ✔ | brak ✔ |
 | telefon | gość | `/razem/praca#mapa-pl-h` | brak ✔ | 33 | nie ✔ | brak ✔ |
 | telefon | gość | `/razem/praca?woj=malopolskie` | brak ✔ | 33 | nie ✔ | brak ✔ |
+| telefon | gość | `/demo` | brak ✔ | 24 | nie ✔ | brak ✔ |
+| telefon | gość | `/razem/jestem-potrzebny` | brak ✔ | 24 | nie ✔ | brak ✔ |
 | telefon | mieszkaniec | `/razem/przewodnik` | brak ✔ | 25 | nie ✔ | brak ✔ |
 | telefon | mieszkaniec | `/razem/jestem-potrzebny/dzienniczek` | brak ✔ | 24 | nie ✔ | brak ✔ |
 | telefon | mieszkaniec | `/razem/jestem-potrzebny/dzienniczek/dyplom/1` | brak ✔ | 25 | nie ✔ | brak ✔ |
@@ -133,15 +137,15 @@ Widoki: desktop 1280 px i telefon 320 px; dodatkowo tryb wysokiego kontrastu i A
 | telefon | admin | `/admin/trendy` | brak ✔ | 31 | nie ✔ | brak ✔ |
 | telefon | admin | `/admin/biblioteka` | brak ✔ | 28 | nie ✔ | brak ✔ |
 | telefon | admin | `/admin/biblioteka/1` | brak ✔ | 23 | nie ✔ | brak ✔ |
-| telefon | admin | `/admin/import` | brak ✔ | 23 | nie ✔ | brak ✔ |
+| telefon | admin | `/admin/import` | brak ✔ | 25 | nie ✔ | brak ✔ |
 | telefon | admin | `/admin/nabory` | brak ✔ | 25 | nie ✔ | brak ✔ |
-| telefon | admin | `/admin/poczta` | brak ✔ | 27 | nie ✔ | brak ✔ |
+| telefon | admin | `/admin/poczta` | brak ✔ | 29 | nie ✔ | brak ✔ |
 | telefon | admin | `/zgloszenie/1` | brak ✔ | 25 | nie ✔ | brak ✔ |
 | telefon | admin | `/admin/razem` | brak ✔ | 30 | nie ✔ | brak ✔ |
 | telefon | admin | `/admin/potrzebny` | brak ✔ | 29 | nie ✔ | brak ✔ |
 | telefon | admin | `/admin/uzytkownicy` | brak ✔ | 30 | nie ✔ | brak ✔ |
 | telefon | admin | `/admin/uzytkownicy/2` | brak ✔ | 25 | nie ✔ | brak ✔ |
-| telefon | admin | `/admin/uzytkownicy/nowy` | brak ✔ | 23 | nie ✔ | brak ✔ |
-| telefon | admin | `/admin/role` | brak ✔ | 28 | nie ✔ | brak ✔ |
-| telefon | gość (kontrast) | `/` | brak ✔ | 30 | nie ✔ | brak ✔ |
-| telefon | gość (duzy-tekst) | `/` | brak ✔ | 30 | nie ✔ | brak ✔ |
+| telefon | admin | `/admin/uzytkownicy/nowy` | brak ✔ | 25 | nie ✔ | brak ✔ |
+| telefon | admin | `/admin/role` | brak ✔ | 30 | nie ✔ | brak ✔ |
+| telefon | gość (kontrast) | `/` | brak ✔ | 25 | nie ✔ | brak ✔ |
+| telefon | gość (duzy-tekst) | `/` | brak ✔ | 25 | nie ✔ | brak ✔ |

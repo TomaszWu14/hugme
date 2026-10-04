@@ -4,17 +4,22 @@
 {% block title %}Twój problem nie zostaje sam{% endblock %}
 {% block main_class %}home{% endblock %}
 {% block content %}
-{% macro as_role(uid, next, label) -%}
-<form method="post" action="{{ url_for('auth.demo') }}" class="inline-form">{{ csrf() }}
-  <input type="hidden" name="user_id" value="{{ uid }}"><input type="hidden" name="next" value="{{ next }}">
-  <button type="submit" class="btn btn--small">{{ label }}</button></form>
-{%- endmacro %}
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero__text">
     <h1 id="hero-title">Twój problem nie&nbsp;zostaje sam</h1>
-    <p class="lead">Opisz, co jest trudne, własnymi słowami. Pokażemy, co już działa w Małopolsce,
-      kto może pomóc i skąd wziąć pieniądze. Odpowie Ci też człowiek z Hubu Innowacji Społecznych.</p>
-    <p class="hero__cta"><a class="btn btn--primary btn--large" href="#ask-title">Opisz sytuację</a> <span class="meta">bez logowania, ok. minuty</span></p>
+    <p class="lead">Opisz, co jest trudne – pokażemy, co już działa w Małopolsce, kto pomoże i skąd wziąć pieniądze, a odpowie Ci człowiek z Hubu.</p>
+    {% if not scenariusz() %}
+    <section class="demo-start" aria-labelledby="demo-title">
+      <h2 id="demo-title">Zobacz demo w 1,5 minuty</h2>
+      <div class="demo-start__btns">
+        <form method="post" action="/demo/rodzic/1">{{ csrf() }}
+          <button type="submit" class="btn btn--primary btn--large demo-start__btn"><span>Rodzic osoby z zespołem Downa</span><span class="sr-only">: </span><span class="demo-start__sub">„Jestem potrzebny”: zgłoszenie, Hub, misja, praca</span></button></form>
+        <form method="post" action="/demo/gmina/1">{{ csrf() }}
+          <button type="submit" class="btn btn--large demo-start__btn"><span>Gmina → Hub</span><span class="sr-only">: </span><span class="demo-start__sub">problem, rozwiązanie, karta usługi, odpowiedź Hubu</span></button></form>
+      </div>
+      <p class="meta">Pasek na górze strony prowadzi krok po kroku. Konta demo nie mają haseł{% if config.DEMO_MODE %}, a demo odnawia się samo po 20 minutach bez nowych wpisów{% endif %}. <a href="/demo">Wszystkie kroki</a></p>
+    </section>
+    {% endif %}
   </div>
   <figure class="hero__art">
     <svg viewBox="0 0 360 230" role="img" aria-labelledby="art-t art-d" class="weave">
@@ -31,20 +36,6 @@
     <figcaption class="sr-only">Ilustracja splotu nici – opis powyżej.</figcaption>
   </figure>
 </section>
-
-{% if config.DEMO_MODE and not g.user %}
-<details class="notice demo-guide">
-  <summary>Oglądasz demo? Przewodnik dla jury: 5 kroków, ok. 3 min</summary>
-  <ol class="demo-guide__steps">
-    <li><strong>Opisz problem</strong> w polu poniżej – przykład już jest wpisany. Kliknij „Znajdź rozwiązania”.</li>
-    <li><strong>Hub Innowacji Społecznych</strong>: skrzynka zgłoszeń, trendy i luki. {{ as_role(5, '/admin', 'Wejdź jako koordynatorka Hubu') }}</li>
-    <li><strong>Gmina</strong>: karta usługi do wdrożenia u siebie. {{ as_role(3, '/posrednik', 'Wejdź jako gmina') }}</li>
-    <li><strong>Asystent pomysłów</strong>: miętowa ramka to AI, bez niej działa wersja regułowa. {{ as_role(2, '/pomysly/1', 'Wejdź jako organizacja') }}</li>
-    <li><strong>Tester innowacji</strong>: przetestuj i oceń. {{ as_role(2, '/tester', 'Wejdź jako organizacja') }}</li>
-  </ol>
-  <p class="meta">Konta demo nie mają haseł – rolę zmienisz też w pasku u góry. Demo odnawia się samo po 20 minutach bez nowych wpisów.</p>
-</details>
-{% endif %}
 
 <section class="ask card card--raised" aria-labelledby="ask-title">
   <h2 id="ask-title">Co jest trudne? Kogo to dotyczy?</h2>
@@ -83,37 +74,6 @@
       <button type="submit" class="mod"><span class="mod__name">Panel administratora</span><span class="mod__desc">wejdź jako koordynatorka Hubu</span></button></form>
       {%- else %}<a class="mod" href="/admin"><span class="mod__name">Panel administratora</span><span class="mod__desc">skrzynka, trendy i luki Hubu</span></a>{% endif %}</li>
     <li><a class="mod" href="/posrednik"><span class="mod__name">Pośrednik innowacji</span><span class="mod__desc">gotowe usługi dla gmin</span></a></li>
-  </ul>
-</section>
-
-<section aria-labelledby="how-title" class="how">
-  <h2 id="how-title">Jak to działa</h2>
-  <ol class="steps">
-    <li><strong>Opisujesz</strong> problem po swojemu – bez urzędowego języka.</li>
-    <li><strong>Widzisz</strong>, co już działa: sprawdzone pomysły, podobne zgłoszenia, ekspertów i poradniki.</li>
-    <li><strong>Zapisujesz</strong> zgłoszenie, a Hub ROPS odpisuje i łączy Cię z ludźmi.</li>
-  </ol>
-</section>
-
-<section class="card card--thread thread--rodziny-zd home-razem" aria-labelledby="razem-title">
-  <div>
-    <p class="eyebrow">Obszar pilotażowy</p>
-    <h2 id="razem-title">Razem z ZD – dla osób z zespołem Downa i ich rodzin</h2>
-    <p>Plan na każdy etap życia, rodzic-przewodnik, chwila wytchnienia, strona w prostym języku – oraz program <a href="/razem/jestem-potrzebny">„Jestem potrzebny”</a>, w którym osoby z ZD pomagają innym, i <a href="/razem/praca">mapa miejsc pracy</a>.</p>
-  </div>
-  <p><a class="btn btn--primary" href="/razem">Otwórz „Razem z ZD”</a></p>
-</section>
-
-<section aria-labelledby="areas-title" data-help="home.obszary">
-  <div class="help-row"><h2 id="areas-title">Wyzwania Małopolski</h2>{{ help('home.obszary') }}</div>
-  <ul class="grid grid--areas">
-    {% for slug, a in AREAS.items() %}
-    <li class="card card--thread thread--{{ slug }}">
-      <h3><a href="/wiedza/obszar/{{ slug }}">{{ a.name }}</a></h3>
-      {% if a.pilot %}<p class="badge badge--pilot">Obszar pilotażowy</p>{% endif %}
-      <p>{{ a.challenge }}</p>
-    </li>
-    {% endfor %}
   </ul>
 </section>
 {% endblock %}

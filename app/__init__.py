@@ -40,8 +40,8 @@ def create_app(test_config=None):
     _security(app)
     _template_globals(app)
 
-    from app import auth, podpowiedzi
-    from app.views import admin, admin_potrzebny, admin_users, api, komunikacja, kreator, posrednik, potrzebny, praca, public, razem, wiedza
+    from app import auth, podpowiedzi, scenariusze
+    from app.views import admin, admin_potrzebny, admin_users, api, demo, komunikacja, kreator, posrednik, potrzebny, praca, public, razem, wiedza
     app.register_blueprint(auth.bp)
     app.register_blueprint(public.bp)
     app.register_blueprint(komunikacja.bp)
@@ -55,8 +55,10 @@ def create_app(test_config=None):
     app.register_blueprint(praca.bp)
     app.register_blueprint(admin_potrzebny.bp)
     app.register_blueprint(admin_users.bp)
+    app.register_blueprint(demo.bp)
     auth.init(app)
     podpowiedzi.init(app)
+    scenariusze.init(app)
 
     for code in ERRORS:
         app.register_error_handler(code, _error_page)

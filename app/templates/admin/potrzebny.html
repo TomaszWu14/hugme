@@ -20,7 +20,7 @@
   {% if pairs %}
   <ul class="list-plain list-plain--cards">
     {% for v, o, common, buddy in pairs %}
-    <li class="actions">
+    <li class="actions" data-alias="{{ v.alias }}">
       <span><strong>{{ v.alias }}</strong> ({{ P.AGE_GROUPS[v.age_group] }}, {{ v.powiat }}; lubi: {{ v.interests.replace(',', ', ') }};
         {{ P.COMPANIONS[v.companion] }}{% if v.source == 'latwy-tekst' %}; zgłoszenie własne{% endif %})
         ↔ <strong>{{ o.institution }}</strong> – {{ o.title }}

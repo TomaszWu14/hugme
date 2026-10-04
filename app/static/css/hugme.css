@@ -227,23 +227,15 @@ main:has(.admin-nav) h1 { font-size: 2rem; }
 .status--zamkniete { color: var(--ink-soft); }
 
 /* Strona startowa */
-.hero { display: grid; gap: 1.5rem; align-items: center; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); margin: 1rem 0 1.5rem; }
-.hero__cta { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; margin: .4rem 0 0; }
+.hero { display: grid; gap: 1.5rem; align-items: center; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); margin: .25rem 0 1.5rem; }
 @media (max-width: 52em) {
   .hero { grid-template-columns: minmax(0, 1fr); gap: 1rem; margin-top: .5rem; }
   .hero__art .weave { display: block; width: 14rem; max-width: 100%; margin-left: auto; }
   .weave__lbl { font-size: 15px; }
 }
-/* Telefon: mała ilustracja obok przycisku „Opisz sytuację”, żeby formularz był bliżej */
-@media (max-width: 37.5em) {
-  .hero { grid-template-columns: minmax(0, 1fr) auto; gap: 0 .8rem; }
-  .hero__text { display: contents; }
-  .hero h1, .hero .lead { grid-column: 1 / -1; }
-  .hero__art .weave { width: 6.5rem; }
-  .weave__lbl { display: none; }
-}
+/* Telefon: bez ilustracji – przyciski demo i formularz bliżej góry */
+@media (max-width: 37.5em) { .hero__art { display: none; } }
 .home > section { margin: 0 0 2.5rem; }
-.home > .demo-guide { margin: 0 0 1.5rem; }
 .mod-grid { display: grid; gap: .75rem; list-style: none; padding: 0; margin: 0; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); }
 .mod-grid > li, .mod-form { display: flex; min-width: 0; }
 .mod-form { width: 100%; }
@@ -369,9 +361,6 @@ caption { text-align: left; font-weight: 700; padding: .7rem; }
 .list-plain > li:not(.card) { padding: .6rem 0; border-bottom: 1px solid var(--line); }
 .notice { background: var(--sand); border-left: 6px solid var(--ink); padding: .8rem 1rem; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
 .demo-guide { margin: 1rem 0 0; }
-.demo-guide__steps { margin: .6rem 0; padding-left: 1.4rem; }
-.demo-guide__steps li { margin: .5rem 0; }
-.demo-guide__steps .inline-form { margin-left: .3rem; }
 .masked { background: var(--sand); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .7rem 1rem; white-space: pre-wrap; }
 details > summary { cursor: pointer; font-weight: 700; min-height: 44px; display: flex; align-items: center; }
 .app-doc dt { font-weight: 700; margin-top: 1rem; }
@@ -452,10 +441,6 @@ code { background: var(--sand); padding: 0 .25rem; border-radius: 4px; }
 .picto-choice input:focus-visible + .picto-choice__box { outline: 3px solid var(--focus); outline-offset: 3px; }
 .picto { display: inline-flex; flex-direction: column; align-items: center; gap: .2rem; }
 .picto .ico { width: 2.4rem; height: 2.4rem; }
-.home-razem { display: grid; gap: 1rem 1.5rem; grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
-.home-razem h2 { margin: .1rem 0 .4rem; font-size: clamp(1.3rem, 1.1rem + .8vw, 1.6rem); }
-.home-razem > p:last-child { margin: 0; }
-@media (max-width: 40em) { .home-razem { grid-template-columns: minmax(0, 1fr); } }
 @media print { .razem-nav { display: none !important; } .letter { border: 0; box-shadow: none; } }
 .etr-page #czytaj { margin-bottom: 1rem; }
 
@@ -527,3 +512,41 @@ html.a11y-contrast .mf-0 { fill: #fff; } html.a11y-contrast .map__r { stroke: #0
 .matrix td.no { color: var(--ink-soft); }
 .matrix th[scope=row] { font-weight: 400; }
 html.a11y-contrast .matrix td.ok { background: #fff; border: 2px solid #000; }
+
+/* Demo prowadzące jury (app/scenariusze.py): przyciski na starcie, karty /demo, pasek kroku, podświetlenie celu */
+.demo-start h2 { margin: 0 0 .6rem; font-size: 1.4rem; }
+.hero h1 { margin-top: 0; } /* przyciski demo na pierwszym ekranie laptopa (1366×657) i projektora (1280×720) */
+.demo-start__btns { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); }
+.demo-start__btns form { display: flex; margin: 0; }
+.demo-start__btn { width: 100%; flex-direction: column; align-items: flex-start; gap: .15rem; text-align: left; border-radius: var(--radius); }
+.demo-start__sub { font-size: .9rem; font-weight: 400; }
+.demo-start .meta { margin: .6rem 0 0; }
+.scen-cards > li { display: flex; flex-direction: column; }
+.scen-cards form { margin-top: auto; padding-top: .5rem; }
+.scen-steps { padding-left: 1.4rem; margin: .5rem 0 1rem; }
+.scen-steps li { margin: .25rem 0; }
+.scen-steps__who { color: var(--ink-soft); font-size: .9rem; }
+.scen-bar { margin: 1rem 0 1.5rem; padding: .8rem 1rem .9rem 1.1rem; background: var(--coral-soft); color: var(--ink);
+  border: 2px solid var(--coral); border-left-width: 8px; border-radius: var(--radius); }
+.scen-bar__count { margin: 0; font-size: .9rem; color: var(--ink-soft); }
+.scen-bar__count strong { color: var(--coral-dark); white-space: nowrap; }
+.scen-bar__title { margin: .15rem 0 .25rem; font-size: 1.3rem; }
+.scen-bar__text { margin: 0 0 .7rem; max-width: 50em; }
+.scen-bar__actions { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.scen-bar__actions form { margin: 0; }
+.scen-bar__actions .btn--primary { text-align: left; }
+.scen-bar__end { margin-left: auto; }
+.scen-cel { outline: 3px solid var(--coral); outline-offset: 6px; border-radius: 6px; }
+html.a11y-contrast .scen-bar { border-color: #000; }
+@media (max-width: 37.5em) {
+  .scen-bar { padding: .7rem .8rem .8rem .9rem; } .scen-bar__title { font-size: 1.15rem; }
+  .scen-bar__scen, .scen-bar__next { display: none; } /* telefon: pasek niski – „Wstecz / Dalej / Zakończ” w jednym rzędzie */
+}
+@media print { .scen-cel { outline: 0; } }
+/* Panel Hubu: 5 głównych pozycji, reszta pod „Więcej” (jak w module Razem z ZD) */
+.admin-nav { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .5rem; }
+.admin-nav > .nav-m { flex: 1 1 100%; min-width: 0; }
+.admin-nav__more > summary { padding: 0 .6rem; font-size: .92rem; border-radius: 999px; }
+.admin-nav__more > summary:hover { background: var(--sand); }
+.admin-nav__more[open] { flex-basis: 100%; }
+@media (min-width: 48em) { .admin-nav > .nav-d { flex: 0 1 auto; } } /* „Więcej” w tej samej linii co menu */

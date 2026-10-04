@@ -11,6 +11,11 @@ bp = Blueprint("komunikacja", __name__)
 SUBJECT_TABLE = {"zgloszenie": "reports", "pomysl": "ideas", "innowacja": "innovations"}
 
 
+def short(text, n=60):
+    """Skrót na granicy słowa, bez wiszącego myślnika: „…do lekarza…”, nie „…do lekarza –”."""
+    return text if len(text) <= n else text[:n + 1].rsplit(" ", 1)[0].rstrip(" –-,;:") + "…"
+
+
 def subject_link(stype, sid):
     return {"zgloszenie": f"/zgloszenie/{sid}", "pomysl": f"/pomysly/{sid}", "innowacja": f"/biblioteka/{sid}"}[stype]
 
@@ -61,7 +66,7 @@ def post_message(stype, sid):
         return redirect(link)
     body, found = mask(text)
     title = {"zgloszenie": "Zgłoszenie", "pomysl": "Pytania do pomysłu", "innowacja": "Pytania o innowację"}[stype]
-    label = subject["title"] if "title" in subject.keys() else subject["body"][:60]
+    label = subject["title"] if "title" in subject.keys() else short(subject["body"])
     tid = ensure_thread(stype, sid, f"{title}: {label}")
     db.execute("INSERT INTO messages (thread_id, user_id, body, created_at) VALUES (?,?,?,?)",
                (tid, g.user["id"], body, db.now()))
@@ -72,11 +77,11 @@ def post_message(stype, sid):
     if "user_id" in subject.keys():
         participants.add(subject["user_id"])
     participants.discard(g.user["id"])
-    notify.notify(participants, f"Nowa wiadomość: {label[:60]}", link)
+    notify.notify(participants, f"Nowa wiadomość: {short(label)}", link)
     if g.user["role"] != "admin":
-        notify.notify_admins(f"Nowa wiadomość w wątku: {label[:60]}", link, exclude=g.user["id"])
+        notify.notify_admins(f"Nowa wiadomość w wątku: {short(label)}", link, exclude=g.user["id"])
     if stype != "zgloszenie" and g.user["role"] != "ekspert" and subject["area"]:
-        notify.notify_experts(subject["area"], f"Pytanie do ekspertów: {label[:60]}", link, exclude=g.user["id"])
+        notify.notify_experts(subject["area"], f"Pytanie do ekspertów: {short(label)}", link, exclude=g.user["id"])
     nxt = ("" if g.user["role"] in ("admin", "ekspert")
            else " Odpowie Hub albo ekspert, zwykle w ciągu 3 dni roboczych – zobaczysz to w Powiadomieniach.")
     flash("Wiadomość wysłana." + nxt + (" Ukryliśmy dane osobowe, które się w niej znalazły." if found else ""), "sekcja")

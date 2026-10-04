@@ -83,7 +83,8 @@
 </header>
 
 <main id="tresc" tabindex="-1" class="wrap {% block main_class %}{% endblock %}">
-  {{ tour() }}
+  {% include "_scenariusz.html" %}
+  {% if not scenariusz() %}{{ tour() }}{% endif %}{# jeden przewodnik naraz: scenariusz demo ma pierwszeństwo #}
   {% with msgs = get_flashed_messages(with_categories=true) %}
   {% if msgs|rejectattr(0, 'equalto', 'sekcja')|first %}
   <div class="flashes">

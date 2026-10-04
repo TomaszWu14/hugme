@@ -47,6 +47,7 @@ PAGES = [
     (None, "/razem/jestem-potrzebny/zglos", None), (None, "/razem/jestem-potrzebny/oferta", None),
     (None, "/razem/jestem-potrzebny/buddy", None), (None, "/razem/jestem-potrzebny/zasady", None),
     (None, "/razem/praca#mapa-pl-h", "23-praca-mapa"), (None, "/razem/praca?woj=malopolskie", None),
+    (None, "/demo", "28-demo"), (None, "@scen", "29-scenariusz-pasek"),  # @scen zostawia scenariusz w sesji – ostatni wpis gościa
     ("mieszkaniec", "/razem/przewodnik", "19-razem-przewodnik"),
     ("mieszkaniec", "/razem/jestem-potrzebny/dzienniczek", "24-potrzebny-dzienniczek"),
     ("mieszkaniec", "/razem/jestem-potrzebny/dzienniczek/dyplom/1", None), ("mieszkaniec", "/razem/wytchnienie", None),
@@ -88,6 +89,9 @@ def open_path(page, path):
         page.select_option("#f-budget", "maly")
         page.fill("#f-problem", "Starsi mieszkańcy pięciu sołectw nie mają jak dojechać do przychodni.")
         page.click("text=Przygotuj kartę usługi")
+    elif path == "@scen":  # pasek scenariusza demo: pierwszy krok pierwszego scenariusza
+        page.goto(BASE + "/demo")
+        page.locator("button:has-text(\"Rozpocznij\")").first.click()
     elif path == "/pomysly/1" :
         page.goto(BASE + path)
         if page.locator("text=Zapytaj asystenta").count():

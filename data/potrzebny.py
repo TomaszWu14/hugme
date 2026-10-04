@@ -81,7 +81,7 @@ EASY_HINTS = ["Krótkie zdania.", "Jedna myśl w zdaniu.", "Bez skrótów i trud
 # (indeks użytkownika, source, institution, mission_kind, title, body, body_easy, powiat, days, slots, for_whom,
 #  provides, requirements, status, dni temu)
 OFFERS = [
-    (2, "instytucja", "Schronisko dla zwierząt w Wadowicach (PRZYKŁAD)", "psy", "Spacery z psami w sobotnie przedpołudnia",
+    (1, "instytucja", "Schronisko dla zwierząt w Wadowicach (PRZYKŁAD)", "psy", "Spacery z psami w sobotnie przedpołudnia",
      "Nasze psy czekają na spacer. Potrzebujemy osób, które raz w tygodniu wyprowadzą spokojnego psa po parku z opiekunem schroniska.",
      "Idziesz na spacer z psem. Pies jest spokojny. Jest z Tobą opiekun. Spacer trwa 1 godzinę.",
      "wadowicki", "sb,nd,rano", 4, "mlodziez,dorosly", "opiekun,szkolenie,kamizelka,ubezpieczenie", "Spokój przy psach.", "zatwierdzone", 30),

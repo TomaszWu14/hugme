@@ -1,6 +1,7 @@
 // Tryb „Podpowiedzi” – ulepszenia w JS (bez JS chmurki „i” działają natywnie jako <details>).
 // 1) Chmurki: jedna otwarta naraz, Esc zamyka i wraca fokusem do „i”, klik obok zamyka, panel nie wychodzi za ekran.
 // 2) „Przewodnik po tej stronie”: kroki z <script type="application/json" id="przewodnik-dane">.
+// 3) Scenariusz demo: podświetlenie elementu z data-cel paska kroku.
 // Bez localStorage i bez atrybutu style – tylko CSSOM (zgodnie z CSP).
 (function () {
   "use strict";
@@ -182,7 +183,34 @@
     window.addEventListener("resize", function () { if (tour) place(true); }); // bez przewijania: pasek adresu na telefonie też wywołuje resize
   }
 
-  function init() { initHelps(); initTour(); }
+  /* ---------- Scenariusz demo (pasek .scen-bar): podświetl element kroku i przewiń do niego ---------- */
+  function initScen() {
+    var bar = document.querySelector(".scen-bar[data-cel]");
+    var sel = bar && bar.getAttribute("data-cel");
+    var t = null;
+    if (!sel) return;
+    try { t = document.querySelector(sel); } catch (e) { return; }
+    if (!t || !visible(t)) return;
+    t.classList.add("scen-cel");
+    if (location.hash) return; // adres z kotwicą (np. lista po kliknięciu powiatu) – przeglądarka już przewinęła
+    var r = t.getBoundingClientRect(), b = bar.getBoundingClientRect(), h = window.innerHeight, dy = 0;
+    // Element nisko na ekranie – przewiń w jego stronę, ale nie dalej niż do górnej krawędzi paska:
+    // instrukcja kroku i „Dalej” muszą zostać widoczne.
+    if (r.top > h * 0.6) { dy = Math.max(0, Math.min(b.top - 8, r.top - h * 0.2)); scrollToY(window.scrollY + dy); }
+    var actions = bar.querySelector(".scen-bar__actions");
+    if (r.top - dy > h * 0.85 && actions) { // dalej poza ekranem – przycisk przewija do celu
+      var more = document.createElement("button");
+      more.type = "button";
+      more.className = "btn btn--small scen-bar__more";
+      more.textContent = "Gdzie kliknąć? ↓";
+      more.addEventListener("click", function () { // wysoki cel (np. długi formularz) – od jego początku, niski – na środek
+        t.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: t.offsetHeight > h * 0.8 ? "start" : "center" });
+      });
+      actions.insertBefore(more, actions.firstChild);
+    }
+  }
+
+  function init() { initHelps(); initTour(); initScen(); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 })();

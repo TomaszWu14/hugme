@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf %}
+{% block title %}Demo krok po kroku{% endblock %}
+{% block content %}
+<h1>Zobacz demo w 1,5 minuty</h1>
+<p class="lead">Wybierz historię. Na górze każdej strony pasek powie, co kliknąć i co zobaczysz – konto zmienia się samo.</p>
+<ul class="grid grid--two scen-cards">
+  {% for sid, s in scenariusze.items() %}
+  <li class="card card--raised">
+    <p class="eyebrow">Scenariusz {{ loop.index }} · {{ s.czas }} · {{ s.kroki|length }} kroków</p>
+    <h2 class="h3">{{ s.tytul }}</h2>
+    <p>{{ s.opis }}</p>
+    <ol class="scen-steps">
+      {% for k in s.kroki %}<li>{{ k.tytul }} <span class="scen-steps__who">· {{ roles[k.uid] if k.uid else 'Gość' }}</span></li>{% endfor %}
+    </ol>
+    <form method="post" action="/demo/{{ sid }}/1">{{ csrf() }}
+      <button type="submit" class="btn btn--primary btn--large">Rozpocznij<span class="sr-only">: {{ s.tytul }}</span></button></form>
+  </li>
+  {% endfor %}
+</ul>
+<p class="meta">Konta demo nie mają haseł.{% if config.DEMO_MODE %} Demo odnawia się samo po 20 minutach bez nowych wpisów.{% endif %}</p>
+{% endblock %}
