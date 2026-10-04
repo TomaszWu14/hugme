@@ -106,7 +106,7 @@ CHECKS_JS = """() => {
   // tekst karty z paskiem obszaru nie może wchodzić pod pasek ani wychodzić poza kartę
   const clipped = [...document.querySelectorAll('.card--thread')].filter(c => c.offsetParent).flatMap(c => {
     const r = c.getBoundingClientRect(), left = r.left + 8;
-    return [...c.querySelectorAll('h2, h3, p')].filter(e => e.offsetParent && e.textContent.trim())
+    return [...c.querySelectorAll('h2, h3, p')].filter(e => e.offsetParent && e.textContent.trim() && !e.closest('.help__panel'))  // chmurka „i” to okienko, nie tekst karty
       .filter(e => { const q = e.getBoundingClientRect(); return q.left < left || q.right > r.right + 1; })
       .slice(0, 1).map(e => e.textContent.trim().slice(0, 40));
   });
