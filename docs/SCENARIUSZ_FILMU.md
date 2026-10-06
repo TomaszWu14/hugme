@@ -1,39 +1,34 @@
-# Scenariusz filmu (do 3 minut)
+# Scenariusz filmu HugMe (3 minuty)
 
-**Format:** nagranie ekranu (1920×1080) z lektorem, MP4. **Narzędzie:** np. OBS albo Xbox Game Bar (Win+G).
-**Przygotowanie:** świeża baza (usuń `instance/hugme.db`), przeglądarka 125% powiększenia, ukryte zakładki,
-bez klucza AI – film pokazuje, że dopasowanie działa bez sztucznej inteligencji.
+**Film:** [docs/film/hugme-film.mp4](film/hugme-film.mp4) – 2:51, 1920×1080, 30 kl./s, polski lektor i wtopione napisy; osobno napisy [hugme-film.srt](film/hugme-film.srt). Do pobrania z GitHuba: otwórz plik i kliknij „Download raw file” (ikona strzałki).
 
-| Czas | Ekran | Co robisz | Lektor |
+**Historia w jednym ciągu:** Anna, mama chłopca z zespołem Downa, opisuje problem → platforma ukrywa dane osobowe i dobiera sprawdzone rozwiązania z wyjaśnieniem → zgłoszenie trafia do koordynatorki Hubu ROPS, która łączy rodzinę z rozwiązaniem i odpowiada → moduł Razem z ZD i program „Jestem potrzebny” (Bartek pomaga w schronisku, dostaje odznakę) → mapa miejsc pracy → gmina dostaje kartę usługi z Pośrednika innowacji → Hub widzi trendy i luki → dostępność → plansza z linkami.
+
+| Czas | Scena | Co widać | Lektor (= napisy) |
 |---|---|---|---|
-| 0:00–0:15 | Strona startowa | powolne przewinięcie: logo, ilustracja splotu | „HugMe – platforma dla HubMi.pl. Hub plus Mi, Małopolska, czyta się jak *hug me* – przytul mnie. Bo z problemem nikt nie powinien zostać sam.” |
-| 0:15–0:35 | Pole „Co jest trudne?” | dopisz: „mój syn Kacper, tel. 600 123 456”, kliknij **Znajdź rozwiązania** | „Mama dziecka z zespołem Downa opisuje własnymi słowami, jak męczące są wizyty u wielu specjalistów. Nie musi znać urzędowych pojęć.” |
-| 0:35–1:00 | Wyniki | pokaż komunikat o ukrytych danych, pierwszą kartę, „Dlaczego pasuje” | „Imię i telefon zostały ukryte, zanim cokolwiek trafiło do bazy. Platforma znalazła rozwiązanie z Biblioteki Innowacji – tu przykładowe: Asystenta zdrowia rodziny – i wyjaśnia, dlaczego pasuje. To dopasowanie nie potrzebuje sztucznej inteligencji – każdy wynik da się wyjaśnić. AI może je tylko wzbogacić.” |
-| 1:00–1:15 | Zapis zgłoszenia | wybierz konto mieszkanki, **Zapisz**, kliknij **Pomocne** | „Jednym kliknięciem zapisuje zgłoszenie. Jej ocena to dla Hubu pomiar trafności.” |
-| 1:15–1:40 | Panel Hubu | przełącz na koordynatorkę: skrzynka → zgłoszenie → status „Połączone”, odpowiedź w wątku | „Koordynatorka Hubu widzi zgłoszenie w skrzynce, łączy rodzinę z autorami rozwiązania i odpisuje. Mama dostaje powiadomienie.” |
-| 1:40–1:55 | Razem z ZD | menu „Razem z ZD” → etap „Przedszkole” → plan | „Dla rodzin osób z zespołem Downa jest osobna przestrzeń: plan na każdy etap życia, wizyty zapisane tylko na telefonie i rodzic-przewodnik z tej samej okolicy.” |
-| 1:55–2:25 | Jestem potrzebny | „Ja chcę pomagać” → obrazek „psy” → Wyślij; przełącz na admina: `/admin/potrzebny` → „Połącz” Tomka ze schroniskiem → „Misja odbyła się”; wróć na mieszkankę: dzienniczek z odznaką | „Osoby z zespołem Downa nie tylko dostają pomoc – też jej udzielają. W programie „Jestem potrzebny” dorosła osoba z ZD sama wybiera obrazek: psy. Hub łączy ją ze schroniskiem, zawsze z opiekunem, i potwierdza każdą misję. W dzienniczku rośnie liczba odznak, a po pięciu misjach – lista umiejętności do pracy.” |
-| 2:25–2:33 | Praca | `/razem/praca` → klik „małopolskie” na mapie | „Mapa pokazuje, gdzie w Polsce naprawdę pracują osoby z zespołem Downa – każde miejsce ze źródłem.” |
-| 2:33–2:41 | Pośrednik | przełącz na gminę, gotowa karta usługi | „Gmina, która chce wdrożyć podobną usługę, dostaje od Pośrednika kartę: zespół, kroki, partnerzy, finansowanie.” |
-| 2:41–2:49 | Trendy i luki | admin: trendy (mapa powiat × obszar), luki | „Hub widzi, gdzie potrzeby rosną i gdzie brakuje rozwiązań. Luki stają się tematami nowych konkursów.” |
-| 2:49–2:54 | Dostępność | kliknij A+ i Wysoki kontrast | „Duży tekst, wysoki kontrast, klawiatura – 136 widoków bez naruszeń wykrywanych automatycznie.” |
-| 2:54–3:00 | Strona startowa | plansza: logo, hugme.twapp.pl, repozytorium | „HugMe. Twój problem nie zostaje sam.” |
+| 0:00–0:05 | Plansza tytułowa | Plansza tytułowa: logo, „HugMe”, „Twój problem nie zostaje sam”. | „HugMe – platforma dla Małopolskiego Hubu Innowacji Społecznych.” |
+| 0:05–0:12 | Strona startowa | Strona startowa na koncie Anny: hasło i ilustracja, płynne przewinięcie do pola „Co jest trudne? Kogo to dotyczy?”. | „Czyta się jak „hug me” – przytul mnie. Bo z problemem nikt nie powinien zostać sam.” |
+| 0:12–0:22 | Anna, mama · Szukaj pomocy | Anna kasuje przykładowy opis, wpisuje własny (z imieniem syna i telefonem), wybiera powiat wadowicki i klika „Znajdź rozwiązania”. | „Anna, mama chłopca z zespołem Downa, opisuje problem własnymi słowami – bez urzędowych pojęć. Wpisuje też imię syna i swój telefon.” |
+| 0:22–0:48 | Anna, mama · Wyniki dopasowania | Wyniki: w opisie „[IMIĘ]” i komunikat o ukrytych danych; karty z Biblioteki Innowacji – „Asystent zdrowia rodziny”, pasek dopasowania i „Dlaczego pasuje”, druga karta. | „Zanim cokolwiek trafi do bazy, platforma ukrywa imię i telefon. Potem pokazuje sprawdzone rozwiązania z Biblioteki Innowacji – na przykład Asystenta zdrowia rodziny, który układa wizyty u wielu specjalistów. Przy każdym wyniku widać, dlaczego pasuje. Dopasowanie działa bez sztucznej inteligencji, więc każdy wynik da się wyjaśnić.” |
+| 0:48–0:56 | Anna, mama · Zgłoszenie do Hubu | „Zapisz zgłoszenie” → strona zgłoszenia z potwierdzeniem → ocena „Pomocne” przy pierwszym rozwiązaniu. | „Anna chce odpowiedzi od człowieka, więc zapisuje zgłoszenie dla Hubu. Ocena „Pomocne” mówi Hubowi, czy dopasowanie było trafne.” |
+| 0:56–1:09 | Joanna, koordynatorka Hubu ROPS · Panel Hubu | Konto koordynatorki: Panel Hubu → Skrzynka → zgłoszenie Anny → status „Połączone z rozwiązaniem” → „Zapisz i powiadom autora” → odpowiedź w rozmowie. | „Koordynatorka Hubu widzi zgłoszenie w skrzynce. Otwiera je, oznacza jako połączone z rozwiązaniem i odpisuje Annie. Anna od razu dostaje powiadomienie.” |
+| 1:09–1:23 | Anna, mama · Razem z ZD | Razem z ZD: „Wasza rodzina nie zostaje sama” → etap „Przedszkole” → plan: „Co teraz ważne” i „Kto pomoże”. | „Rodziny osób z zespołem Downa mają też osobny moduł: Razem z ZD. Po wybraniu etapu życia – na przykład przedszkola – widać, co teraz ważne i kto w Małopolsce pomoże.” |
+| 1:23–1:38 | Bartek z mamą · „Jestem potrzebny” w łatwym tekście | „Ja chcę pomagać” w łatwym tekście: obrazki psy, sobota, rano, „mama, tata lub opiekun”; pseudonim Bartek, powiat wadowicki, zgoda → „Wyślij”. | „Ale osoby z zespołem Downa nie tylko dostają pomoc – same też pomagają. W programie „Jestem potrzebny” dorosły Bartek wybiera obrazki: lubi psy, ma czas w sobotę rano, a idzie z nim mama.” |
+| 1:38–1:49 | Joanna, koordynatorka Hubu · „Jestem potrzebny” | Jestem potrzebny – panel Hubu: para Bartek ↔ Schronisko dla zwierząt w Wadowicach → „Połącz” → „Misja odbyła się”. | „Hub dostaje gotowe propozycje par z tego samego powiatu. Koordynatorka łączy Bartka ze schroniskiem w Wadowicach, a po spacerze z psami potwierdza misję.” |
+| 1:49–1:56 | Bartek z mamą · Dzienniczek | Dzienniczek Bartka: misja w schronisku, odznaka „Pierwsza misja”, zapowiedź umiejętności po 5 misjach. | „W dzienniczku Bartka jest już pierwsza odznaka. Po pięciu misjach pojawią się tu umiejętności przydatne w pracy.” |
+| 1:56–2:06 | Razem z ZD · Praca | Praca: mapa Polski z miejscami pracy osób z ZD → „małopolskie” → lista miejsc z linkami „Źródło”. | „A mapa pokazuje prawdziwe miejsca pracy osób z zespołem Downa – kawiarnie, urzędy, zakłady aktywności zawodowej – każde ze źródłem.” |
+| 2:06–2:23 | Piotr, urzędnik gminy · Biblioteka i Pośrednik innowacji | Konto gminy: karta „Bus na Telefon” → „Dopasuj do mojej gminy” → wypełniony Pośrednik innowacji → „Przygotuj kartę usługi” → karta (zespół, kroki, partnerzy, koszty, finansowanie) → „Drukuj / zapisz jako PDF”. | „Z HugMe korzysta też gmina, która szuka sposobu na dowóz seniorów do lekarza. Pośrednik innowacji bierze sprawdzony Bus na Telefon i przygotowuje kartę usługi: zespół, kroki, partnerów, koszty i finansowanie – gotową do druku.” |
+| 2:23–2:34 | Joanna, koordynatorka Hubu · Trendy i luki | Trendy potrzeb i luki: zmiany wg obszaru, mapa powiat × obszar, luki z plakietką „Kandydat na konkurs”. | „Hub widzi, w jakich obszarach i powiatach Małopolski przybywa zgłoszeń. Problemy bez dobrego rozwiązania stają się lukami – tematami nowych konkursów.” |
+| 2:34–2:44 | Dostępność · WCAG 2.1 AA | Strona startowa: „A+ większy tekst”, „Wysoki kontrast”, przejście klawiszem Tab z widocznym fokusem. | „HugMe jest dla wszystkich: większy tekst, wysoki kontrast, obsługa klawiaturą. Automatyczny audyt nie wykrył naruszeń dostępności w 138 widokach.” |
+| 2:44–2:51 | Plansza końcowa | Plansza końcowa: hugme.twapp.pl, github.com/TomaszWu14/hugme, kod QR do demo. | „HugMe. Twój problem nie zostaje sam.” |
 
-**W aplikacji, poza filmem (zmiany z 4.10, po nagraniu).** Film trwa 2:59 i nie ma rezerwy czasu, więc tych zmian
-w nim nie ma – pokazujemy je na żywo albo w [README](../README.md#scenariusz-demo-5-minut):
-- menu z nazwami modułów z briefu (Szukaj pomocy, Zasobnik wiedzy, Biblioteka innowacji, Tester innowacji,
-  Kreator pomysłów, Pośrednik innowacji, na końcu „Razem z ZD · pilotaż”), dzwonek powiadomień, na starcie kafle
-  „7 modułów HubMi” i „Przewodnik dla jury: 5 kroków”; Trendy i luki na jednym ekranie;
-- **tryb Podpowiedzi**: przełącznik „Podpowiedzi: wł./wył.” w pasku, ikonki „i” przy polach, filtrach i wykresach
-  (do czego służy, przykład albo jak czytać, skąd to się bierze) oraz „Przewodnik po tej stronie” w 4–5 krokach;
-- liczby z dnia oddania: 138 widoków bez naruszeń wykrywanych automatycznie (w filmie: 136), trafność top 3: 16/16.
+## Jak powstaje film
 
-**Jak powstaje film:** `python scripts/film.py <katalog>` nagrywa przeklikanie (Playwright, rzeczywiste czasy scen
-w `sceny.txt`), a `python scripts/film_napisy.py <katalog> [lektor.mp3]` przyspiesza je do 2:59, wtapia napisy PL
-i dokłada planszę końcową. Tekst i dokładne czasy lektora: [film/lektor.srt](film/lektor.srt) – to samo źródło dla
-głosu z syntezatora i dla napisów; gotowe audio podaje się jako drugi argument.
-W oddanej wersji lektor to syntezator mowy (edge-tts, głos `pl-PL-ZofiaNeural`), generowany osobno dla każdej sceny
-i dopasowany do jej okna.
+Wszystko jest w repo i odtwarza się jedną komendą: `python demo/build_all.py` (albo krokami poniżej).
 
-**Wskazówki:** mów wolno (ok. 130 słów na minutę, cały tekst ma ok. 300 słów), nie pokazuj paska adresu
-z localhost, w drugiej wersji filmu dodaj napisy.
+1. **Scenariusz** – `demo/film_sceny.py`: dla każdej sceny konto demo, podpis, opis ekranu, tekst lektora i jego zapis fonetyczny dla syntezatora („HugMe” czytamy po angielsku: „hag‑mi”).
+2. **Lektor** – `demo/film_lektor/*.mp3`: ElevenLabs (model eleven_multilingual_v2, głos „Arleta – Calm Instructor”), jedna kwestia na scenę. `slowa.json` to czasy każdego słowa z transkrypcji (ElevenLabs Scribe) – z nich liczone są napisy i chwile kliknięć.
+3. **Nagranie** – `python demo/film_nagraj.py`: Playwright na świeżej bazie, okno 1920×1080 z powiększeniem 125%, zapis klatek przez CDP (ostry tekst). Akcje są przypięte do słów lektora (np. klik „Połącz” na słowie „łączy”), a scena trwa co najmniej tyle, ile jej kwestia – dlatego nic nie jest ucięte ani przyspieszone. Konta przełączamy w tle, więc w filmie nie ma ekranu wyboru konta.
+4. **Montaż** – `python demo/film_montaz.py`: plansze, przenikania 0,4 s między ekranami, lektor (tempo ×1.04, głośność −16 LUFS), napisy co do słowa; sprawdza limit 3:00 i zapisuje ten plik.
+
+**Dlaczego nowa wersja:** poprzednie filmy powstawały w pośpiechu – nagranie było przyspieszane do zadanej długości, a lektor dopasowywany do scen „na sztywno”, przez co kwestie się urywały, w ścieżce były kilkunastosekundowe dziury, a napisy nie pasowały do obrazu. Teraz to lektor wyznacza rytm obrazu.
