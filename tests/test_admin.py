@@ -155,6 +155,24 @@ def test_admin_hides_and_restores_idea_and_message(client, app):
     assert title in page and msg["body"][:30] not in page and "Ukryj" not in page
 
 
+def _messages_and_notifications(app):
+    with app.app_context():
+        return (db.one("SELECT COUNT(*) FROM messages")[0], db.one("SELECT COUNT(*) FROM notifications")[0])
+
+
+def test_hidden_idea_thread_rejects_messages_except_hub(client, app):
+    with app.app_context():
+        db.execute("UPDATE ideas SET hidden = 1 WHERE id = 1")
+    messages, notifications = _messages_and_notifications(app)
+    token = login(client, "ngo")
+    r = client.post("/watek/pomysl/1", data={"_csrf": token, "tresc": "Pytanie po ukryciu"})
+    assert r.status_code == 404
+    assert _messages_and_notifications(app) == (messages, notifications)  # ani wiadomości, ani powiadomień
+    token = login(client, "admin")                                         # Hub moderuje i może odpisać
+    assert client.post("/watek/pomysl/1", data={"_csrf": token, "tresc": "Wątek zamknięty"}).status_code == 302
+    assert _messages_and_notifications(app)[0] == messages + 1
+
+
 def test_gaps_moved_to_trends_and_linked_reports_are_not_gaps(client, app):
     login(client, "admin")
     r = client.get("/admin/luki")

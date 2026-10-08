@@ -57,6 +57,9 @@ def post_message(stype, sid):
     subject = db.one(f"SELECT * FROM {table} WHERE id = ?", (sid,))  # table z białej listy
     if subject is None:
         abort(404)
+    # Ukryty przez moderację temat nie istnieje dla nikogo poza Hubem – jak w widoku pomysłu.
+    if "hidden" in subject.keys() and subject["hidden"] and g.user["role"] != "admin":
+        abort(404)
     if not can_post(stype, subject):
         abort(403)
     text = request.form.get("tresc", "").strip()
