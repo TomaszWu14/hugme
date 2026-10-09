@@ -113,15 +113,15 @@
   <h2 id="zglos-h">Zgłoś miejsce pracy</h2>
   <p>Znasz firmę, urząd, kawiarnię albo zakład, w którym pracują osoby z zespołem Downa? Podaj link do artykułu lub strony –
     Hub sprawdzi źródło i doda miejsce na mapę.</p>
-  <form method="post" action="/razem/praca/zglos" novalidate>
+  <form method="post" action="/razem/praca/zglos#zglos" novalidate>
     {{ csrf() }}
-    {{ field('name', 'Nazwa miejsca', hint='Kawiarnia „Dobra”', required=true) }}
-    {{ field('kind', 'Rodzaj', options=W.KIND_LABELS.items()|list, required=true) }}
-    {{ field('city', 'Miejscowość', hint='Poznań', required=true) }}
-    {{ field('voivodeship', 'Województwo', options=W.VOIVODESHIPS.items()|list, required=true) }}
-    {{ field('powiat', 'Powiat (tylko Małopolska)', options=powiaty|pairs) }}
-    {{ field('url', 'Link do źródła', type='url', hint='https://… artykuł prasowy albo strona miejsca', plain_hint=true, required=true) }}
-    {{ field('note', 'Co tam robią osoby z ZD?', rows=2, hint='obsługa gości, prace biurowe') }}
+    {{ field('name', 'Nazwa miejsca', hint='Kawiarnia „Dobra”', required=true, value=form.name, error=errors.name) }}
+    {{ field('kind', 'Rodzaj', options=W.KIND_LABELS.items()|list, required=true, value=form.kind, error=errors.kind) }}
+    {{ field('city', 'Miejscowość', hint='Poznań', required=true, value=form.city, error=errors.city) }}
+    {{ field('voivodeship', 'Województwo', options=W.VOIVODESHIPS.items()|list, required=true, value=form.voivodeship, error=errors.voivodeship) }}
+    {{ field('powiat', 'Powiat (tylko Małopolska)', options=powiaty|pairs, value=form.powiat, error=errors.powiat) }}
+    {{ field('url', 'Link do źródła', type='url', hint='https://… artykuł prasowy albo strona miejsca', plain_hint=true, required=true, value=form.url, error=errors.url) }}
+    {{ field('note', 'Co tam robią osoby z ZD?', rows=2, hint='obsługa gości, prace biurowe', value=form.note, error=errors.note) }}
     {% if g.user %}<button type="submit" class="btn btn--primary">Wyślij do Hubu</button>
     {% else %}<p><a class="btn btn--primary" href="/konto?next=/razem/praca">Wybierz konto, żeby wysłać</a></p>{% endif %}
   </form>
