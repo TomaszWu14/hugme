@@ -3,7 +3,7 @@
 Docelowo logowanie przez login.gov.pl albo link e-mail – patrz docs/ARCHITEKTURA.md."""
 from functools import wraps
 
-from flask import flash, Blueprint, abort, g, redirect, render_template, request, session, url_for
+from flask import flash, Blueprint, abort, current_app, g, redirect, render_template, request, session, url_for
 
 from core import db
 
@@ -69,7 +69,9 @@ def role_required(*roles):
 
 def switch_account(uid):
     """Zmiana konta demo (None = gość): nowa sesja (ochrona przed session fixation), ale szkice
-    i aktywny scenariusz demo przeżywają logowanie."""
+    i aktywny scenariusz demo przeżywają logowanie. Bez DEMO_ACCOUNTS – 404 (#15)."""
+    if not current_app.config["DEMO_ACCOUNTS"]:
+        abort(404)
     kept = {k: session[k] for k in ("draft", "razem_draft", "scen") if k in session}
     session.clear()
     session.update(kept)
@@ -79,6 +81,8 @@ def switch_account(uid):
 
 @bp.route("/konto", methods=["GET", "POST"])
 def demo():
+    if not current_app.config["DEMO_ACCOUNTS"]:
+        abort(404)
     if request.method == "POST":
         uid = request.form.get("user_id", type=int)
         user = db.one("SELECT id, is_active, role FROM users WHERE id = ?", (uid,)) if uid else None
