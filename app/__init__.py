@@ -32,6 +32,8 @@ def create_app(test_config=None):
     )
     if test_config:
         app.config.update(test_config)
+    # Konta demo bez haseł (pasek, /konto, scenariusze /demo) – jedyne logowanie w prototypie, więc tylko na żądanie.
+    app.config.setdefault("DEMO_ACCOUNTS", app.config["DEMO_MODE"] or os.environ.get("DEMO_ACCOUNTS") == "1")
 
     Path(app.config["DATABASE"]).parent.mkdir(parents=True, exist_ok=True)
     _ensure_db(app)
