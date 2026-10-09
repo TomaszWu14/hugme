@@ -71,6 +71,7 @@ ERRORS = {
     404: ("Nie ma takiej strony", "Może adres się zmienił. Wróć na stronę startową."),
     405: ("Tak się nie da", "Wróć na stronę startową."),
     413: ("Za dużo danych", "Spróbuj z mniejszym plikiem (do 2 MB)."),
+    500: ("Coś poszło nie tak po naszej stronie", "Spróbuj za chwilę. Jeśli błąd wróci, napisz do Hubu."),
 }
 
 
