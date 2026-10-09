@@ -5,7 +5,7 @@ instance/
 .env
 graphify-out/
 .pytest_cache/
-.idea/workspace.xml
+.idea/
 scripts/.cache/
 
 # materiały demo: wyniki budowania (finalne kopie są w docs/)

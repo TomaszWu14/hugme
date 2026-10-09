@@ -10,8 +10,8 @@
 - Dwa agenty pomocnicze: **budżet kliknięć** (Playwright, każda ścieżka w nowej sesji) i **testy trafności Matchmakingu** (10 przypadków z briefu i warianty). Ich wyniki są przypisane do jurorów 1, 2 i 3.
 - Wszystko sprawdzano **lokalnie** na http://127.0.0.1:5055 z `DEMO_MODE=1` i **bez klucza AI**, więc widać zachowanie fallbacku: BM25, słownik tematów i ramkę „Podpowiedź z szablonu (bez AI)”. Produkcji nie dotykano (wyszukiwanie zużywa dzienny limit AI). Kodu aplikacji w Etapie 1 nie zmieniano.
 - Rozdzielczości: 1366×768 i 390×844. Dodatkowo Juror 2 sprawdził 683×384 (odpowiednik zoomu 200%) oraz telefon z A+.
-- Zrzuty „przed”: `audit/iteracje/00-przed/`. Pliki 01–17 to ekrany publiczne (Juror 1a), 30–51 to ekrany po zalogowaniu i panel (Juror 1b). Zrzuty i skrypty pozostałych agentów są w scratchpadzie sesji (`scratchpad/juror2/`, `j3/`, `klik/`, `trafnosc/`).
-- Porównanie z Trash Fairy i wzorce do przeniesienia: `audit/WZORCE.md`.
+- Zrzuty „przed”: `docs/audit/iteracje/00-przed/`. Pliki 01–17 to ekrany publiczne (Juror 1a), 30–51 to ekrany po zalogowaniu i panel (Juror 1b). Zrzuty i skrypty pozostałych agentów są w scratchpadzie sesji (`scratchpad/juror2/`, `j3/`, `klik/`, `trafnosc/`).
+- Porównanie z Trash Fairy i wzorce do przeniesienia: `docs/audit/WZORCE.md`.
 - Wagi znalezisk: **BLOKUJE** (martwa ścieżka albo brak elementu wymaganego wprost przez brief), **ODBIERA PUNKTY**, **KOSMETYKA**. Duplikaty zgłoszone przez kilku agentów są scalone pod jednym ID, a w nawiasie podane są ID scalone. Dwa znaleziska podniósł do BLOKUJE sekretarz jury, bo dotyczą wymogu wprost z profilu A (oznaczone †).
 - Dane testowe agentów zostały w lokalnej bazie (pomysły „J3 …”, oceny 1★ dla innowacji 1, wpisy przy /biblioteka/1–3 i 24–25). Demo odnawia się samo po 20 minutach bez nowych wpisów.
 
@@ -288,9 +288,9 @@ Runda końcowa: 4.10, ok. 07:45–08:00, **produkcja** https://hugme.twapp.pl (A
   - `/zgloszenie` z 2/21 na 4/24.
 
 **Zrzuty: przed → po → końcowe**
-- `audit/iteracje/00-przed/`: lokalnie, bez AI, Etap 1.
-- `audit/iteracje/01-po/`: po PR #8, pliki `p1-…` do `p5-…` (pakiety).
-- `audit/iteracje/02-final/`: produkcja po PR #9.
+- `docs/audit/iteracje/00-przed/`: lokalnie, bez AI, Etap 1.
+- `docs/audit/iteracje/01-po/`: po PR #8, pliki `p1-…` do `p5-…` (pakiety).
+- `docs/audit/iteracje/02-final/`: produkcja po PR #9.
   - 01–16: Juror 1, ekrany i tryb Podpowiedzi.
   - 20–33: Juror 2, telefon, chmurki, przewodniki, A+ z kontrastem.
   - 30-j3…38-j3: Juror 3. **31-j3-wyniki-seniorka** to dowód problemu z danymi.

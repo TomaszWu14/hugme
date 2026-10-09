@@ -1,5 +1,9 @@
 # HugMe — platforma dla HubMi.pl
 
+![Strona startowa HugMe: pole „Co jest trudne? Kogo to dotyczy?” i ilustracja splotu](docs/zrzuty/01-start-desktop.png)
+
+**HugMe łączy problem mieszkańca z gotowym rozwiązaniem w regionie i pokazuje Hubowi luki.**
+
 [![Testy](https://github.com/TomaszWu14/hugme/actions/workflows/ci.yml/badge.svg)](https://github.com/TomaszWu14/hugme/actions/workflows/ci.yml)
 
 > **Twój problem nie zostaje sam.**
@@ -23,8 +27,6 @@ konto, a „Dalej” prowadzi do następnego ekranu:
 Kroki zależą od siebie (np. Bartek pojawia się u Hubu dopiero po zgłoszeniu), więc najlepiej iść po kolei.
 Konta demo nie mają haseł – rolę (mieszkanka, organizacja, gmina, ekspert, koordynatorka Hubu) możesz też wybrać
 sam w pasku u góry. Demo odnawia się samo po 20 minutach bez nowych wpisów.
-
-![Strona startowa HugMe: pole „Co jest trudne? Kogo to dotyczy?” i ilustracja splotu](docs/zrzuty/01-start-desktop.png)
 
 ## Gra słów
 
@@ -111,7 +113,7 @@ Reset danych: usuń plik bazy. AI włączysz zmienną `ANTHROPIC_API_KEY` (przyk
 **Testy i audyt:**
 
 ```bash
-pytest                                   # 313 testów: ścieżki, role, CSRF, prywatność, trafność
+pytest                                   # 350 testów: ścieżki, role, CSRF, prywatność, trafność
 python -m playwright install chromium
 python scripts/axe_audit.py --zrzuty     # raport docs/WCAG_RAPORT.md + docs/zrzuty/
 ```
@@ -163,7 +165,7 @@ i style są w repo, bez CDN), `/demo` działa tak samo; plan C: [film](docs/film
 [ARCHITEKTURA](docs/ARCHITEKTURA.md) · [DANE](docs/DANE.md) · [WCAG](docs/WCAG.md) ·
 [Raport axe](docs/WCAG_RAPORT.md) · [KOSZTY](docs/KOSZTY.md) · [KRYTERIA](docs/KRYTERIA.md) ·
 [ROADMAPA](docs/ROADMAPA.md) · [PYTANIA DO MENTORÓW](docs/PYTANIA_DO_MENTOROW.md) ·
-[SCENARIUSZ FILMU](docs/SCENARIUSZ_FILMU.md) · [Symulacja jury](audit/JURY.md) · [makiety](docs/zrzuty/) · decyzje projektowe: [BRAINSTORM.md](BRAINSTORM.md)
+[SCENARIUSZ FILMU](docs/SCENARIUSZ_FILMU.md) · [Symulacja jury](docs/audit/JURY.md) · [makiety](docs/zrzuty/) · decyzje projektowe: [BRAINSTORM.md](docs/BRAINSTORM.md)
 
 ## Stos
 
@@ -173,10 +175,24 @@ produkcyjne: `flask`, `gunicorn`, `anthropic`.
 ## Jak powstało
 
 Projekt zrobiłem sam w czasie HackYeah 2026. Decyzje produktowe zapadały w ustrukturyzowanych sesjach pytań
-(100 decyzji w [BRAINSTORM.md](BRAINSTORM.md), specyfikacje i plany w [docs/superpowers/](docs/superpowers/)).
+(100 decyzji w [BRAINSTORM.md](docs/BRAINSTORM.md), specyfikacje i plany w [docs/superpowers/](docs/superpowers/)).
 Kod pisałem z **Claude Code** jako asystentem programisty – decyzje, dane, testy i weryfikacja są moje, a każdy
 commit ma jawny dopisek `Co-Authored-By: Claude`. Zmiany przechodzą przez PR, testy i audyt dostępności w CI,
 a po scaleniu wdrażają się same (webhook do Coolify).
+
+## Ograniczenia
+
+To prototyp z hackathonu, nie system produkcyjny:
+
+- **Brak prawdziwego logowania.** Konta demo przełącza się bez haseł; login.gov.pl i link e-mail są tylko opisane
+  w [docs/ARCHITEKTURA.md](docs/ARCHITEKTURA.md#logowanie).
+- **Dane są fikcyjne** (poza miejscami pracy i statystykami w module „Praca”), a demo odnawia się po 20 minutach
+  bez nowych wpisów – nie zapisuj tam niczego ważnego.
+- **Poczta nie wychodzi.** Powiadomienia e-mail trafiają do kolejki widocznej w panelu Hubu; wysyłka SMTP to krok wdrożenia.
+- **Jedna instancja z SQLite.** Schemat jest zgodny z PostgreSQL, ale większy ruch wymaga przejścia na Postgres.
+- **Trafność zmierzona na małym zestawie** (16 zdań testowych); na prawdziwych zgłoszeniach trzeba ją sprawdzić ponownie.
+- **AI jest opcjonalne** i bez klucza `ANTHROPIC_API_KEY` działają tylko reguły i szablony.
+- **Dostępność sprawdzona przez axe-core i przegląd ręczny** (klawiatura, czytnik ekranu); nie było jeszcze testów z osobami z niepełnosprawnościami.
 
 ## Prawa
 
