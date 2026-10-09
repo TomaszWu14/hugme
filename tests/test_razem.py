@@ -117,6 +117,8 @@ def test_request_is_masked_saved_and_notifies_hub(client, app):
 
 def test_specialist_day_one_click(client, app):
     token = login(client, "mieszkaniec")
+    with app.app_context():  # Anna głosuje już w danych demo – jeden głos na konto (#18)
+        db.execute("DELETE FROM family_requests WHERE kind = 'dzien-specjalistow' AND user_id = 1")
     before = count(app, "SELECT COUNT(*) FROM family_requests WHERE kind='dzien-specjalistow'")
     client.post("/razem/prosba/dzien-specjalistow", data={"_csrf": token, "powiat": "suski", "alias": "Rodzic"})
     assert count(app, "SELECT COUNT(*) FROM family_requests WHERE kind='dzien-specjalistow'") == before + 1
@@ -315,3 +317,26 @@ def test_module_nav_has_five_items_and_more(client):
     desktop = nav[nav.index('class="nav nav-d'):]
     assert desktop[:desktop.index("</ul>")].count("<li>") == 5
     assert "Więcej" in nav and 'href="/razem/prawa"' in nav and 'class="btn btn--small" href="/razem/moje-sprawy"' in nav
+
+
+def test_signup_for_past_event_rejected(client, app):
+    """Issue #22: bezpośredni POST na minione wydarzenie nie zapisuje i nie wysyła „Zapisano”."""
+    token = login(client, "mieszkaniec")
+    with app.app_context():
+        db.execute("UPDATE events SET date = '2000-01-01' WHERE id = 1")
+    resp = client.post("/razem/wydarzenia/1/zapis", data={"_csrf": token})
+    assert "już się odbyło" in client.get(resp.headers["Location"]).get_data(as_text=True)
+    assert count(app, "SELECT COUNT(*) FROM event_signups WHERE event_id = 1 AND user_id = 1") == 0
+    assert count(app, "SELECT COUNT(*) FROM notifications WHERE user_id = 1 AND body LIKE 'Zapisano:%'") == 0
+
+
+def test_specialists_day_one_vote_per_account(client, app):
+    """Issue #18: kolejne kliknięcia z jednego konta nie dokładają głosów."""
+    token = login(client, "mieszkaniec")
+    with app.app_context():
+        db.execute("DELETE FROM family_requests WHERE kind = 'dzien-specjalistow' AND user_id = 1")
+    data = {"_csrf": token, "powiat": "suski", "alias": "Rodzic"}
+    for _ in range(3):
+        resp = client.post("/razem/prosba/dzien-specjalistow", data=data)
+    assert count(app, "SELECT COUNT(*) FROM family_requests WHERE kind = 'dzien-specjalistow' AND user_id = 1") == 1
+    assert "Twój głos już jest zapisany" in client.get(resp.headers["Location"]).get_data(as_text=True)
