@@ -8,7 +8,7 @@
 <div class="two-col">
   <form method="post" action="{{ '/admin/uzytkownicy/' ~ u.id if u else '/admin/uzytkownicy/nowy' }}" class="card" novalidate>
     {{ csrf() }}
-    {% if errors %}<div class="error-summary" role="alert"><h2 class="h3">Popraw {{ errors|length }} {{ 'pole' if errors|length == 1 else 'pola' }}</h2>
+    {% if errors %}<div class="error-summary" role="alert"><h2 class="h3">Popraw {{ errors|length }} {{ errors|length|plural('pole', 'pola', 'pól') }}</h2>
       <ul>{% for k, m in errors.items() %}<li><a href="#f-{{ k }}">{{ m }}</a></li>{% endfor %}</ul></div>{% endif %}
     {{ field('name', 'Nazwa konta', hint='Anna – mama, powiat wadowicki', value=form.get('name', ''), error=errors.get('name'), required=true) }}
     {{ field('role', 'Rola', options=ROLES.items()|list, value=form.get('role', ''), error=errors.get('role'), required=true) }}

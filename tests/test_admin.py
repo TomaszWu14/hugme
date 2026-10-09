@@ -279,6 +279,14 @@ def test_hidden_messages_do_not_affect_waiting_counters(client, app):
         assert ("pomysl", iid) not in replied                       # ukryta odpowiedź Hubu się nie liczy
 
 
+def test_innovation_form_errors_use_polish_plural(client):
+    """Issue #26: „Popraw 7 pól” i „co najmniej 10 znaków” zamiast „7 pola” / „10 znaki”."""
+    token = login(client, "admin")
+    html = client.post("/admin/biblioteka/nowa", data={"_csrf": token, "title": "Tytuł"}).get_data(as_text=True)
+    assert "Popraw 7 pól" in html
+    assert "co najmniej 10 znaków" in html and "co najmniej 3 znaki" in html
+
+
 def test_import_twice_skips_duplicates(client, app):
     """Issue #23: ponowny import (i powtórka w pliku) nie tworzy kopii ani drugich powiadomień."""
     token = login(client, "admin")
