@@ -109,11 +109,12 @@ DEMO_ACCOUNTS=1 flask --app app:create_app run       # http://127.0.0.1:5000 (Wi
 
 Przy pierwszym starcie baza `instance/hugme.db` tworzy się sama i ładuje dane przykładowe.
 Reset danych: usuń plik bazy. AI włączysz zmienną `ANTHROPIC_API_KEY` (przykład w `.env.example`).
+Wszystkie zmienne: sekcja [Konfiguracja](#konfiguracja).
 
 **Testy i audyt:**
 
 ```bash
-pytest                                   # 350 testów: ścieżki, role, CSRF, prywatność, trafność
+pytest                                   # ponad 350 testów: ścieżki, role, CSRF, prywatność, trafność
 python -m playwright install chromium
 python scripts/axe_audit.py --zrzuty     # raport docs/WCAG_RAPORT.md + docs/zrzuty/
 ```
@@ -130,6 +131,26 @@ Bez `DEMO_MODE=1` (ani `DEMO_ACCOUNTS=1`) przełącznik kont jest wyłączony: `
 
 **CI/CD:** każdy PR i push do `main` uruchamia testy (GitHub Actions, `.github/workflows/ci.yml`). PR z gałęzi
 `claude/**` scala się sam po zielonym CI (squash), a push do `main` wyzwala wdrożenie w Coolify przez webhook.
+
+## Konfiguracja
+
+Wszystko przez zmienne środowiskowe; bez żadnej aplikacja startuje lokalnie z danymi przykładowymi i bez AI.
+
+| Zmienna | Domyślnie | Do czego |
+|---|---|---|
+| `SECRET_KEY` | losowy przy każdym starcie | Podpis sesji i tokenów CSRF. **Na serwerze ustaw stały** – inaczej restart wylogowuje wszystkich. `docker-compose.yml` go wymaga. |
+| `DATABASE` | `instance/hugme.db` (w obrazie `/data/hugme.db`) | Ścieżka pliku SQLite; czyta ją też `scripts/reset_demo.py`. |
+| `COOKIE_SECURE` | wyłączone (w obrazie `1`) | `1` = ciasteczko sesji tylko po HTTPS. |
+| `DEMO_MODE` | wyłączone | `1` = publiczne demo: konta z paska „Tryb demo” nie do zablokowania ani zmiany roli, przyciski „Napisz jako…” jednym kliknięciem dla gościa, komunikat o odnawianiu demo. |
+| `DEMO_ACCOUNTS` | wyłączone (włączone, gdy `DEMO_MODE=1`) | `1` = konta demo bez haseł (pasek „Tryb demo”, `/konto`, scenariusze `/demo`) bez reszty trybu demo – do pracy lokalnej. Bez tej flagi i bez `DEMO_MODE` przełącznik zwraca 404. |
+| `ANTHROPIC_API_KEY` | brak | Włącza funkcje AI. Bez klucza działają reguły i szablony. |
+| `ANTHROPIC_MODEL` | `claude-haiku-4-5` | Model używany przez `core/ai.py`. |
+| `AI_DAILY_LIMIT` | `300` | Dzienna pula wywołań AI (licznik w bazie, wspólny dla workerów); po wyczerpaniu szablony do północy UTC. |
+| `AI_DISABLED` | wyłączone | `1` = AI wyłączone mimo klucza (testy i audyt axe ustawiają to same). |
+
+**Reset publicznego demo.** `python scripts/reset_demo.py` czyści dane i ładuje seed, ale tylko po co najmniej
+20 minutach bez nowych wpisów (żeby nie skasować oglądającemu tego, co przed chwilą zapisał); `--force` resetuje od razu.
+Licznik AI zostaje. Na produkcji: Coolify → Scheduled Tasks, np. co godzinę. Lokalnie najprościej usunąć plik bazy.
 
 ## Scenariusz demo (5 minut)
 
