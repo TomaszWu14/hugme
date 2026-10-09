@@ -98,6 +98,9 @@ def _call(prompt, max_tokens):
     except anthropic.APIConnectionError:  # obejmuje też przekroczenie czasu
         log.warning("AI: brak połączenia / timeout")
         return None
+    except anthropic.APIError as e:  # pozostałe błędy SDK, np. APIResponseValidationError (#21)
+        log.warning("AI: błąd SDK %s", type(e).__name__)
+        return None
     if resp.stop_reason == "refusal":
         return None
     text = "".join(b.text for b in resp.content if b.type == "text").strip()
