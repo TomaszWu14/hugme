@@ -1,4 +1,6 @@
 """Program „Jestem potrzebny”: zgłoszenia, oferty, pary, misje, odznaki, mapa pracy."""
+import re
+
 import pytest
 
 from conftest import csrf_of, login
@@ -252,6 +254,20 @@ def test_double_connect_creates_one_mission(client, app):
     assert client.post("/admin/potrzebny/polacz", data=data).status_code == 302
     assert client.post("/admin/potrzebny/polacz", data=data).status_code == 400
     assert count(app, "SELECT COUNT(*) FROM missions WHERE volunteer_id = ?", (v["id"],)) == 1
+
+
+def test_workplace_form_error_keeps_values_and_marks_field(client):
+    """Issue #25: błąd walidacji nie gubi wpisanych danych, komunikat stoi przy polu (WCAG 3.3.1/3.3.3)."""
+    token = login(client, "ngo")
+    data = {"_csrf": token, "name": "Kawiarnia Próbna", "kind": "spoleczne", "city": "Poznań",
+            "voivodeship": "wielkopolskie", "url": "bez-linku", "note": "obsługa gości"}
+    r = client.post("/razem/praca/zglos", data=data)
+    assert r.status_code == 422
+    html = r.get_data(as_text=True)
+    assert 'value="Kawiarnia Próbna"' in html and 'value="Poznań"' in html and "obsługa gości</textarea>" in html
+    assert re.search(r'id="f-url"[^>]*aria-invalid="true"', html)
+    assert 'id="e-url"' in html and "zaczynający się od http" in html
+    assert 'id="f-name"' in html and not re.search(r'id="f-name"[^>]*aria-invalid', html)
 
 
 def test_pair_rejected_when_offer_has_no_free_slots(client, app):

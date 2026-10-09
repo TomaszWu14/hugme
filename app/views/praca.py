@@ -32,7 +32,7 @@ def interests_chart():
 
 
 @bp.route("")
-def index():
+def index(errors=None, form=None):
     woj = request.args.get("woj", "")
     woj = woj if woj in W.VOIVODESHIPS else ""
     powiat = request.args.get("powiat", "")
@@ -56,7 +56,7 @@ def index():
         shown = rows
     return render_template("razem/praca.html", W=W, P=P, mapa=mapa, rows=shown, total=len(rows), woj=woj, powiat=powiat,
                            regions_pl=regions_pl, regions_mp=regions_mp, chart=interests_chart(), powiaty=POWIATY,
-                           errors={}, form={})
+                           errors=errors or {}, form=form or {})
 
 
 @bp.post("/zglos")
@@ -77,9 +77,8 @@ def propose():
         errors["powiat"] = "Powiat podajemy tylko dla Małopolski."
     if not RE_URL.match(f["url"]):
         errors["url"] = "Podaj link do źródła (artykuł, strona miejsca) zaczynający się od http."
-    if errors:
-        flash(next(iter(errors.values())), "error")
-        return redirect(url_for("praca.index") + "#zglos")
+    if errors:  # formularz z błędami przy polach i wpisanymi danymi, bez przekierowania (#25, WCAG 3.3.1/3.3.3)
+        return index(errors, f), 422
     db.execute("INSERT INTO workplaces (name, kind, city, voivodeship, powiat, url, note, checked_at, status, user_id, "
                "created_at) VALUES (?,?,?,?,?,?,?,?, 'nowe', ?, ?)",
                (mask(f["name"])[0][:120], f["kind"], mask(f["city"])[0][:60], f["voivodeship"], f["powiat"] or None,
