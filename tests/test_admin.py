@@ -279,6 +279,43 @@ def test_hidden_messages_do_not_affect_waiting_counters(client, app):
         assert ("pomysl", iid) not in replied                       # ukryta odpowiedź Hubu się nie liczy
 
 
+def _innovation_form(app, iid, token, **changes):
+    from app.views.admin import INNOVATION_FIELDS
+    with app.app_context():
+        row = db.one("SELECT * FROM innovations WHERE id = ?", (iid,))
+    return {"_csrf": token, **{k: row[k] or "" for k in INNOVATION_FIELDS}, **changes}
+
+
+def test_admin_edits_existing_innovation_title_and_keywords(client, app):
+    """Issue #27: ścieżka UPDATE – zmiana trafia do bazy i od razu do wyszukiwania, bez duplikatu i powiadomień."""
+    token = login(client, "admin")
+    with app.app_context():
+        n_before = db.one("SELECT COUNT(*) FROM innovations")[0]
+        notes_before = db.one("SELECT COUNT(*) FROM notifications WHERE body LIKE 'Nowa innowacja%'")[0]
+    form = _innovation_form(app, 1, token, title="Klub rowerowy na trójkołowcach", keywords="hulajnoga kosmiczna")
+    resp = client.post("/admin/biblioteka/1", data=form)
+    assert resp.status_code == 302 and resp.headers["Location"].endswith("/biblioteka/1")
+    with app.app_context():
+        row = db.one("SELECT title, keywords FROM innovations WHERE id = 1")
+        assert (row["title"], row["keywords"]) == ("Klub rowerowy na trójkołowcach", "hulajnoga kosmiczna")
+        assert db.one("SELECT COUNT(*) FROM innovations")[0] == n_before
+        assert db.one("SELECT COUNT(*) FROM notifications WHERE body LIKE 'Nowa innowacja%'")[0] == notes_before
+    assert "Klub rowerowy na trójkołowcach" in client.get("/biblioteka", query_string={"q": "hulajnoga kosmiczna"}).get_data(as_text=True)
+    assert "hulajnoga kosmiczna" in client.get("/admin/biblioteka/1").get_data(as_text=True)
+
+
+@pytest.mark.parametrize("role", ["mieszkaniec", "ngo", "gmina", "ekspert"])
+def test_other_roles_cannot_edit_innovation(client, app, role):
+    token = login(client, role)
+    with app.app_context():
+        before = dict(db.one("SELECT * FROM innovations WHERE id = 1"))
+    form = _innovation_form(app, 1, token, title="Przejęta innowacja", keywords="spam")
+    assert client.get("/admin/biblioteka/1").status_code == 403
+    assert client.post("/admin/biblioteka/1", data=form).status_code == 403
+    with app.app_context():
+        assert dict(db.one("SELECT * FROM innovations WHERE id = 1")) == before
+
+
 def test_innovation_form_errors_use_polish_plural(client):
     """Issue #26: „Popraw 7 pól” i „co najmniej 10 znaków” zamiast „7 pola” / „10 znaki”."""
     token = login(client, "admin")
