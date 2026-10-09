@@ -104,7 +104,7 @@ ekspert, koordynatorka ROPS. Docelowe logowanie przez **login.gov.pl** albo link
 ```bash
 python -m venv .venv && . .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt -r requirements-dev.txt
-flask --app app:create_app run                       # http://127.0.0.1:5000
+DEMO_ACCOUNTS=1 flask --app app:create_app run       # http://127.0.0.1:5000 (Windows PS: $env:DEMO_ACCOUNTS=1)
 ```
 
 Przy pierwszym starcie baza `instance/hugme.db` tworzy się sama i ładuje dane przykładowe.
@@ -126,7 +126,8 @@ SECRET_KEY=$(python -c "import secrets;print(secrets.token_hex(32))") docker com
 ```
 
 Baza SQLite leży w wolumenie `hugme-data`. Healthcheck: `GET /zdrowie`. W Coolify wystarczy wskazać
-repozytorium (build z `Dockerfile`), ustawić `SECRET_KEY` i opcjonalnie `ANTHROPIC_API_KEY`, a potem podpiąć domenę.
+repozytorium (build z `Dockerfile`), ustawić `SECRET_KEY`, dla publicznego demo `DEMO_MODE=1` i opcjonalnie `ANTHROPIC_API_KEY`, a potem podpiąć domenę.
+Bez `DEMO_MODE=1` (ani `DEMO_ACCOUNTS=1`) przełącznik kont jest wyłączony: `/konto` i scenariusze `/demo` zwracają 404.
 
 **CI/CD:** każdy PR i push do `main` uruchamia testy (GitHub Actions, `.github/workflows/ci.yml`). PR z gałęzi
 `claude/**` scala się sam po zielonym CI (squash), a push do `main` wyzwala wdrożenie w Coolify przez webhook.
@@ -154,7 +155,7 @@ Licznik AI zostaje. Na produkcji: Coolify → Scheduled Tasks, np. co godzinę. 
 
 **Najprościej: wejdź na [/demo](https://hugme.twapp.pl/demo) i wybierz scenariusz – pasek na górze poprowadzi Cię krok
 po kroku (ok. 1,5 min każdy).** Kroki obu scenariuszy są opisane wyżej, pod „Zobacz”. Poniżej dłuższa ścieżka ręczna –
-to także ściąga do pokazu na żywo. Plan B bez internetu: aplikacja lokalnie (`flask --app app:create_app run`, fonty
+to także ściąga do pokazu na żywo. Plan B bez internetu: aplikacja lokalnie (`DEMO_ACCOUNTS=1 flask --app app:create_app run`, fonty
 i style są w repo, bez CDN), `/demo` działa tak samo; plan C: [film](docs/film/hugme-film.mp4) (2:51, lektor i napisy).
 
 1. **Start, gość.** Menu z nazwami modułów z briefu, na starcie przyciski „Zobacz demo w 1,5 minuty”, niżej kafle
@@ -204,7 +205,8 @@ a po scaleniu wdrażają się same (webhook do Coolify).
 
 To prototyp z hackathonu, nie system produkcyjny:
 
-- **Brak prawdziwego logowania.** Konta demo przełącza się bez haseł; login.gov.pl i link e-mail są tylko opisane
+- **Brak prawdziwego logowania.** Konta demo przełącza się bez haseł – tylko przy `DEMO_MODE=1` albo `DEMO_ACCOUNTS=1`,
+  bez nich aplikacja działa wyłącznie dla gościa; login.gov.pl i link e-mail są tylko opisane
   w [docs/ARCHITEKTURA.md](docs/ARCHITEKTURA.md#logowanie).
 - **Dane są fikcyjne** (poza miejscami pracy i statystykami w module „Praca”), a demo odnawia się po 20 minutach
   bez nowych wpisów – nie zapisuj tam niczego ważnego.

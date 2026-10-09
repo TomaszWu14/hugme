@@ -15,7 +15,7 @@ os.environ.setdefault("AI_DISABLED", "1")  # nagrania bez AI: powtarzalne i bez 
 def start(port):
     from werkzeug.serving import make_server
     from app import create_app
-    app = create_app({"DATABASE": str(Path(tempfile.mkdtemp()) / "demo.db"), "SECRET_KEY": "demo"})
+    app = create_app({"DATABASE": str(Path(tempfile.mkdtemp()) / "demo.db"), "SECRET_KEY": "demo", "DEMO_ACCOUNTS": True})
     srv = make_server("127.0.0.1", port, app, threaded=True)
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     return srv, f"http://127.0.0.1:{port}"
