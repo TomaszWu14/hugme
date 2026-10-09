@@ -24,9 +24,9 @@ def guard():
 
 
 UNANSWERED_SQL = """
-SELECT t.*, (SELECT MAX(created_at) FROM messages m WHERE m.thread_id = t.id) AS last_at,
+SELECT t.*, (SELECT MAX(created_at) FROM messages m WHERE m.thread_id = t.id AND m.hidden = 0) AS last_at,
        (SELECT u.role FROM messages m JOIN users u ON u.id = m.user_id
-        WHERE m.thread_id = t.id ORDER BY m.created_at DESC, m.id DESC LIMIT 1) AS last_role,
+        WHERE m.thread_id = t.id AND m.hidden = 0 ORDER BY m.created_at DESC, m.id DESC LIMIT 1) AS last_role,
        CASE t.subject_type WHEN 'zgloszenie' THEN (SELECT area FROM reports WHERE id = t.subject_id)
                            WHEN 'pomysl' THEN (SELECT area FROM ideas WHERE id = t.subject_id)
                            ELSE (SELECT area FROM innovations WHERE id = t.subject_id) END AS area
@@ -36,7 +36,7 @@ FROM threads t ORDER BY last_at DESC"""
 HUB_REPLIES_SQL = """
 SELECT t.subject_type, t.subject_id, MAX(m.created_at) AS at FROM threads t
 JOIN messages m ON m.thread_id = t.id JOIN users u ON u.id = m.user_id
-WHERE u.role IN ('admin', 'ekspert') GROUP BY t.subject_type, t.subject_id"""
+WHERE u.role IN ('admin', 'ekspert') AND m.hidden = 0 GROUP BY t.subject_type, t.subject_id"""
 
 
 def unanswered():
