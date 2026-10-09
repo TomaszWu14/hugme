@@ -79,3 +79,23 @@ def test_idea_page_plain_language_canvas_grid_and_single_primary(client):
     assert "Pomoc w napisaniu wniosku" in html and "(nabór)" in html
     # J1B-12: przy kilku naborach „Przygotuj wniosek” jest konturem, nie ceglastym primary
     assert 'class="btn btn--primary" href="/pomysly/1/wniosek/' not in html
+
+
+def test_application_rejected_after_call_deadline(client, app):
+    """Issue #16: po terminie naboru generator i „Złóż” nie działają, mimo że nabór jest otwarty."""
+    token = login(client, "ngo")
+    with app.app_context():
+        db.execute("UPDATE calls SET deadline = '2000-01-01' WHERE id = 1")
+        iid = db.one("SELECT id FROM ideas WHERE user_id = 2 LIMIT 1")[0]
+    fields = {"tytul": "t", "problem": "p", "grupa": "g", "dzialania": "d", "rezultaty": "r", "budzet": "b", "partnerzy": "OPS"}
+    resp = client.post(f"/pomysly/{iid}/wniosek/1", data={"_csrf": token, "akcja": "zloz", **fields})
+    assert resp.status_code == 302 and f"/pomysly/{iid}" in resp.headers["Location"]
+    assert "Termin naboru minął" in client.get(resp.headers["Location"]).get_data(as_text=True)
+    with app.app_context():
+        assert db.one("SELECT COUNT(*) FROM applications WHERE idea_id = ? AND call_id = 1", (iid,))[0] == 0
+
+
+def test_seeded_open_calls_have_future_deadlines(app):
+    from datetime import date
+    with app.app_context():
+        assert all(r[0] >= date.today().isoformat() for r in db.query("SELECT deadline FROM calls WHERE is_open = 1"))

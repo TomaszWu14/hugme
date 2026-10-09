@@ -18,7 +18,7 @@
 
 {# Liczba ocen po polsku: 1 ocena, 2–4 oceny, 5+ ocen (12–14 ocen) #}
 {% macro ocen(n) -%}
-{{ n }} {{ 'ocena' if n == 1 else ('oceny' if n % 10 in (2, 3, 4) and n % 100 not in (12, 13, 14) else 'ocen') }}
+{{ n }} {{ n|plural('ocena', 'oceny', 'ocen') }}
 {%- endmacro %}
 
 {% macro avg5(r) -%}{{ ('%.1f'|format(r.avg)).replace('.', ',') }} na 5{%- endmacro %}

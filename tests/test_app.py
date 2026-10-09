@@ -126,3 +126,39 @@ def test_flash_sekcja_not_shown_on_top(app):
         flash("Zapisano", "success")
         html = render_template("dostepnosc.html")
     assert "Zapisano" in html and "Wysłane do testu" not in html
+
+
+def test_friendly_500_in_app_layout(app):
+    """Issue #24: nieobsłużony wyjątek = polska strona w layoucie, nie „Internal Server Error” Flaska."""
+    app.config["PROPAGATE_EXCEPTIONS"] = False
+    app.add_url_rule("/boom", "boom", lambda: 1 / 0)
+    app.add_url_rule("/api/boom", "api_boom", lambda: 1 / 0)
+    client = app.test_client()
+    resp = client.get("/boom")
+    html = resp.get_data(as_text=True)
+    assert resp.status_code == 500 and "Coś poszło nie tak po naszej stronie" in html
+    assert 'class="site-header"' in html and 'href="/"' in html
+    resp = client.get("/api/boom")
+    assert resp.status_code == 500 and resp.get_json() == {"error": "Coś poszło nie tak po naszej stronie"}
+
+
+def test_switch_to_role_without_access_lands_on_role_home(client):
+    """Issue #20: admin na /admin przełącza się na mieszkankę – strona startowa zamiast 403."""
+    login(client, "admin")
+    token = csrf_of(client, "/admin")
+    r = client.post("/konto", data={"_csrf": token, "user_id": 1, "next": "/admin"})
+    assert r.headers["Location"].endswith("/admin")
+    r = client.get("/admin")
+    assert r.status_code == 302 and r.headers["Location"] == "/"
+    assert client.get("/admin").status_code == 403  # bez świeżego przełączenia 403 zostaje
+
+
+def test_switch_keeps_path_and_query_when_allowed(client):
+    login(client, "mieszkaniec")
+    html = client.get("/biblioteka?obszar=senior").get_data(as_text=True)
+    switch_form = re.search(r'class="role-switch">.*?</form>', html, re.S).group(0)
+    assert 'name="next" value="/biblioteka?obszar=senior"' in switch_form
+    token = csrf_of(client, "/")
+    r = client.post("/konto", data={"_csrf": token, "user_id": 2, "next": "/biblioteka?obszar=senior"})
+    assert r.headers["Location"].endswith("/biblioteka?obszar=senior")
+    assert client.get("/biblioteka?obszar=senior").status_code == 200

@@ -12,7 +12,7 @@ def no_ai(monkeypatch):
 
 @pytest.fixture
 def app(tmp_path):
-    return create_app({"TESTING": True, "DATABASE": str(tmp_path / "test.db"), "SECRET_KEY": "test"})
+    return create_app({"TESTING": True, "DATABASE": str(tmp_path / "test.db"), "SECRET_KEY": "test", "DEMO_ACCOUNTS": True})
 
 
 @pytest.fixture

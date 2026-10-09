@@ -129,6 +129,10 @@ def create_request(kind):
         abort(403)
     back = request.form.get("wroc", "")
     back = back if back.startswith("/razem") and not back.startswith("//") else url_for(f"razem.{page}")
+    if kind == "dzien-specjalistow" and db.one(  # jeden głos na konto – zestawienie per powiat w /admin/razem (#18)
+            "SELECT 1 FROM family_requests WHERE user_id = ? AND kind = ?", (g.user["id"], kind)):
+        flash("Twój głos już jest zapisany.", "info")
+        return redirect(back)
     rid, errors = save_request(kind, request.form)
     if errors and page == "start":  # przycisk na stronie planu – wracamy tam z komunikatem
         flash(next(iter(errors.values())), "error")
@@ -207,6 +211,8 @@ def toggle_signup(eid):
     if db.one("SELECT 1 FROM event_signups WHERE event_id = ? AND user_id = ?", (eid, g.user["id"])):
         db.execute("DELETE FROM event_signups WHERE event_id = ? AND user_id = ?", (eid, g.user["id"]))
         flash(f"Wypisano z wydarzenia „{e['title']}”.", "success")
+    elif e["date"] < date.today().isoformat():  # lista nie ma przycisku, ale bezpośredni POST przechodził (#22)
+        flash(f"Wydarzenie „{e['title']}” już się odbyło – zapisy są zamknięte.", "error")
     else:
         # ON CONFLICT: dwa równoczesne kliknięcia nie kończą się błędem (SQLite i PostgreSQL).
         db.execute("INSERT INTO event_signups (event_id, user_id, created_at) VALUES (?,?,?) "

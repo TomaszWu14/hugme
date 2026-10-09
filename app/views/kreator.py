@@ -1,6 +1,7 @@
 """Kreator pomysłów: fiszka (4 pola) → Kanwa Innowacji Społecznych → asystent (AI lub reguły)
 → generator wniosków (tylko w trakcie otwartego naboru), szkic, złożenie, wydruk z przeglądarki."""
 import json
+from datetime import date
 
 from flask import Blueprint, abort, flash, g, redirect, render_template, request, url_for
 
@@ -182,6 +183,9 @@ def application(iid, cid):
         return redirect(url_for("kreator.print_application", aid=existing["id"]))
     if not call["is_open"]:
         flash("Ten nabór jest zamknięty – generator wniosków działa tylko w trakcie naboru.", "error")
+        return redirect(url_for("kreator.detail", iid=iid))
+    if call["deadline"] and call["deadline"] < date.today().isoformat():
+        flash(f"Termin naboru minął ({call['deadline']}) – wniosku nie można już złożyć.", "error")
         return redirect(url_for("kreator.detail", iid=iid))
     fields = json.loads(existing["fields"]) if existing else _prefill(idea)
     suggestion, errors = None, {}

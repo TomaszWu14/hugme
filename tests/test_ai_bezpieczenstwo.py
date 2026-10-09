@@ -137,3 +137,40 @@ def test_ai_buttons_tell_where_text_goes(monkeypatch, client):
     login(client, "ngo")
     assert "zewnętrzny model (Claude)" in client.get("/pomysly/1").get_data(as_text=True)
     assert "Anthropic" in client.get("/prywatnosc").get_data(as_text=True)
+
+
+def _sdk_error(name):
+    """Wyjątek SDK bez budowania żądania HTTP (klasy transportu zmieniają się między wersjami anthropic)."""
+    import anthropic
+    cls = getattr(anthropic, name)
+    err = cls.__new__(cls)
+    err.status_code = 529
+    return err
+
+
+SDK_ERRORS = {"api": "APIError", "status": "InternalServerError", "timeout": "APITimeoutError",
+              "walidacja": "APIResponseValidationError"}
+
+
+@pytest.mark.parametrize("kind", ["api", "status", "timeout", "walidacja", "odmowa", "nie-json"])
+def test_ai_never_raises_and_returns_none(monkeypatch, kind):
+    """Issue #21: każdy błąd SDK, odmowa i odpowiedź nie-JSON dają None (widok użyje szablonu), nie wyjątek."""
+    monkeypatch.setenv("AI_DISABLED", "0")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    monkeypatch.setattr(ai, "_CACHE", {})
+
+    class Client:
+        messages = None
+
+        def create(self, **_kw):
+            if kind == "odmowa":
+                return type("R", (), {"stop_reason": "refusal", "content": []})()
+            if kind == "nie-json":
+                block = type("B", (), {"type": "text", "text": "Przepraszam, nie umiem {tego zrobić}."})()
+                return type("R", (), {"stop_reason": "end_turn", "content": [block]})()
+            raise _sdk_error(SDK_ERRORS[kind])
+
+    client = Client()
+    client.messages = client
+    monkeypatch.setattr(ai, "_client", lambda: client)
+    assert ai.ask_json("Zwróć JSON", data="opis", schema={"a": ("str", 10)}) is None

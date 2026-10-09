@@ -7,7 +7,7 @@
   <p class="eyebrow">Hub Innowacji Społecznych · program „Jestem potrzebny”</p>
   <h1 id="dyp-h">Dyplom</h1>
   <p class="diploma__for">dla <strong>{{ e.v.alias }}</strong></p>
-  <p class="lead">za {{ e.total }} {{ 'misję' if e.total == 1 else ('misje' if e.total in (2, 3, 4) else 'misji') }} pomagania innym:
+  <p class="lead">za {{ e.total }} {{ e.total|plural('misję', 'misje', 'misji') }} pomagania innym:
     {% for k, n in e.by_kind.items() if n %}{{ P.MISSION_LABELS[k].lower() }} ({{ n }}){{ ', ' if not loop.last }}{% endfor %}.</p>
   {% if e.badges %}
   <ul class="badges">{% for slug, name, text in e.badges %}<li class="badge-card">{{ icon('odznaka') }}<span>{{ name }}</span></li>{% endfor %}</ul>

@@ -27,7 +27,7 @@
         {% if m.body_easy %}<span class="etr"><strong>Co robię:</strong> {{ m.body_easy }}</span>{% endif %}</li>
       {% endfor %}
     </ul>
-    <p class="etr-line"><strong>Razem: {{ e.total }} {{ 'misja' if e.total == 1 else ('misje' if e.total in (2, 3, 4) else 'misji') }}.</strong></p>
+    <p class="etr-line"><strong>Razem: {{ e.total }} {{ e.total|plural('misja', 'misje', 'misji') }}.</strong></p>
     {% endif %}
     <h3 class="h3">Moje odznaki</h3>
     {% if e.badges %}

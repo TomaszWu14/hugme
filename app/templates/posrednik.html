@@ -8,7 +8,7 @@
   co wdrożyć, kim, w jakich krokach, z kim i skąd wziąć pieniądze. Na podstawie sprawdzonych innowacji z Biblioteki.</p>
 {% if errors %}
 <div class="error-summary" role="alert" aria-labelledby="err-h">
-  <h2 id="err-h">Uzupełnij {{ errors|length }} {{ 'pole' if errors|length == 1 else 'pola' }}</h2>
+  <h2 id="err-h">Uzupełnij {{ errors|length }} {{ errors|length|plural('pole', 'pola', 'pól') }}</h2>
   <ul>{% for k, msg in errors.items() %}<li><a href="#f-{{ k }}">{{ msg }}</a></li>{% endfor %}</ul>
 </div>
 {% endif %}

@@ -58,7 +58,8 @@ def run(con):
         con.execute("INSERT INTO materials (title, area, kind, summary, body, created_at) VALUES (?,?,?,?,?,?)",
                     (title, area, kind, summary, body, ago(200 - n * 10)))
 
-    for n, (title, area, desc, is_open, deadline) in enumerate(D.CALLS):
+    for n, (title, area, desc, is_open, days) in enumerate(D.CALLS):
+        deadline = (datetime.now(timezone.utc) + timedelta(days=days)).date().isoformat()
         con.execute("INSERT INTO calls (title, area, description, is_open, deadline, created_at) VALUES (?,?,?,?,?,?)",
                     (title, area, desc, is_open, deadline, ago(30 + n * 40)))
 
