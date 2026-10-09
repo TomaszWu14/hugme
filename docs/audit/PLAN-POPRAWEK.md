@@ -21,7 +21,7 @@
   - `docs/KOSZTY.md` „8 s” zamiast 25 s.
 - Lista z plikami: `JURY.md`, „Czego nie zdążono”.
 
-Źródło: `audit/JURY.md` (ID scalone) i `audit/WZORCE.md`. Wynik ważony przed: **7,17/10**.
+Źródło: `docs/audit/JURY.md` (ID scalone) i `docs/audit/WZORCE.md`. Wynik ważony przed: **7,17/10**.
 
 **Zasady**
 - Nie przebudowujemy architektury i nie dodajemy dużych funkcji.
@@ -96,7 +96,7 @@ Posortowane według priorytetu.
 
 **Etap 4:**
 - J3-11 i slajd z J3-04: nazwy modułów z briefu w `KRYTERIA.md`, `README.md`, `HACKTRIBE.md` i na slajdach. Pliki mają niezatwierdzone zmiany użytkownika, więc edytować punktowo.
-- WZ-11 (PRZED-PO, zrzuty do `audit/iteracje/01-po/`).
+- WZ-11 (PRZED-PO, zrzuty do `docs/audit/iteracje/01-po/`).
 
 ### Wzorce z WZORCE.md: gdzie trafiły
 

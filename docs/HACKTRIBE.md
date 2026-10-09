@@ -55,7 +55,7 @@ wariant bez AI ma pełną funkcjonalność.
 ## Skills
 
 Projekt zrobiłem sam w czasie HackYeah 2026. **Produkt i UX:** 100 decyzji w ustrukturyzowanych sesjach pytań
-(`BRAINSTORM.md`), symulacja 3 jurorów z budżetem kliknięć i poprawkami (`audit/JURY.md`), scenariusze demo prowadzące
+(`docs/BRAINSTORM.md`), symulacja 3 jurorów z budżetem kliknięć i poprawkami (`docs/audit/JURY.md`), scenariusze demo prowadzące
 krok po kroku. **Dostępność (WCAG 2.1 AA):** wszystkie sprawdzane widoki bez naruszeń wykrywanych automatycznie
 (axe-core + Playwright w CI blokuje scalenie), czcionka Atkinson Hyperlegible, A+, wysoki kontrast, tryb Podpowiedzi
 działający bez JavaScriptu. **Backend:** Python 3.12, Flask/Jinja bez frameworka JS, SQLite zgodny z PostgreSQL,
