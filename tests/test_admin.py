@@ -277,3 +277,15 @@ def test_hidden_messages_do_not_affect_waiting_counters(client, app):
         db.execute(add, (tid, 5, "Ukryta odpowiedź", "2099-01-01 10:00:00", 1))
         replied = {(r["subject_type"], r["subject_id"]) for r in db.query(HUB_REPLIES_SQL)}
         assert ("pomysl", iid) not in replied                       # ukryta odpowiedź Hubu się nie liczy
+
+
+def test_new_call_rejects_past_deadline(client, app):
+    """Issue #16: nabór nie może mieć terminu wcześniejszego niż dziś."""
+    token = login(client, "admin")
+    form = {"_csrf": token, "title": "Nabór testowy", "area": "rodziny-zd", "description": "Opis naboru testowego."}
+    client.post("/admin/nabory/nowy", data={**form, "deadline": "2000-01-01"})
+    with app.app_context():
+        assert db.one("SELECT COUNT(*) FROM calls WHERE title = 'Nabór testowy'")[0] == 0
+    client.post("/admin/nabory/nowy", data={**form, "deadline": "2999-01-01"})
+    with app.app_context():
+        assert db.one("SELECT COUNT(*) FROM calls WHERE title = 'Nabór testowy'")[0] == 1

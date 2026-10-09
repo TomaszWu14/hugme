@@ -311,17 +311,17 @@ MATERIALS = [
      "zakupy, kto pożyczy wiertarkę. Najważniejsze jest pierwsze zaproszenie."),
 ]
 
-# (title, area, description, is_open, deadline)
+# (title, area, description, is_open, termin: dni od dnia seedu – otwarte nabory nie „przeterminują się” w demo)
 CALLS = [
     ("Małopolskie Innowacje Społeczne 2026 – odciążenie opiekunów", "rodziny-zd",
      "Granty na przetestowanie nowych usług, które dają opiekunom osób z niepełnosprawnością czas na odpoczynek.",
-     1, "2026-11-15"),
+     1, 37),
     ("Transport w małych miejscowościach", "wies",
      "Wsparcie dla gmin i organizacji testujących dowozy na żądanie i sąsiedzkie dojazdy.",
-     1, "2026-12-01"),
+     1, 53),
     ("Seniorzy w sieci", "cyfrowe",
      "Nabór zakończony. Wspierał naukę kompetencji cyfrowych osób starszych.",
-     0, "2026-06-30"),
+     0, -101),
 ]
 
 # (user_index, title, essence, audience, stage, area, canvas)
