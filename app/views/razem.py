@@ -129,6 +129,10 @@ def create_request(kind):
         abort(403)
     back = request.form.get("wroc", "")
     back = back if back.startswith("/razem") and not back.startswith("//") else url_for(f"razem.{page}")
+    if kind == "dzien-specjalistow" and db.one(  # jeden głos na konto – zestawienie per powiat w /admin/razem (#18)
+            "SELECT 1 FROM family_requests WHERE user_id = ? AND kind = ?", (g.user["id"], kind)):
+        flash("Twój głos już jest zapisany.", "info")
+        return redirect(back)
     rid, errors = save_request(kind, request.form)
     if errors and page == "start":  # przycisk na stronie planu – wracamy tam z komunikatem
         flash(next(iter(errors.values())), "error")
