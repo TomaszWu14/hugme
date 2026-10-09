@@ -302,12 +302,11 @@ def new_call():
     title, area = request.form.get("title", "").strip(), request.form.get("area")
     desc, deadline = request.form.get("description", "").strip(), request.form.get("deadline", "")
     try:
-        date.fromisoformat(deadline)
-        valid_date = True
+        valid_date = date.fromisoformat(deadline) >= date.today()
     except ValueError:
         valid_date = False
     if len(title) < 5 or area not in AREAS or len(desc) < 10 or not valid_date:
-        flash("Uzupełnij tytuł, obszar, opis i termin naboru.", "error")
+        flash("Uzupełnij tytuł, obszar, opis i termin naboru (nie wcześniejszy niż dziś).", "error")
     else:
         db.execute("INSERT INTO calls (title, area, description, is_open, deadline, created_at) VALUES (?,?,?,0,?,?)",
                    (title, area, desc, deadline, db.now()))
