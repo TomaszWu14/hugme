@@ -261,3 +261,19 @@ def test_konto_admin_first_without_lowercase(client):
     assert "Dla jury" in html and "jako koordynatorka rops" not in html and ">Wejdź<" in html
     # Środek zdania: mała pierwsza litera, skróty bez zmian (szuka tego też scripts/axe_audit.py).
     assert "jako koordynatorka ROPS" in html and "jako gmina (JST)" in html
+
+
+def test_hidden_messages_do_not_affect_waiting_counters(client, app):
+    """Issue #19: ukryta (np. spam) wiadomość nie zmienia „czeka na odpowiedź” ani „Hub odpowiedział”."""
+    from app.views.admin import HUB_REPLIES_SQL, unanswered
+    with app.app_context():
+        t = db.one("SELECT id, subject_id FROM threads WHERE subject_type = 'pomysl' LIMIT 1")
+        tid, iid = t["id"], t["subject_id"]
+        add = "INSERT INTO messages (thread_id, user_id, body, created_at, hidden) VALUES (?, ?, ?, ?, ?)"
+        db.execute(add, (tid, 5, "Odpowiedź Hubu", "2099-01-01 10:00:00", 0))
+        db.execute(add, (tid, 1, "Spam", "2099-01-01 11:00:00", 1))
+        assert tid not in {t["id"] for t in unanswered()}          # ostatnia widoczna to odpowiedź Hubu
+        db.execute("DELETE FROM messages WHERE thread_id = ?", (tid,))
+        db.execute(add, (tid, 5, "Ukryta odpowiedź", "2099-01-01 10:00:00", 1))
+        replied = {(r["subject_type"], r["subject_id"]) for r in db.query(HUB_REPLIES_SQL)}
+        assert ("pomysl", iid) not in replied                       # ukryta odpowiedź Hubu się nie liczy
