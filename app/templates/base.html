@@ -18,7 +18,7 @@
   <div class="wrap demo-bar__in">
     <form method="post" action="{{ url_for('auth.demo') }}" class="role-switch">
       {{ csrf() }}
-      <input type="hidden" name="next" value="{{ request.path }}">
+      <input type="hidden" name="next" value="{{ request.full_path.rstrip('?') }}">
       <label for="role-switch" class="sr-only-sm">Tryb demo – jako:</label>
       <select id="role-switch" name="user_id">
         {% if not g.user %}<option value="">Gość</option>{% endif %}
