@@ -319,6 +319,17 @@ def test_module_nav_has_five_items_and_more(client):
     assert "Więcej" in nav and 'href="/razem/prawa"' in nav and 'class="btn btn--small" href="/razem/moje-sprawy"' in nav
 
 
+def test_signup_for_past_event_rejected(client, app):
+    """Issue #22: bezpośredni POST na minione wydarzenie nie zapisuje i nie wysyła „Zapisano”."""
+    token = login(client, "mieszkaniec")
+    with app.app_context():
+        db.execute("UPDATE events SET date = '2000-01-01' WHERE id = 1")
+    resp = client.post("/razem/wydarzenia/1/zapis", data={"_csrf": token})
+    assert "już się odbyło" in client.get(resp.headers["Location"]).get_data(as_text=True)
+    assert count(app, "SELECT COUNT(*) FROM event_signups WHERE event_id = 1 AND user_id = 1") == 0
+    assert count(app, "SELECT COUNT(*) FROM notifications WHERE user_id = 1 AND body LIKE 'Zapisano:%'") == 0
+
+
 def test_specialists_day_one_vote_per_account(client, app):
     """Issue #18: kolejne kliknięcia z jednego konta nie dokładają głosów."""
     token = login(client, "mieszkaniec")
