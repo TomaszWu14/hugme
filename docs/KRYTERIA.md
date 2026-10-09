@@ -60,5 +60,5 @@ statystyki GUS/PFRON, „Poznaj ZD” dla pracodawców i instytucji.
 ## Jakość materiałów i MVP (10%)
 
 - Działający MVP z danymi przykładowymi i scenariuszem demo ([README](../README.md#scenariusz-demo-5-minut)).
-- Prezentacja PDF (10 slajdów), film z dwoma scenariuszami (ok. 1:15, `docs/film/hugme-scenariusze.mp4`); skrypty: `python demo/build_all.py`.
+- Prezentacja PDF (10 slajdów), film z lektorem i napisami (2:51, `docs/film/hugme-film.mp4`, [scenariusz](SCENARIUSZ_FILMU.md)); skrypty: `python demo/build_all.py`.
 - Dokumentacja: architektura, dane i prywatność, WCAG + raport, koszty, roadmapa, pytania do mentorów.

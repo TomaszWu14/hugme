@@ -1,0 +1,151 @@
+1
+00:00:00,540 --> 00:00:05,130
+HugMe – platforma dla Małopolskiego Hubu Innowacji Społecznych.
+
+2
+00:00:06,455 --> 00:00:09,415
+Czyta się jak „hug me” – przytul mnie.
+
+3
+00:00:09,415 --> 00:00:12,025
+Bo z problemem nikt nie powinien zostać sam.
+
+4
+00:00:13,378 --> 00:00:15,698
+Anna, mama chłopca z zespołem Downa,
+
+5
+00:00:15,698 --> 00:00:19,738
+opisuje problem własnymi słowami – bez urzędowych pojęć.
+
+6
+00:00:19,738 --> 00:00:22,238
+Wpisuje też imię syna i swój telefon.
+
+7
+00:00:23,418 --> 00:00:28,108
+Zanim cokolwiek trafi do bazy, platforma ukrywa imię i telefon.
+
+8
+00:00:28,108 --> 00:00:32,178
+Potem pokazuje sprawdzone rozwiązania z Biblioteki Innowacji –
+
+9
+00:00:32,178 --> 00:00:38,048
+na przykład Asystenta zdrowia rodziny, który układa wizyty u wielu specjalistów.
+
+10
+00:00:38,048 --> 00:00:41,088
+Przy każdym wyniku widać, dlaczego pasuje.
+
+11
+00:00:41,088 --> 00:00:47,158
+Dopasowanie działa bez sztucznej inteligencji, więc każdy wynik da się wyjaśnić.
+
+12
+00:00:48,551 --> 00:00:52,421
+Anna chce odpowiedzi od człowieka, więc zapisuje zgłoszenie dla Hubu.
+
+13
+00:00:52,421 --> 00:00:56,381
+Ocena „Pomocne” mówi Hubowi, czy dopasowanie było trafne.
+
+14
+00:00:57,295 --> 00:01:00,295
+Koordynatorka Hubu widzi zgłoszenie w skrzynce.
+
+15
+00:01:00,295 --> 00:01:05,605
+Otwiera je, oznacza jako połączone z rozwiązaniem i odpisuje Annie.
+
+16
+00:01:05,605 --> 00:01:07,895
+Anna od razu dostaje powiadomienie.
+
+17
+00:01:10,185 --> 00:01:15,605
+Rodziny osób z zespołem Downa mają też osobny moduł: Razem z ZD.
+
+18
+00:01:15,605 --> 00:01:18,645
+Po wybraniu etapu życia – na przykład przedszkola –
+
+19
+00:01:18,645 --> 00:01:22,465
+widać, co teraz ważne i kto w Małopolsce pomoże.
+
+20
+00:01:23,805 --> 00:01:28,655
+Ale osoby z zespołem Downa nie tylko dostają pomoc – same też pomagają.
+
+21
+00:01:28,655 --> 00:01:32,845
+W programie „Jestem potrzebny” dorosły Bartek wybiera obrazki:
+
+22
+00:01:32,845 --> 00:01:36,995
+lubi psy, ma czas w sobotę rano, a idzie z nim mama.
+
+23
+00:01:38,971 --> 00:01:42,721
+Hub dostaje gotowe propozycje par z tego samego powiatu.
+
+24
+00:01:42,721 --> 00:01:46,341
+Koordynatorka łączy Bartka ze schroniskiem w Wadowicach,
+
+25
+00:01:46,341 --> 00:01:48,991
+a po spacerze z psami potwierdza misję.
+
+26
+00:01:49,925 --> 00:01:52,505
+W dzienniczku Bartka jest już pierwsza odznaka.
+
+27
+00:01:52,505 --> 00:01:56,195
+Po pięciu misjach pojawią się tu umiejętności przydatne w pracy.
+
+28
+00:01:57,118 --> 00:02:01,558
+A mapa pokazuje prawdziwe miejsca pracy osób z zespołem Downa –
+
+29
+00:02:01,558 --> 00:02:06,378
+kawiarnie, urzędy, zakłady aktywności zawodowej – każde ze źródłem.
+
+30
+00:02:07,271 --> 00:02:12,241
+Z HugMe korzysta też gmina, która szuka sposobu na dowóz seniorów do lekarza.
+
+31
+00:02:12,241 --> 00:02:18,521
+Pośrednik innowacji bierze sprawdzony Bus na Telefon i przygotowuje kartę usługi:
+
+32
+00:02:18,521 --> 00:02:23,561
+zespół, kroki, partnerów, koszty i finansowanie – gotową do druku.
+
+33
+00:02:24,555 --> 00:02:28,965
+Hub widzi, w jakich obszarach i powiatach Małopolski przybywa zgłoszeń.
+
+34
+00:02:28,965 --> 00:02:33,845
+Problemy bez dobrego rozwiązania stają się lukami – tematami nowych konkursów.
+
+35
+00:02:34,791 --> 00:02:39,871
+HugMe jest dla wszystkich: większy tekst, wysoki kontrast, obsługa klawiaturą.
+
+36
+00:02:39,871 --> 00:02:44,711
+Automatyczny audyt nie wykrył naruszeń dostępności w 138 widokach.
+
+37
+00:02:45,531 --> 00:02:46,201
+HugMe.
+
+38
+00:02:46,201 --> 00:02:47,971
+Twój problem nie zostaje sam.
