@@ -1,4 +1,5 @@
 """Publiczne demo (DEMO_MODE): konta z paska „Tryb demo” nie do zepsucia, odnawianie bazy po ciszy."""
+import re
 import sys
 from datetime import timedelta
 from pathlib import Path
@@ -13,7 +14,8 @@ import reset_demo  # noqa: E402
 
 def test_demo_accounts_locked_only_in_demo_mode(tmp_path):
     for demo, expected in ((True, 1), (False, 0)):
-        app = create_app({"TESTING": True, "DATABASE": str(tmp_path / f"{demo}.db"), "SECRET_KEY": "t", "DEMO_MODE": demo})
+        app = create_app({"TESTING": True, "DATABASE": str(tmp_path / f"{demo}.db"), "SECRET_KEY": "t", "DEMO_MODE": demo,
+                          "DEMO_ACCOUNTS": True})
         client = app.test_client()
         token = login(client, "admin")
         client.post("/admin/uzytkownicy/1/blokada", data={"_csrf": token})
@@ -49,3 +51,25 @@ def test_home_demo_buttons_and_reset_note_only_in_demo_mode(tmp_path):
     html = off.get("/").get_data(as_text=True)
     assert 'action="/demo/gmina/1"' in html and "nie mają haseł" in html and "odnawia się" not in html
     assert "Oglądasz demo?" not in html  # dawna ramka zastąpiona przyciskami scenariuszy
+
+
+def test_account_switcher_only_with_demo_accounts(tmp_path, monkeypatch):
+    """Issue #15: bez DEMO_MODE=1 (ani DEMO_ACCOUNTS=1) nikt nie wybierze konta – także admina."""
+    monkeypatch.delenv("DEMO_MODE", raising=False)
+    monkeypatch.delenv("DEMO_ACCOUNTS", raising=False)
+    off = create_app({"TESTING": True, "DATABASE": str(tmp_path / "off.db"), "SECRET_KEY": "t"})
+    client = off.test_client()
+    html = client.get("/").get_data(as_text=True)
+    token = re.search(r'name="_csrf" value="([^"]+)"', html).group(1)
+    assert 'id="role-switch"' not in html
+    assert client.get("/konto").status_code == 404
+    assert client.post("/konto", data={"_csrf": token, "user_id": 5}).status_code == 404
+    assert client.post("/demo/gmina/1", data={"_csrf": token}).status_code == 404
+    with client.session_transaction() as s:
+        assert "uid" not in s
+    assert client.get("/admin").status_code != 200
+
+    monkeypatch.setenv("DEMO_MODE", "1")
+    on = create_app({"TESTING": True, "DATABASE": str(tmp_path / "on.db"), "SECRET_KEY": "t"}).test_client()
+    login(on, "admin")
+    assert on.get("/admin").status_code == 200

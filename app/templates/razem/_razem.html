@@ -32,7 +32,7 @@
   {% if back %}<input type="hidden" name="wroc" value="{{ back }}">{% endif %}
   {% if err %}
   <div class="error-summary" role="alert" aria-labelledby="err-{{ kind }}">
-    <h3 id="err-{{ kind }}">Popraw {{ err|length }} {{ 'pole' if err|length == 1 else 'pola' }}</h3>
+    <h3 id="err-{{ kind }}">Popraw {{ err|length }} {{ err|length|plural('pole', 'pola', 'pól') }}</h3>
     <ul>{% for k, msg in err.items() %}<li><a href="#f-{{ kind }}-{{ k }}">{{ msg }}</a></li>{% endfor %}</ul>
   </div>
   {% endif %}

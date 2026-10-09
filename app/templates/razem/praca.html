@@ -8,7 +8,7 @@
   <svg class="map" viewBox="{{ viewbox }}" role="group" aria-label="{{ label }}">
     <title>{{ label }}</title>
     {% for slug, name, path, cx, cy, n, lvl in regions %}
-    <a href="/razem/praca?{{ param }}={{ slug if param == 'woj' else name }}#lista-h" aria-label="{{ name }}: {{ n }} {{ 'miejsce' if n == 1 else ('miejsca' if n in (2, 3, 4) else 'miejsc') }}">
+    <a href="/razem/praca?{{ param }}={{ slug if param == 'woj' else name }}#lista-h" aria-label="{{ name }}: {{ n }} {{ n|plural('miejsce', 'miejsca', 'miejsc') }}">
       <path class="map__r mf-{{ lvl }}" d="{{ path }}"/>
       <text class="map__n {{ 'map__n--light' if lvl >= 3 }}" x="{{ cx }}" y="{{ cy }}" text-anchor="middle">{{ n if n else '' }}</text>
     </a>

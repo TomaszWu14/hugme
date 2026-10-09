@@ -268,3 +268,21 @@ def test_workplace_form_error_keeps_values_and_marks_field(client):
     assert re.search(r'id="f-url"[^>]*aria-invalid="true"', html)
     assert 'id="e-url"' in html and "zaczynający się od http" in html
     assert 'id="f-name"' in html and not re.search(r'id="f-name"[^>]*aria-invalid', html)
+
+
+def test_pair_rejected_when_offer_has_no_free_slots(client, app):
+    """Issue #17: oferta z 2 miejscami – trzecie połączenie jest odrzucane."""
+    token = login(client, "admin")
+    with app.app_context():
+        oid = db.one("SELECT id FROM offers WHERE status = 'zatwierdzone' LIMIT 1")["id"]
+        db.execute("DELETE FROM missions WHERE offer_id = ?", (oid,))
+        db.execute("UPDATE offers SET slots = 2 WHERE id = ?", (oid,))
+        vids = [r["id"] for r in db.query("SELECT id FROM volunteers WHERE role = 'uczestnik' AND status = 'nowe'")]
+    assert len(vids) >= 3
+    codes = [client.post("/admin/potrzebny/polacz", data={"_csrf": token, "volunteer_id": vid, "offer_id": oid}).status_code
+             for vid in vids[:3]]
+    assert codes == [302, 302, 400]
+    r = client.post("/admin/potrzebny/polacz", data={"_csrf": token, "volunteer_id": vids[2], "offer_id": oid})
+    assert "nie ma już wolnych miejsc" in r.get_data(as_text=True)
+    assert count(app, "SELECT COUNT(*) FROM missions WHERE offer_id = ?", (oid,)) == 2
+    assert count(app, "SELECT status FROM volunteers WHERE id = ?", (vids[2],)) == "nowe"

@@ -9,6 +9,7 @@ services:
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-haiku-4-5}
       COOKIE_SECURE: ${COOKIE_SECURE:-1}
+      DEMO_MODE: ${DEMO_MODE:-0}  # 1 = publiczne demo: konta bez haseł, przełącznik kont, reset po ciszy
     volumes:
       - hugme-data:/data
 

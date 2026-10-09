@@ -8,6 +8,7 @@ from datetime import date, datetime, timezone
 
 from flask import Blueprint, Response, abort, flash, g, redirect, render_template, request, url_for
 
+from app import plural
 from app.auth import role_required, safe_next
 from app.views.wiedza import embed_url
 from core import db, notify
@@ -173,7 +174,7 @@ def validate_innovation(form):
     errors = {}
     for k, n in (("title", 3), ("summary", 10), ("description", 20), ("org", 3)):
         if len(form.get(k, "").strip()) < n:
-            errors[k] = f"To pole musi mieć co najmniej {n} znaki."
+            errors[k] = f"To pole musi mieć co najmniej {n} {plural(n, 'znak', 'znaki', 'znaków')}."
     for k, allowed in (("area", AREAS), ("powiat", POWIATY), ("stage", STAGES), ("audience", AUDIENCES)):
         if form.get(k) not in allowed:
             errors[k] = "Wybierz wartość z listy."
@@ -266,11 +267,17 @@ def import_library():
             flash("Nie udało się odczytać pliku. Sprawdź, czy to CSV/JSON w kodowaniu UTF-8.", "error")
             return redirect(url_for("admin.import_library"))
         ok, bad = 0, []
+        def key(t):  # tytuł po normalizacji: wielkość liter i białe znaki nie robią nowej innowacji (#23)
+            return " ".join(t.split()).casefold()
+        seen = {key(r["title"]) for r in db.query("SELECT title FROM innovations")}
         for n, row in enumerate(rows, start=2):
             errors = validate_innovation(row)
             if errors:
                 bad.append((n, row.get("title", "?"), "; ".join(f"{k}: {v}" for k, v in errors.items())))
+            elif key(row["title"]) in seen:
+                bad.append((n, row["title"], "taka innowacja już jest w Bibliotece (ten sam tytuł)"))
             else:
+                seen.add(key(row["title"]))
                 save_innovation(row, is_example=0)
                 ok += 1
         report = {"ok": ok, "bad": bad}
@@ -302,12 +309,11 @@ def new_call():
     title, area = request.form.get("title", "").strip(), request.form.get("area")
     desc, deadline = request.form.get("description", "").strip(), request.form.get("deadline", "")
     try:
-        date.fromisoformat(deadline)
-        valid_date = True
+        valid_date = date.fromisoformat(deadline) >= date.today()
     except ValueError:
         valid_date = False
     if len(title) < 5 or area not in AREAS or len(desc) < 10 or not valid_date:
-        flash("Uzupełnij tytuł, obszar, opis i termin naboru.", "error")
+        flash("Uzupełnij tytuł, obszar, opis i termin naboru (nie wcześniejszy niż dziś).", "error")
     else:
         db.execute("INSERT INTO calls (title, area, description, is_open, deadline, created_at) VALUES (?,?,?,0,?,?)",
                    (title, area, desc, deadline, db.now()))

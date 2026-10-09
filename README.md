@@ -104,16 +104,17 @@ ekspert, koordynatorka ROPS. Docelowe logowanie przez **login.gov.pl** albo link
 ```bash
 python -m venv .venv && . .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt -r requirements-dev.txt
-flask --app app:create_app run                       # http://127.0.0.1:5000
+DEMO_ACCOUNTS=1 flask --app app:create_app run       # http://127.0.0.1:5000 (Windows PS: $env:DEMO_ACCOUNTS=1)
 ```
 
 Przy pierwszym starcie baza `instance/hugme.db` tworzy się sama i ładuje dane przykładowe.
 Reset danych: usuń plik bazy. AI włączysz zmienną `ANTHROPIC_API_KEY` (przykład w `.env.example`).
+Wszystkie zmienne: sekcja [Konfiguracja](#konfiguracja).
 
 **Testy i audyt:**
 
 ```bash
-pytest                                   # 350 testów: ścieżki, role, CSRF, prywatność, trafność
+pytest                                   # ponad 350 testów: ścieżki, role, CSRF, prywatność, trafność
 python -m playwright install chromium
 python scripts/axe_audit.py --zrzuty     # raport docs/WCAG_RAPORT.md + docs/zrzuty/
 ```
@@ -125,16 +126,37 @@ SECRET_KEY=$(python -c "import secrets;print(secrets.token_hex(32))") docker com
 ```
 
 Baza SQLite leży w wolumenie `hugme-data`. Healthcheck: `GET /zdrowie`. W Coolify wystarczy wskazać
-repozytorium (build z `Dockerfile`), ustawić `SECRET_KEY` i opcjonalnie `ANTHROPIC_API_KEY`, a potem podpiąć domenę.
+repozytorium (build z `Dockerfile`), ustawić `SECRET_KEY`, dla publicznego demo `DEMO_MODE=1` i opcjonalnie `ANTHROPIC_API_KEY`, a potem podpiąć domenę.
+Bez `DEMO_MODE=1` (ani `DEMO_ACCOUNTS=1`) przełącznik kont jest wyłączony: `/konto` i scenariusze `/demo` zwracają 404.
 
 **CI/CD:** każdy PR i push do `main` uruchamia testy (GitHub Actions, `.github/workflows/ci.yml`). PR z gałęzi
 `claude/**` scala się sam po zielonym CI (squash), a push do `main` wyzwala wdrożenie w Coolify przez webhook.
+
+## Konfiguracja
+
+Wszystko przez zmienne środowiskowe; bez żadnej aplikacja startuje lokalnie z danymi przykładowymi i bez AI.
+
+| Zmienna | Domyślnie | Do czego |
+|---|---|---|
+| `SECRET_KEY` | losowy przy każdym starcie | Podpis sesji i tokenów CSRF. **Na serwerze ustaw stały** – inaczej restart wylogowuje wszystkich. `docker-compose.yml` go wymaga. |
+| `DATABASE` | `instance/hugme.db` (w obrazie `/data/hugme.db`) | Ścieżka pliku SQLite; czyta ją też `scripts/reset_demo.py`. |
+| `COOKIE_SECURE` | wyłączone (w obrazie `1`) | `1` = ciasteczko sesji tylko po HTTPS. |
+| `DEMO_MODE` | wyłączone | `1` = publiczne demo: konta z paska „Tryb demo” nie do zablokowania ani zmiany roli, przyciski „Napisz jako…” jednym kliknięciem dla gościa, komunikat o odnawianiu demo. |
+| `DEMO_ACCOUNTS` | wyłączone (włączone, gdy `DEMO_MODE=1`) | `1` = konta demo bez haseł (pasek „Tryb demo”, `/konto`, scenariusze `/demo`) bez reszty trybu demo – do pracy lokalnej. Bez tej flagi i bez `DEMO_MODE` przełącznik zwraca 404. |
+| `ANTHROPIC_API_KEY` | brak | Włącza funkcje AI. Bez klucza działają reguły i szablony. |
+| `ANTHROPIC_MODEL` | `claude-haiku-4-5` | Model używany przez `core/ai.py`. |
+| `AI_DAILY_LIMIT` | `300` | Dzienna pula wywołań AI (licznik w bazie, wspólny dla workerów); po wyczerpaniu szablony do północy UTC. |
+| `AI_DISABLED` | wyłączone | `1` = AI wyłączone mimo klucza (testy i audyt axe ustawiają to same). |
+
+**Reset publicznego demo.** `python scripts/reset_demo.py` czyści dane i ładuje seed, ale tylko po co najmniej
+20 minutach bez nowych wpisów (żeby nie skasować oglądającemu tego, co przed chwilą zapisał); `--force` resetuje od razu.
+Licznik AI zostaje. Na produkcji: Coolify → Scheduled Tasks, np. co godzinę. Lokalnie najprościej usunąć plik bazy.
 
 ## Scenariusz demo (5 minut)
 
 **Najprościej: wejdź na [/demo](https://hugme.twapp.pl/demo) i wybierz scenariusz – pasek na górze poprowadzi Cię krok
 po kroku (ok. 1,5 min każdy).** Kroki obu scenariuszy są opisane wyżej, pod „Zobacz”. Poniżej dłuższa ścieżka ręczna –
-to także ściąga do pokazu na żywo. Plan B bez internetu: aplikacja lokalnie (`flask --app app:create_app run`, fonty
+to także ściąga do pokazu na żywo. Plan B bez internetu: aplikacja lokalnie (`DEMO_ACCOUNTS=1 flask --app app:create_app run`, fonty
 i style są w repo, bez CDN), `/demo` działa tak samo; plan C: [film](docs/film/hugme-film.mp4) (2:51, lektor i napisy).
 
 1. **Start, gość.** Menu z nazwami modułów z briefu, na starcie przyciski „Zobacz demo w 1,5 minuty”, niżej kafle
@@ -184,7 +206,8 @@ a po scaleniu wdrażają się same (webhook do Coolify).
 
 To prototyp z hackathonu, nie system produkcyjny:
 
-- **Brak prawdziwego logowania.** Konta demo przełącza się bez haseł; login.gov.pl i link e-mail są tylko opisane
+- **Brak prawdziwego logowania.** Konta demo przełącza się bez haseł – tylko przy `DEMO_MODE=1` albo `DEMO_ACCOUNTS=1`,
+  bez nich aplikacja działa wyłącznie dla gościa; login.gov.pl i link e-mail są tylko opisane
   w [docs/ARCHITEKTURA.md](docs/ARCHITEKTURA.md#logowanie).
 - **Dane są fikcyjne** (poza miejscami pracy i statystykami w module „Praca”), a demo odnawia się po 20 minutach
   bez nowych wpisów – nie zapisuj tam niczego ważnego.

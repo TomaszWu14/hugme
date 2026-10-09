@@ -9,7 +9,7 @@
 <p class="notice">Pomysł będzie widoczny publicznie. Nie wpisuj danych osobowych – i tak je ukryjemy.</p>
 {% if errors %}
 <div class="error-summary" role="alert" aria-labelledby="err-h">
-  <h2 id="err-h">Popraw {{ errors|length }} {{ 'pole' if errors|length == 1 else 'pola' }}</h2>
+  <h2 id="err-h">Popraw {{ errors|length }} {{ errors|length|plural('pole', 'pola', 'pól') }}</h2>
   <ul>{% for k, msg in errors.items() %}<li><a href="#f-{{ k }}">{{ msg }}</a></li>{% endfor %}</ul>
 </div>
 {% endif %}
