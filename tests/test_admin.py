@@ -285,3 +285,37 @@ def test_innovation_form_errors_use_polish_plural(client):
     html = client.post("/admin/biblioteka/nowa", data={"_csrf": token, "title": "Tytuł"}).get_data(as_text=True)
     assert "Popraw 7 pól" in html
     assert "co najmniej 10 znaków" in html and "co najmniej 3 znaki" in html
+
+
+def test_import_twice_skips_duplicates(client, app):
+    """Issue #23: ponowny import (i powtórka w pliku) nie tworzy kopii ani drugich powiadomień."""
+    token = login(client, "admin")
+    row = ("Klub Szachowy Seniora;Seniorzy grają w szachy;Cotygodniowe spotkania szachowe w bibliotece gminnej.;"
+           "Seniorzy;olkuski;wdrożenie;seniorzy;Biblioteka X\n")
+    csv_text = "tytul;streszczenie;opis;obszar;powiat;etap;odbiorcy;organizacja\n" + row + "  klub szachowy  SENIORA" + row[21:]
+    count = "SELECT (SELECT COUNT(*) FROM innovations), (SELECT COUNT(*) FROM notifications)"
+
+    def send():
+        return client.post("/admin/import", data={"_csrf": token, "plik": (io.BytesIO(csv_text.encode()), "rops.csv")},
+                           content_type="multipart/form-data").get_data(as_text=True)
+
+    html = send()
+    assert "Zaimportowano: <strong>1</strong>" in html and "Pominięto: <strong>1</strong>" in html
+    with app.app_context():
+        before = tuple(db.one(count))
+    html = send()
+    assert "Zaimportowano: <strong>0</strong>" in html and "Pominięto: <strong>2</strong>" in html and "już jest" in html
+    with app.app_context():
+        assert tuple(db.one(count)) == before
+
+
+def test_new_call_rejects_past_deadline(client, app):
+    """Issue #16: nabór nie może mieć terminu wcześniejszego niż dziś."""
+    token = login(client, "admin")
+    form = {"_csrf": token, "title": "Nabór testowy", "area": "rodziny-zd", "description": "Opis naboru testowego."}
+    client.post("/admin/nabory/nowy", data={**form, "deadline": "2000-01-01"})
+    with app.app_context():
+        assert db.one("SELECT COUNT(*) FROM calls WHERE title = 'Nabór testowy'")[0] == 0
+    client.post("/admin/nabory/nowy", data={**form, "deadline": "2999-01-01"})
+    with app.app_context():
+        assert db.one("SELECT COUNT(*) FROM calls WHERE title = 'Nabór testowy'")[0] == 1

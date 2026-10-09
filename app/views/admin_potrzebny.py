@@ -82,6 +82,12 @@ def pair():
     if con.execute("UPDATE volunteers SET status = 'polaczone' WHERE id = ? AND status = 'nowe'", (v["id"],)).rowcount != 1:
         con.rollback()
         abort(400)
+    # Liczone po zajęciu blokady zapisu (UPDATE wyżej), więc równoległe „Połącz” nie przekroczą limitu (#17).
+    taken = con.execute("SELECT COUNT(*) FROM missions WHERE offer_id = ? AND status = 'polaczone'", (o["id"],)).fetchone()[0]
+    if taken >= o["slots"]:
+        con.rollback()
+        abort(400, f"Formularz jest nieaktualny: oferta „{o['title']}” nie ma już wolnych miejsc ({o['slots']}) – "
+                   "wybierz inną propozycję.")
     con.execute("INSERT INTO missions (volunteer_id, offer_id, buddy_id, created_at) VALUES (?,?,?,?)",
                 (v["id"], o["id"], b["id"] if b else None, db.now()))
     if b:

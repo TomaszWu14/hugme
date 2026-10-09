@@ -65,7 +65,7 @@ ROLE_UID = {"mieszkaniec": 1, "ngo": 2, "gmina": 3, "ekspert": 4, "admin": 5}  #
 
 def serve():
     db = Path(tempfile.mkdtemp()) / "audit.db"
-    app = create_app({"DATABASE": str(db), "SECRET_KEY": "audit"})
+    app = create_app({"DATABASE": str(db), "SECRET_KEY": "audit", "DEMO_ACCOUNTS": True})
     server = make_server("127.0.0.1", PORT, app, threaded=True)
     threading.Thread(target=server.serve_forever, daemon=True).start()
     return server
