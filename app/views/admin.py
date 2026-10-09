@@ -266,11 +266,17 @@ def import_library():
             flash("Nie udało się odczytać pliku. Sprawdź, czy to CSV/JSON w kodowaniu UTF-8.", "error")
             return redirect(url_for("admin.import_library"))
         ok, bad = 0, []
+        def key(t):  # tytuł po normalizacji: wielkość liter i białe znaki nie robią nowej innowacji (#23)
+            return " ".join(t.split()).casefold()
+        seen = {key(r["title"]) for r in db.query("SELECT title FROM innovations")}
         for n, row in enumerate(rows, start=2):
             errors = validate_innovation(row)
             if errors:
                 bad.append((n, row.get("title", "?"), "; ".join(f"{k}: {v}" for k, v in errors.items())))
+            elif key(row["title"]) in seen:
+                bad.append((n, row["title"], "taka innowacja już jest w Bibliotece (ten sam tytuł)"))
             else:
+                seen.add(key(row["title"]))
                 save_innovation(row, is_example=0)
                 ok += 1
         report = {"ok": ok, "bad": bad}
