@@ -4,7 +4,7 @@ import os
 import secrets
 from pathlib import Path
 
-from flask import Flask, abort, render_template, request, session
+from flask import Flask, abort, g, redirect, render_template, request, session
 
 from core import db
 from core.domain import AREAS, REPORT_STATUSES, ROLES, heat_level
@@ -32,6 +32,8 @@ def create_app(test_config=None):
     )
     if test_config:
         app.config.update(test_config)
+    # Konta demo bez haseł (pasek, /konto, scenariusze /demo) – jedyne logowanie w prototypie, więc tylko na żądanie.
+    app.config.setdefault("DEMO_ACCOUNTS", app.config["DEMO_MODE"] or os.environ.get("DEMO_ACCOUNTS") == "1")
 
     Path(app.config["DATABASE"]).parent.mkdir(parents=True, exist_ok=True)
     _ensure_db(app)
@@ -76,6 +78,9 @@ ERRORS = {
 
 
 def _error_page(e):
+    if e.code == 403 and g.get("just_switched"):  # nowe konto nie ma dostępu do strony, z której przełączano (#20)
+        from app.auth import ROLE_HOME
+        return redirect(ROLE_HOME.get(g.user["role"] if g.user else None, "/"))
     title, text = ERRORS[e.code]
     if e.code == 400 and e.description and e.description.startswith("Formularz"):
         text = e.description
