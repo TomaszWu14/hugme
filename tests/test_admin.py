@@ -277,3 +277,25 @@ def test_hidden_messages_do_not_affect_waiting_counters(client, app):
         db.execute(add, (tid, 5, "Ukryta odpowiedź", "2099-01-01 10:00:00", 1))
         replied = {(r["subject_type"], r["subject_id"]) for r in db.query(HUB_REPLIES_SQL)}
         assert ("pomysl", iid) not in replied                       # ukryta odpowiedź Hubu się nie liczy
+
+
+def test_import_twice_skips_duplicates(client, app):
+    """Issue #23: ponowny import (i powtórka w pliku) nie tworzy kopii ani drugich powiadomień."""
+    token = login(client, "admin")
+    row = ("Klub Szachowy Seniora;Seniorzy grają w szachy;Cotygodniowe spotkania szachowe w bibliotece gminnej.;"
+           "Seniorzy;olkuski;wdrożenie;seniorzy;Biblioteka X\n")
+    csv_text = "tytul;streszczenie;opis;obszar;powiat;etap;odbiorcy;organizacja\n" + row + "  klub szachowy  SENIORA" + row[21:]
+    count = "SELECT (SELECT COUNT(*) FROM innovations), (SELECT COUNT(*) FROM notifications)"
+
+    def send():
+        return client.post("/admin/import", data={"_csrf": token, "plik": (io.BytesIO(csv_text.encode()), "rops.csv")},
+                           content_type="multipart/form-data").get_data(as_text=True)
+
+    html = send()
+    assert "Zaimportowano: <strong>1</strong>" in html and "Pominięto: <strong>1</strong>" in html
+    with app.app_context():
+        before = tuple(db.one(count))
+    html = send()
+    assert "Zaimportowano: <strong>0</strong>" in html and "Pominięto: <strong>2</strong>" in html and "już jest" in html
+    with app.app_context():
+        assert tuple(db.one(count)) == before
