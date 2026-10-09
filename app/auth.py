@@ -19,6 +19,7 @@ def init(app):
     @app.before_request
     def load_user():
         uid = session.get("uid")
+        g.just_switched = session.pop("just_switched", False)  # pierwsze żądanie po zmianie konta (#20)
         g.user = db.one("SELECT * FROM users WHERE id = ? AND is_active = 1", (uid,)) if uid else None
         g.unread = db.one(
             "SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0", (uid,)
@@ -92,6 +93,7 @@ def demo():
             flash("To konto jest zablokowane przez Hub – wybierz inne.", "error")
             return redirect(url_for("auth.demo"))
         switch_account(user["id"] if user else None)
+        session["just_switched"] = True
         home = ROLE_HOME.get(user["role"] if user else None, url_for("public.home"))
         return redirect(safe_next(request.form.get("next"), home))
     return render_template("konto.html", next=safe_next(request.args.get("next"), ""))
