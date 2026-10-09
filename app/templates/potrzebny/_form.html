@@ -4,7 +4,7 @@
 {% macro error_summary(errors, prefix='f') -%}
 {% if errors %}
 <div class="error-summary" role="alert" aria-labelledby="err-title">
-  <h2 id="err-title" class="h3">Popraw {{ errors|length }} {{ 'pole' if errors|length == 1 else 'pola' }}</h2>
+  <h2 id="err-title" class="h3">Popraw {{ errors|length }} {{ errors|length|plural('pole', 'pola', 'pól') }}</h2>
   <ul>{% for k, msg in errors.items() %}<li><a href="#{{ prefix }}-{{ k }}">{{ msg }}</a></li>{% endfor %}</ul>
 </div>
 {% endif %}

@@ -8,7 +8,7 @@
 <p>Pola wypełniliśmy danymi z fiszki i kanwy. Popraw je, zapisz szkic, a gdy wszystko gotowe – złóż wniosek.</p>
 {% if errors %}
 <div class="error-summary" role="alert" aria-labelledby="err-h">
-  <h2 id="err-h">Uzupełnij {{ errors|length }} {{ 'pole' if errors|length == 1 else 'pola' }}, żeby złożyć wniosek</h2>
+  <h2 id="err-h">Uzupełnij {{ errors|length }} {{ errors|length|plural('pole', 'pola', 'pól') }}, żeby złożyć wniosek</h2>
   <ul>{% for k in errors %}<li><a href="#f-{{ k }}">{{ (spec|selectattr(0, 'equalto', k)|first)[1] }}</a></li>{% endfor %}</ul>
 </div>
 {% endif %}

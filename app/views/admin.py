@@ -8,6 +8,7 @@ from datetime import date, datetime, timezone
 
 from flask import Blueprint, Response, abort, flash, g, redirect, render_template, request, url_for
 
+from app import plural
 from app.auth import role_required, safe_next
 from app.views.wiedza import embed_url
 from core import db, notify
@@ -173,7 +174,7 @@ def validate_innovation(form):
     errors = {}
     for k, n in (("title", 3), ("summary", 10), ("description", 20), ("org", 3)):
         if len(form.get(k, "").strip()) < n:
-            errors[k] = f"To pole musi mieć co najmniej {n} znaki."
+            errors[k] = f"To pole musi mieć co najmniej {n} {plural(n, 'znak', 'znaki', 'znaków')}."
     for k, allowed in (("area", AREAS), ("powiat", POWIATY), ("stage", STAGES), ("audience", AUDIENCES)):
         if form.get(k) not in allowed:
             errors[k] = "Wybierz wartość z listy."

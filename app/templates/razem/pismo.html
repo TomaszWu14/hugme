@@ -14,7 +14,7 @@
 <form method="post" class="card no-print" novalidate {% if ai_enabled %}data-czekaj="Chwila… z AI to może potrwać do pół minuty"{% endif %}>
   {{ csrf() }}
   {% if errors %}
-  <div class="error-summary" role="alert" aria-labelledby="err-h"><h2 id="err-h">Uzupełnij {{ errors|length }} {{ 'pole' if errors|length == 1 else 'pola' }}</h2>
+  <div class="error-summary" role="alert" aria-labelledby="err-h"><h2 id="err-h">Uzupełnij {{ errors|length }} {{ errors|length|plural('pole', 'pola', 'pól') }}</h2>
     <ul>{% for k in errors %}<li><a href="#f-{{ k }}">{{ (spec.fields|selectattr(0, 'equalto', k)|first)[1] }}</a></li>{% endfor %}</ul></div>
   {% endif %}
   <p class="notice">Dane wpisane tutaj zostają w Twojej przeglądarce i na wydruku – nie trafiają do bazy. Do AI wysyłamy wyłącznie uzasadnienie bez danych osobowych.</p>
