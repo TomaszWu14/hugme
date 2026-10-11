@@ -110,7 +110,18 @@ Decyzje produktowe zapadały w ustrukturyzowanych sesjach pytań ([archiwum/BRAI
 Kod pisałem z Claude Code jako asystentem programisty – decyzje, dane, testy i weryfikacja są moje, a commity mają
 jawny dopisek `Co-Authored-By: Claude`.
 
-`<DO UZUPEŁNIENIA: wynik hackathonu, co było Twoją rolą jako analityka, czego się nauczyłeś>`
+**Ocena jury HackYeah 2026** (zadanie partnerskie UMWM: HubMi.pl):
+
+| Kryterium | Ocena |
+|---|---|
+| Stopień spełnienia wyzwania | 7,67 |
+| Potencjał wdrożeniowy | 7,00 |
+| Dostępność i intuicyjność prototypu | 7,00 |
+| Atrakcyjność, pomysłowość i jakość interfejsu | 7,00 |
+| Jakość dostarczonych materiałów oraz MVP | 7,33 |
+| **Średnia** | **7,30** (średnia wszystkich zespołów: 5,65) |
+
+`<DO UZUPEŁNIENIA: co było Twoją rolą jako analityka, czego się nauczyłeś>`
 
 ## Prawa
 
