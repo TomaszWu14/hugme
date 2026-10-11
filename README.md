@@ -11,7 +11,8 @@ a Hub Innowacji Społecznych widzi, gdzie rozwiązań brakuje.** Prototyp dla Ma
 📹 [Prezentacja działania – 1:46 (MP4, z lektorem)](docs/film/hugme-portfolio.mp4) · [napisy](docs/film/hugme-portfolio.srt) · YouTube: `<DO UZUPEŁNIENIA: link>`
 
 🌐 **Demo:** [hugme.twapp.pl](https://hugme.twapp.pl) – konta bez haseł, rolę wybierasz w pasku u góry, dane odnawiają
-się po 20 minutach ciszy. `<DO UZUPEŁNIENIA: do kiedy demo będzie działać>`
+się po 20 minutach ciszy. Demo może zostać wyłączone bez zapowiedzi – wtedy
+uruchom aplikację lokalnie (instrukcja niżej, ok. 2 minuty).
 
 ## Problem → rozwiązanie
 
@@ -98,7 +99,7 @@ Licznik AI zostaje. Na produkcji: Coolify → Scheduled Tasks, np. co godzinę. 
 ## Zakres i ograniczenia
 
 To prototyp z hackathonu, nie system produkcyjny. Świadomie **nie ma**: prawdziwego logowania (konta demo bez haseł),
-wysyłki e-maili (kolejka w panelu), obsługi złożonego wniosku przez Hub, usuwania danych przez użytkownika.
+wysyłki e-maili (kolejka w panelu), obsługi złożonego wniosku przez Hub (świadomie poza zakresem prototypu), usuwania danych przez użytkownika.
 AI nigdy nie podejmuje decyzji, a karty usług nie zawierają kwot. Dane są fikcyjne (plakietka PRZYKŁAD), poza
 miejscami pracy i statystykami w zakładce „Praca”, które mają źródła. Trafność zmierzona na 16 zdaniach testowych.
 Szczegóły i 16 znanych problemów: [07 – Ograniczenia](docs/07-ograniczenia.md).
@@ -121,11 +122,11 @@ jawny dopisek `Co-Authored-By: Claude`.
 | Jakość dostarczonych materiałów oraz MVP | 7,33 |
 | **Średnia** | **7,30** (średnia wszystkich zespołów: 5,65) |
 
-`<DO UZUPEŁNIENIA: co było Twoją rolą jako analityka, czego się nauczyłeś>`
+**Moja rola:** cały zespół to jedna osoba. Przeanalizowałem brief HubMi.pl, podjąłem decyzje produktowe przed
+kodowaniem (100 pytań i odpowiedzi w [BRAINSTORM](docs/archiwum/BRAINSTORM.md)), zamieniłem reguły biznesowe na testy
+akceptacyjne (376 testów) i zweryfikowałem działanie; kod powstał z Claude Code jako asystentem programisty.
 
 ## Prawa
 
-Wszelkie prawa zastrzeżone do czasu decyzji właściciela praw zgodnie z regulaminem HackYeah (przeniesienie
-autorskich praw majątkowych na organizatora i Województwo Małopolskie). Preferowana licencja docelowa:
-**EUPL 1.2** – patrz [archiwum/PYTANIA_DO_MENTOROW.md](docs/archiwum/PYTANIA_DO_MENTOROW.md).
-`<DO UZUPEŁNIENIA: aktualny stan praw>`
+Kod jest mój i jest udostępniony na licencji [MIT](LICENSE). Dane przykładowe są fikcyjne; miejsca pracy
+i statystyki w zakładce „Praca” pochodzą z publicznych źródeł podanych przy każdym wpisie.

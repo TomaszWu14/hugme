@@ -11,8 +11,8 @@ procesu nie widzą się nawzajem:
 - **Hub Innowacji Społecznych** (Regionalny Ośrodek Polityki Społecznej w Krakowie) nie widzi, gdzie
   rozwiązań brakuje – więc tematy konkursów grantowych powstają bez danych o realnych potrzebach.
 
-Jak ten proces wyglądał przed aplikacją i ile kosztował: `<DO UZUPEŁNIENIA: opis procesu PRZED i liczby z briefu
-HubMi.pl albo od ROPS – np. liczba innowacji w Bibliotece, czas odpowiedzi, liczba zgłoszeń>`.
+Nie mam danych liczbowych o procesie sprzed aplikacji (liczba zgłoszeń, czas odpowiedzi, koszt) – opis procesu
+PRZED w [02-proces](02-proces.md) jest hipotezą z analizy problemu i pierwszą rzeczą do zweryfikowania z Hubem.
 
 ## Cel
 
@@ -40,8 +40,8 @@ Mierniki, które aplikacja już liczy (panel Hubu):
 | Koordynatorka Hubu ROPS | `admin` | widzieć zgłoszenia, odpowiadać, moderować, wiedzieć, gdzie są luki |
 | Gość | brak konta | przeglądać i szukać bez logowania |
 
-Źródło wymagań: brief zadania HubMi.pl na HackYeah 2026 (7 modułów). `<DO UZUPEŁNIENIA: czy były rozmowy
-z ROPS, mentorami albo rodzicami>`.
+Źródło wymagań: brief zadania HubMi.pl na HackYeah 2026 (7 modułów) i decyzje autora zapisane przed kodowaniem
+([archiwum/BRAINSTORM.md](archiwum/BRAINSTORM.md)). Wymagań nie testowano jeszcze z użytkownikami.
 
 ## W zakresie
 
@@ -65,7 +65,7 @@ z ROPS, mentorami albo rodzicami>`.
 | Wysyłka e-maili | wymaga SMTP i workera | kolejka `emails` widoczna w panelu Hubu |
 | Decyzje podejmowane przez AI | wyjaśnialność i bezpieczeństwo (patrz [06-decyzje](06-decyzje.md)) | AI tylko dopisuje tekst; dopasowanie, status i pary liczą reguły |
 | Kwoty w kartach usług | model mógłby je wymyślić | tylko rodzaje kosztów; kwoty wycinane także z odpowiedzi AI |
-| Obsługa złożonego wniosku przez Hub | nie zdążono w ramach hackathonu `<DO UZUPEŁNIENIA: świadomie czy niedokończone>` | wniosek trafia do skrzynki Hubu i na wydruk |
+| Obsługa złożonego wniosku przez Hub | świadomie poza zakresem prototypu – zakres kończy się na złożeniu wniosku; jego ocena to proces naboru Hubu | wniosek trafia do skrzynki Hubu i na wydruk |
 | Usuwanie danych przez użytkownika, retencja | prototyp na danych fikcyjnych | opis RODO w [DANE.md](DANE.md) |
 | PostgreSQL, wiele instancji | jedna instancja wystarcza na demo | SQLite, schemat zgodny z PostgreSQL |
 
