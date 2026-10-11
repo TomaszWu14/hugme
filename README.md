@@ -8,7 +8,7 @@ a Hub Innowacji Społecznych widzi, gdzie rozwiązań brakuje.** Prototyp dla Ma
 
 ![demo](docs/screenshots/demo.gif)
 
-📹 [Prezentacja działania – 2 min](<DO UZUPEŁNIENIA: link YouTube>)
+📹 [Prezentacja działania – 1:46 (MP4, z lektorem)](docs/film/hugme-portfolio.mp4) · [napisy](docs/film/hugme-portfolio.srt) · YouTube: `<DO UZUPEŁNIENIA: link>`
 
 🌐 **Demo:** [hugme.twapp.pl](https://hugme.twapp.pl) – konta bez haseł, rolę wybierasz w pasku u góry, dane odnawiają
 się po 20 minutach ciszy. `<DO UZUPEŁNIENIA: do kiedy demo będzie działać>`
