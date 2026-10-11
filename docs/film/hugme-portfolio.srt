@@ -1,0 +1,143 @@
+1
+00:00:00,300 --> 00:00:03,421
+W Małopolsce działa wiele innowacji społecznych.
+
+2
+00:00:03,471 --> 00:00:07,186
+Ludzie, którzy ich potrzebują, zwykle o nich nie wiedzą.
+
+3
+00:00:07,236 --> 00:00:10,819
+Gmina szuka rozwiązania, które sąsiednia gmina już ma.
+
+4
+00:00:10,869 --> 00:00:14,650
+Regionalny hub innowacji nie widzi, gdzie brakuje pomocy.
+
+5
+00:00:15,580 --> 00:00:16,675
+Krok pierwszy.
+
+6
+00:00:16,725 --> 00:00:19,948
+Gmina opisuje problem własnymi słowami.
+
+7
+00:00:19,998 --> 00:00:22,485
+Nie wybiera kategorii z listy.
+
+8
+00:00:22,535 --> 00:00:27,230
+Numer telefonu w opisie znika, zanim tekst trafi do bazy.
+
+9
+00:00:28,180 --> 00:00:28,974
+Krok drugi.
+
+10
+00:00:29,024 --> 00:00:32,501
+System pokazuje gotowe rozwiązania z regionu.
+
+11
+00:00:32,551 --> 00:00:35,262
+Każde ma ocenę dopasowania i powód.
+
+12
+00:00:35,312 --> 00:00:37,562
+Widać wspólne słowa i tematy.
+
+13
+00:00:37,612 --> 00:00:41,090
+Gdy nic nie pasuje, aplikacja mówi to wprost.
+
+14
+00:00:42,060 --> 00:00:42,851
+Krok trzeci.
+
+15
+00:00:42,901 --> 00:00:44,742
+Zgłoszenie trafia do hubu.
+
+16
+00:00:44,792 --> 00:00:47,054
+Koordynatorka odpowiada w wątku.
+
+17
+00:00:47,104 --> 00:00:50,768
+Zgłoszenia bez dobrego rozwiązania stają się lukami.
+
+18
+00:00:50,818 --> 00:00:53,290
+Luki to tematy kolejnych konkursów.
+
+19
+00:00:54,220 --> 00:00:55,784
+Najważniejsza decyzja:
+
+20
+00:00:55,834 --> 00:00:59,672
+dopasowanie liczą reguły, nie sztuczna inteligencja.
+
+21
+00:00:59,722 --> 00:01:04,586
+Klasyczny algorytm wyszukiwania daje wynik, który da się wyjaśnić.
+
+22
+00:01:04,636 --> 00:01:07,667
+Koordynatorka widzi, dlaczego coś pasuje.
+
+23
+00:01:07,717 --> 00:01:10,015
+Działa też bez płatnego modelu.
+
+24
+00:01:10,065 --> 00:01:14,343
+Sztuczna inteligencja tylko dopisuje streszczenie i słowa.
+
+25
+00:01:14,393 --> 00:01:16,690
+Nie zmienia statusu ani wyniku.
+
+26
+00:01:17,660 --> 00:01:20,101
+Czego aplikacja świadomie nie robi?
+
+27
+00:01:20,151 --> 00:01:22,236
+Nie ma prawdziwego logowania.
+
+28
+00:01:22,286 --> 00:01:23,161
+To prototyp.
+
+29
+00:01:23,211 --> 00:01:25,509
+Docelowo wejdzie profil zaufany.
+
+30
+00:01:25,559 --> 00:01:26,861
+Nie wysyła poczty.
+
+31
+00:01:26,911 --> 00:01:29,210
+Powiadomienia czekają w kolejce.
+
+32
+00:01:29,260 --> 00:01:32,625
+Kalendarz wizyt dziecka zostaje w przeglądarce.
+
+33
+00:01:32,675 --> 00:01:34,974
+Nie podaje kwot w kartach usług.
+
+34
+00:01:35,024 --> 00:01:38,176
+Kwota wymyślona przez model byłaby ryzykiem.
+
+35
+00:01:38,226 --> 00:01:42,517
+Całość to Python, Flask i SQLite, bez frameworka JavaScript.
+
+36
+00:01:42,567 --> 00:01:45,150
+Kod jest na GitHubie, link w opisie.
