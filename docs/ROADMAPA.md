@@ -5,7 +5,7 @@
 - Import prawdziwej Biblioteki Innowacji i Mapy Wyzwań ROPS (mapowanie kolumn w panelu już jest).
 - Rozbudowa słownika pojęć z koordynatorami Hubu, na podstawie języka prawdziwych zgłoszeń.
 - Testy z użytkownikami: 5 rodzin z obszaru pilotażowego, 5 seniorów, 3 gminy, 3 NGO.
-- Decyzja o licencji i przeniesieniu praw (patrz [PYTANIA_DO_MENTOROW](PYTANIA_DO_MENTOROW.md)).
+- Decyzja o licencji i przeniesieniu praw (patrz [PYTANIA_DO_MENTOROW](archiwum/PYTANIA_DO_MENTOROW.md)).
 
 ## Etap 1 – pilotaż (3 miesiące)
 

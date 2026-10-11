@@ -10,3 +10,6 @@ scripts/.cache/
 
 # materiały demo: wyniki budowania (finalne kopie są w docs/)
 demo/out/
+.DS_Store
+node_modules/
+*.log
