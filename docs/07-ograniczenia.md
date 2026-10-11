@@ -28,7 +28,7 @@ Lista do decyzji, nie zadania do naprawy w tym repozytorium.
 | 5 | Ocena dopasowania spoza zgłoszenia pokazuje „Dziękujemy”, nic nie zapisując | `app/views/public.py` `rate_match` | – |
 | 6 | Jedna ocena / jeden głos pilnowane w kodzie, bez UNIQUE w bazie | `app/views/wiedza.py`, `app/views/razem.py` | Co przy dwóch równoczesnych kliknięciach? |
 | 7 | Ekspert widzi wszystkie niezatwierdzone zgłoszenia, nie tylko ze swoich obszarów | `app/views/public.py` `can_see_report` | Czy to zamierzone? |
-| 8 | Telefon w programie „Jestem potrzebny” jawny; zgoda zapisywana zawsze jako 1 | `app/views/potrzebny.py` `save_volunteer` | Kto widzi telefon i jak długo go przechowujemy? |
+| 8 | Telefon w programie „Jestem potrzebny” zapisywany jawnie (zgoda jest wymagana, ale bez zakresu i terminu) | `app/views/potrzebny.py` `save_volunteer` | Kto widzi telefon i jak długo go przechowujemy? |
 | 9 | Obszar zgłoszenia przychodzi z formularza, nie z analizy na serwerze | `app/views/public.py` `create_report` | Czy trendy mogą zależeć od pola, które da się zmienić? |
 | 10 | Para przewodników tylko w tym samym powiecie | `app/views/admin.py` `guide_pairs` | Co z sąsiednim powiatem? |
 | 11 | Liczba miejsc w ofercie po cichu ograniczana do 1–20 | `app/views/potrzebny.py` `save_offer` | Komunikat czy twardy błąd? |
