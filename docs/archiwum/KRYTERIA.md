@@ -29,20 +29,20 @@ statystyki GUS/PFRON, „Poznaj ZD” dla pracodawców i instytucji.
 ## Potencjał wdrożeniowy (20%)
 
 - **Prostota utrzymania**: jeden kontener, 3 zależności, brak frameworka JS, SQLite → PostgreSQL bez zmian modelu.
-- **Koszt**: ok. 75 zł miesięcznie technologii z AI, a bez AI pełna funkcjonalność ([KOSZTY](KOSZTY.md)).
+- **Koszt**: ok. 75 zł miesięcznie technologii z AI, a bez AI pełna funkcjonalność ([KOSZTY](../KOSZTY.md)).
 - **Skalowalność i elastyczność**: dowolne obszary i powiaty (konfiguracja w `core/domain.py`), słownik pojęć
   edytowalny bez programowania, import Biblioteki ROPS, API JSON dla bazy grantowej.
 - **Gotowość**: Docker + Coolify, healthcheck, 313 testów automatycznych, audyt dostępności w CI (blokuje scalenie zmian).
-- **Ścieżka do produkcji**: login.gov.pl, RODO, DPIA opisane w [ARCHITEKTURA](ARCHITEKTURA.md) i [DANE](DANE.md).
+- **Ścieżka do produkcji**: login.gov.pl, RODO, DPIA opisane w [ARCHITEKTURA](../ARCHITEKTURA.md) i [DANE](../DANE.md).
 
 ## Dostępność i intuicyjność (20%)
 
-- WCAG 2.1 AA: **142/142 widoków bez naruszeń wykrywanych automatycznie** (axe-core, desktop i 320 px, tryb kontrastu i A+), układ telefonu z A+ na wszystkich 69 widokach – [WCAG](WCAG.md).
+- WCAG 2.1 AA: **142/142 widoków bez naruszeń wykrywanych automatycznie** (axe-core, desktop i 320 px, tryb kontrastu i A+), układ telefonu z A+ na wszystkich 69 widokach – [WCAG](../WCAG.md).
 - Menu nazwane tak jak moduły w briefie (Szukaj pomocy, Zasobnik wiedzy, Biblioteka innowacji, Tester innowacji,
   Kreator pomysłów, Pośrednik innowacji), na starcie „Zobacz demo w 1,5 minuty” (dwa scenariusze, pasek prowadzi krok po kroku; wszystkie kroki na /demo) i kafle „7 modułów HubMi”.
 - **Tryb Podpowiedzi**: ikonka „i” przy polach, filtrach, wykresach i wskaźnikach – chmurka mówi, do czego coś służy,
   jak to czytać i skąd się bierze (dane, reguły czy AI). „Przewodnik po tej stronie” w 4–5 krokach na 7 ekranach.
-  Działa z klawiatury i bez JS, można go wyłączyć jednym przyciskiem ([WCAG](WCAG.md#tryb-podpowiedzi)).
+  Działa z klawiatury i bez JS, można go wyłączyć jednym przyciskiem ([WCAG](../WCAG.md#tryb-podpowiedzi)).
 - Dla seniorów: 18 px bazowo, Atkinson Hyperlegible, A+, wysoki kontrast, cele ≥ 44 px, działanie bez JS.
 - Prosty język: pole „Co jest trudne? Kogo to dotyczy?” od razu na stronie startowej, z przykładem;
   krótkie formularze z przykładem pod każdym polem; komunikaty błędów słowami.
@@ -55,10 +55,10 @@ statystyki GUS/PFRON, „Poznaj ZD” dla pracodawców i instytucji.
 - Nieszablonowo: wyjaśnialne dopasowania z wyróżnionymi wspólnymi słowami, „luki” jako źródło tematów konkursów.
 - Podpowiedzi „i” w 3 częściach (do czego służy, przykład albo jak czytać, skąd to się bierze) i przewodnik, który
   podświetla kolejne elementy ekranu; na telefonie chmurka wysuwa się od dołu jak arkusz.
-- Makiety: [docs/zrzuty](zrzuty/) (desktop i telefon).
+- Makiety: [docs/zrzuty](../zrzuty/) (desktop i telefon).
 
 ## Jakość materiałów i MVP (10%)
 
-- Działający MVP z danymi przykładowymi i scenariuszem demo ([README](../README.md#scenariusz-demo-5-minut)).
-- Prezentacja PDF (10 slajdów), film z lektorem i napisami (2:51, `docs/film/hugme-film.mp4`, [scenariusz](SCENARIUSZ_FILMU.md)); skrypty: `python demo/build_all.py`.
+- Działający MVP z danymi przykładowymi i scenariuszem demo ([README](../../README.md)).
+- Prezentacja PDF (10 slajdów), film z lektorem i napisami (2:51, `docs/film/hugme-film.mp4`, [scenariusz](../SCENARIUSZ_FILMU.md)); skrypty: `python demo/build_all.py`.
 - Dokumentacja: architektura, dane i prywatność, WCAG + raport, koszty, roadmapa, pytania do mentorów.
