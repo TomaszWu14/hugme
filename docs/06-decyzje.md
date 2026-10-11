@@ -104,15 +104,18 @@ Decyzje podjęte przed kodowaniem w ustrukturyzowanej sesji 100 pytań i przed o
 
 - **Kontekst:** platforma obsługuje 7 obszarów wyzwań regionu; jeden obszar pogłębiono modułem „Razem z ZD”,
   programem „Jestem potrzebny” i mapą miejsc pracy.
-- **Rozważane opcje / dlaczego ten obszar:** `<DO UZUPEŁNIENIA: wymóg briefu czy własny wybór i uzasadnienie>`.
+- **Decyzja:** własny wybór autora, nie wymóg briefu. W kodzie obszar ma flagę `pilot: True` (`core/domain.py`).
+- **Efekt:** w tym jednym obszarze widać pełną ścieżkę (zgłoszenie → Hub → para, misja, miejsce pracy),
+  a nie tylko wyszukiwarkę.
 - **Skutki:** najwięcej danych przykładowych i reguł w tym obszarze; pozostałe obszary mają tylko matchmaking
   i Bibliotekę.
 
-## D-11. Brak pliku LICENSE do decyzji właściciela praw
+## D-11. Licencja MIT
 
-- **Kontekst:** regulamin HackYeah przewiduje przeniesienie autorskich praw majątkowych na organizatora
-  i Województwo Małopolskie.
+- **Kontekst:** w trakcie hackathonu nie było jasne, czy regulamin HackYeah przenosi prawa majątkowe na organizatora;
+  do wyjaśnienia repozytorium nie miało licencji.
 - **Rozważane opcje:** licencja otwarta od razu; brak pliku do odpowiedzi mentorów (pyt. 100); docelowo EUPL 1.2
   (licencja zalecana dla administracji).
-- **Decyzja:** brak pliku LICENSE, sekcja „Prawa” w README.
-- **Skutki:** `<DO UZUPEŁNIENIA: aktualny stan praw po HackYeah>`.
+- **Decyzja:** prawa do kodu zostały przy autorze → licencja MIT (najprostsza dla repozytorium portfolio).
+- **Skutki:** każdy może użyć i zmienić kod; przy wdrożeniu w administracji można rozważyć ponowne
+  wydanie na EUPL 1.2.

@@ -7,8 +7,8 @@ System: opcjonalny model AI (Claude) – wyłącznie dopisuje tekst, nie podejmu
 
 ## PRZED – bez aplikacji
 
-> `<DO UZUPEŁNIENIA>` Poniższy diagram to **hipoteza** zbudowana z opisu problemu w README, nie z badań.
-> Do potwierdzenia albo poprawy na podstawie briefu HubMi.pl / rozmów z ROPS.
+> Poniższy diagram to **hipoteza** zbudowana z opisu problemu, nie z badań – brak danych o procesie sprzed
+> aplikacji. Do potwierdzenia albo poprawy w rozmowie z Hubem (pierwszy krok pilotażu).
 
 ```mermaid
 flowchart TD

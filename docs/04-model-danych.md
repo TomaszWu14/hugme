@@ -233,7 +233,7 @@ wywołań AI), `events`, `event_signups`, `follows`, `notifications`, `emails`, 
 |---|---|---|
 | `reports.body`, `messages.body`, `ideas.*`, `family_requests.body`, `offers.*` | tekst od użytkownika | maskowanie PESEL, telefonu, e-maila, adresu, kodu, imienia po „syn/córka…”, nazwiska po „dr” – przed zapisem (`core/privacy.py`) |
 | `family_requests.alias`, `volunteers.alias` | pseudonim zamiast imienia | maskowanie |
-| `volunteers.phone` | telefon do kontaktu koordynatorki | **nie jest maskowany** – świadomie (kontakt); zasady dostępu i retencji: `<DO UZUPEŁNIENIA>` |
+| `volunteers.phone` | telefon do kontaktu koordynatorki | **nie jest maskowany** – świadomie (kontakt); zasady dostępu i retencji **nieokreślone w prototypie** (luka nr 8 w [07](07-ograniczenia.md)) |
 | plan wizyt dziecka | – | **nie trafia na serwer**: `localStorage` przeglądarki (`app/static/js/razem.js`) |
 | etap życia dziecka | slug etapu w ciasteczku, nie data urodzenia | `app/views/razem.py` `choose_stage` |
 

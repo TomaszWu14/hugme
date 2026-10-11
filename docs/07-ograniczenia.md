@@ -6,7 +6,7 @@
 |---|---|---|
 | Prawdziwe logowanie | nie nadaje się do prawdziwych danych | konta demo bez haseł tylko przy `DEMO_MODE` / `DEMO_ACCOUNTS` ([06-decyzje](06-decyzje.md#d-09-konta-demo-bez-haseł-zamiast-logowania)) |
 | Wysyłka e-maili | powiadomienia e-mail nie wychodzą | kolejka `emails` w panelu Hubu |
-| Obsługa złożonego wniosku przez Hub | wniosek zawsze „czeka” w skrzynce, mimo komunikatu „Hub potwierdzi przyjęcie” | wydruk wniosku |
+| Obsługa złożonego wniosku przez Hub (świadomie poza zakresem) | wniosek zawsze „czeka” w skrzynce; komunikat „Hub potwierdzi przyjęcie” obiecuje więcej, niż robi aplikacja | wydruk wniosku |
 | Usuwanie danych przez użytkownika, retencja | brak realizacji prawa do usunięcia | opis RODO w [DANE.md](DANE.md) |
 | Limit zapytań do API | publiczne `POST /api/v1/dopasuj` bez ograniczeń | – |
 | PostgreSQL, wiele instancji | jeden worker | SQLite, schemat zgodny z PostgreSQL |
@@ -21,7 +21,7 @@ Lista do decyzji, nie zadania do naprawy w tym repozytorium.
 
 | # | Obserwacja | Gdzie | Pytanie analityka |
 |---|---|---|---|
-| 1 | Złożony wniosek nie ma dalszej obsługi | `app/views/kreator.py` `application`, `app/views/admin.py` `inbox` | Kto i jak potwierdza przyjęcie wniosku? |
+| 1 | Złożony wniosek nie ma dalszej obsługi (poza zakresem), a komunikat po złożeniu ją obiecuje | `app/views/kreator.py` `application`, `app/views/admin.py` `inbox` | Zmienić komunikat czy dodać potwierdzenie przez Hub? |
 | 2 | Status zgłoszenia bez reguł przejść; w bazie bez CHECK | `app/views/admin.py` `set_status`, `core/db.py` | Czy „zamknięte” może wrócić do „nowe”? Kto zamyka? |
 | 3 | „Hub odpowiada w ciągu 3 dni roboczych” to tylko tekst | `app/views/public.py`, `app/views/komunikacja.py` | Jak mierzyć i eskalować przekroczenie? |
 | 4 | Nabór po terminie dalej jest „otwarty” na liście | `app/views/kreator.py` `detail` | Zamykać automatycznie po terminie? |
