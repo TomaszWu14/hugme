@@ -7,7 +7,6 @@ a Hub Innowacji Społecznych widzi, gdzie rozwiązań brakuje.** Prototyp dla Ma
 [![Testy](https://github.com/TomaszWu14/hugme/actions/workflows/ci.yml/badge.svg)](https://github.com/TomaszWu14/hugme/actions/workflows/ci.yml)
 
 ![demo](docs/screenshots/demo.gif)
-<!-- <DO UZUPEŁNIENIA: nagrać GIF 15–20 s – opis w docs/screenshots/README.md> -->
 
 📹 [Prezentacja działania – 2 min](<DO UZUPEŁNIENIA: link YouTube>)
 
