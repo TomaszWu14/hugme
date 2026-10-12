@@ -1,6 +1,6 @@
 # Scenariusz filmu HugMe (3 minuty)
 
-**Film:** [docs/film/hugme-film.mp4](film/hugme-film.mp4) – 2:51, 1920×1080, 30 kl./s, polski lektor i wtopione napisy; osobno napisy [hugme-film.srt](film/hugme-film.srt). Do pobrania z GitHuba: otwórz plik i kliknij „Download raw file” (ikona strzałki).
+**Film:** [hugme-film.mp4](https://github.com/TomaszWu14/hugme/releases/download/filmy-2026-10/hugme-film.mp4) – 2:51, 1920×1080, 30 kl./s, polski lektor i wtopione napisy; osobno napisy [hugme-film.srt](film/hugme-film.srt). Plik leży w [wydaniu „Filmy HugMe”](https://github.com/TomaszWu14/hugme/releases/tag/filmy-2026-10), nie w repozytorium.
 
 **Historia w jednym ciągu:** Anna, mama chłopca z zespołem Downa, opisuje problem → platforma ukrywa dane osobowe i dobiera sprawdzone rozwiązania z wyjaśnieniem → zgłoszenie trafia do koordynatorki Hubu ROPS, która łączy rodzinę z rozwiązaniem i odpowiada → moduł Razem z ZD i program „Jestem potrzebny” (Bartek pomaga w schronisku, dostaje odznakę) → mapa miejsc pracy → gmina dostaje kartę usługi z Pośrednika innowacji → Hub widzi trendy i luki → dostępność → plansza z linkami.
 
