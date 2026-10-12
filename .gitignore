@@ -13,3 +13,10 @@ demo/out/
 .DS_Store
 node_modules/
 *.log
+
+# filmy są w wydaniu GitHub „filmy-2026-10”, nie w repo
+docs/film/*.mp4
+demo/portfolio/*.wav
+demo/portfolio/*.mp4
+demo/portfolio/audio.txt
+demo/portfolio/klatki/

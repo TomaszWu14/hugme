@@ -236,9 +236,10 @@ def scenariusz(plan, dlugosc):
     """docs/SCENARIUSZ_FILMU.md – tabela z rzeczywistymi czasami z montażu, tekst lektora = napisy."""
     m, s = divmod(round(dlugosc), 60)
     w = ["# Scenariusz filmu HugMe (3 minuty)", "",
-         f"**Film:** [docs/film/hugme-film.mp4](film/hugme-film.mp4) – {m}:{s:02d}, 1920×1080, 30 kl./s, polski lektor "
+         f"**Film:** [hugme-film.mp4](https://github.com/TomaszWu14/hugme/releases/download/filmy-2026-10/hugme-film.mp4) – {m}:{s:02d}, 1920×1080, 30 kl./s, polski lektor "
          "i wtopione napisy; osobno napisy [hugme-film.srt](film/hugme-film.srt). "
-         "Do pobrania z GitHuba: otwórz plik i kliknij „Download raw file” (ikona strzałki).", "",
+         "Plik leży w [wydaniu „Filmy HugMe”](https://github.com/TomaszWu14/hugme/releases/tag/filmy-2026-10), "
+         "nie w repozytorium.", "",
          "**Historia w jednym ciągu:** Anna, mama chłopca z zespołem Downa, opisuje problem → platforma ukrywa dane "
          "osobowe i dobiera sprawdzone rozwiązania z wyjaśnieniem → zgłoszenie trafia do koordynatorki Hubu ROPS, która "
          "łączy rodzinę z rozwiązaniem i odpowiada → moduł Razem z ZD i program „Jestem potrzebny” (Bartek pomaga "
