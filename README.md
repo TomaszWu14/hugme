@@ -6,6 +6,9 @@ a Hub Innowacji Społecznych widzi, gdzie rozwiązań brakuje.** Prototyp dla Ma
 
 [![Testy](https://github.com/TomaszWu14/hugme/actions/workflows/ci.yml/badge.svg)](https://github.com/TomaszWu14/hugme/actions/workflows/ci.yml)
 
+🏆 **Ocena jury HackYeah 2026: 7,30 przy średniej wszystkich zespołów 5,65**. Projekt zrobiłem sam, a najwyżej
+oceniony został stopień spełnienia wyzwania (7,67). [Oceny we wszystkich kryteriach ↓](#ocena-jury)
+
 ![demo](docs/screenshots/demo.gif)
 
 📹 [Prezentacja działania – 1:46 (MP4, z lektorem)](https://github.com/TomaszWu14/hugme/releases/download/filmy-2026-10/hugme-portfolio.mp4) · [napisy](docs/film/hugme-portfolio.srt) · YouTube: `<DO UZUPEŁNIENIA: link>`
@@ -111,7 +114,7 @@ Decyzje produktowe zapadały w ustrukturyzowanych sesjach pytań ([archiwum/BRAI
 Kod pisałem z Claude Code jako asystentem programisty – decyzje, dane, testy i weryfikacja są moje, a commity mają
 jawny dopisek `Co-Authored-By: Claude`.
 
-**Ocena jury HackYeah 2026** (zadanie partnerskie UMWM: HubMi.pl):
+<a id="ocena-jury"></a>**Ocena jury HackYeah 2026** (zadanie partnerskie UMWM: HubMi.pl):
 
 | Kryterium | Ocena |
 |---|---|
@@ -121,6 +124,12 @@ jawny dopisek `Co-Authored-By: Claude`.
 | Atrakcyjność, pomysłowość i jakość interfejsu | 7,00 |
 | Jakość dostarczonych materiałów oraz MVP | 7,33 |
 | **Średnia** | **7,30** (średnia wszystkich zespołów: 5,65) |
+
+<details><summary>Zrzut z systemu ocen HackYeah</summary>
+
+![Oceny jury HackYeah 2026 dla zadania HubMi.pl: 7,67 · 7,00 · 7,00 · 7,00 · 7,33, średnia 7,30, średnia wszystkich zespołów 5,65](docs/screenshots/hackyeah-ocena-jury.png)
+
+</details>
 
 **Moja rola:** cały zespół to jedna osoba. Przeanalizowałem brief HubMi.pl, podjąłem decyzje produktowe przed
 kodowaniem (100 pytań i odpowiedzi w [BRAINSTORM](docs/archiwum/BRAINSTORM.md)), zamieniłem reguły biznesowe na testy
