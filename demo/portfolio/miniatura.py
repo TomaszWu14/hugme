@@ -47,9 +47,11 @@ transform:rotate(4deg);box-shadow:0 30px 60px rgba(27,37,64,.3)}}
 <div class="chip">HackYeah 2026 · ocena jury <span>7,30</span> (średnia 5,65)</div>
 <div class="tel"><div class="ekran"></div></div>"""
 
-# Logo wypełnia ~62% boku – mieści się w kole, które YouTube wycina z kwadratu.
-AVATAR = BASE + f"""<style>body{{width:800px;height:800px;display:grid;place-items:center}}
-img{{width:500px;margin-top:40px}}</style><img src="{LOGO}">"""
+# Ikona + nazwa mieszczą się w kole, które YouTube wycina z kwadratu.
+AVATAR = BASE + f"""<style>body{{width:800px;height:800px;display:flex;flex-direction:column;
+align-items:center;justify-content:center}} img{{width:400px}}
+div{{font-size:128px;font-weight:700;line-height:1;margin-top:-6px}} b{{color:#B8432F}}</style>
+<img src="{LOGO}"><div>Hug<b>Me</b></div>"""
 
 with sync_playwright() as p:
     b = p.chromium.launch()
