@@ -122,6 +122,13 @@ def _security(app):
         resp.headers["X-Content-Type-Options"] = "nosniff"
         resp.headers["Referrer-Policy"] = "same-origin"
         resp.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+        resp.headers["X-Frame-Options"] = "DENY"  # starsze przeglądarki; nowe czytają frame-ancestors z CSP
+        resp.headers["Cross-Origin-Opener-Policy"] = "same-origin"
+        if request.path.startswith("/api/") or resp.mimetype == "application/json":
+            # dane API nie zostają w pamięci przeglądarki ani proxy; świadome ustawienia trasy zostają (setdefault)
+            resp.headers.setdefault("Cache-Control", "no-store")
+        if app.config["SESSION_COOKIE_SECURE"]:  # COOKIE_SECURE=1 = aplikacja stoi za HTTPS
+            resp.headers.setdefault("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
         return resp
 
 

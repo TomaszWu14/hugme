@@ -34,6 +34,6 @@
 <div class="tour-start">
   <button type="button" class="btn btn--small" id="przewodnik-start" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></svg> Przewodnik po tej stronie</button>
 </div>
-<script type="application/json" id="przewodnik-dane">{{ kroki|tojson }}</script>
+<script type="application/json" id="przewodnik-dane">{{ kroki|tojson }}</script> {# nosemgrep -- tojson (Flask escapuje <>&') w script type=application/json #}
 {%- endif %}
 {%- endmacro %}

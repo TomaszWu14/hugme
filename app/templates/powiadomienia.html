@@ -8,7 +8,7 @@
   <button type="submit" class="btn">Oznacz wszystkie jako przeczytane</button></form>
 <ul class="list-plain">
   {% for n in rows %}
-  <li>{% if not n.is_read %}<strong><span aria-hidden="true">●</span> Nowe: </strong>{% endif %}<a href="{{ n.link }}">{{ n.body }}</a>
+  <li>{% if not n.is_read %}<strong><span aria-hidden="true">●</span> Nowe: </strong>{% endif %}<a href="{{ n.link }}">{{ n.body }}</a> {# nosemgrep -- Jinja autoescape; link powiadomienia ustawia kod (url_for/stałe ścieżki) #}
     <br><span class="meta">{{ n.created_at|date }}</span></li>
   {% endfor %}
 </ul>

@@ -17,7 +17,7 @@
   {{ compact_nav(items, 'Menu modułu') }}
   <details {% if more|selectattr(2)|list %}open{% endif %}>
     <summary>Więcej <span aria-hidden="true">▾</span></summary>
-    <ul class="nav nav--small">{% for href, text, cur in more %}<li><a href="{{ href }}" {% if cur %}aria-current="page"{% endif %}>{{ text }}</a></li>{% endfor %}</ul>
+    <ul class="nav nav--small">{% for href, text, cur in more %}<li><a href="{{ href }}" {% if cur %}aria-current="page"{% endif %}>{{ text }}</a></li>{% endfor %}</ul> {# nosemgrep -- Jinja autoescape; href z kodu/url_for, nie z wejścia użytkownika #}
   </details>
 </nav>
 {%- endmacro %}

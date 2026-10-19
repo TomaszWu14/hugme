@@ -26,7 +26,7 @@
   {{ field('grupa', 'Dla kogo', options=audiences|pairs, value=f.grupa, optional_text=false, help='biblioteka.grupa') }}
   <div class="actions">
     <button type="submit" class="btn btn--primary">Pokaż</button>
-    <a class="btn btn--ghost" href="{{ request.path }}">Wyczyść</a>
+    <a class="btn btn--ghost" href="{{ request.path }}">Wyczyść</a> {# nosemgrep -- request.path (bez query), Jinja autoescape #}
   </div>
 </form>
 

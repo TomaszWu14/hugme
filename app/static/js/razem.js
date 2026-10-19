@@ -4,7 +4,7 @@
 (function () {
   "use strict";
 
-  var KEY = "hugme-razem-wizyty";
+  var KEY = "hugme-razem-wizyty";  // nosemgrep -- nazwa klucza localStorage, nie sekret
 
   function load() {
     try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; }
