@@ -150,7 +150,7 @@ def card(cid):
     card = json.loads(row["card"])
     # Pełne wiersze innowacji dla makra innovation_card (w karcie zapisane są tylko id i tytuł).
     ids = [i["id"] for i in card.get("_inspiracje", [])]
-    by_id = {r["id"]: r for r in db.query(f"SELECT * FROM innovations WHERE id IN ({','.join('?' * len(ids))})", ids)} if ids else {}
+    by_id = {r["id"]: r for r in db.query(f"SELECT * FROM innovations WHERE id IN ({','.join('?' * len(ids))})", ids)} if ids else {}  # nosemgrep -- w zapytaniu tylko znaki ?, id przekazane parametrami
     inspirations = [by_id[i] for i in ids if i in by_id]
     return render_template("karta.html", row=row, ctx=json.loads(row["context"]), card=card, inspirations=inspirations,
                            keys=CARD_KEYS, labels=CARD_LABELS, institutions=INSTITUTIONS, scales=SCALES, budgets=BUDGETS)

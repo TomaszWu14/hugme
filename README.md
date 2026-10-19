@@ -99,6 +99,20 @@ Licznik AI zostaje. Na produkcji: Coolify → Scheduled Tasks, np. co godzinę. 
 | **Docker + Coolify** | jeden kontener z healthcheckiem; wdrożenie po scaleniu do `main` |
 | **pytest + axe-core (Playwright) w CI** | 376 testów i audyt dostępności blokują scalenie zmiany, która psuje ścieżkę albo WCAG |
 
+## Bezpieczeństwo
+
+Każdy PR przechodzi skany z [`.github/workflows/security.yml`](.github/workflows/security.yml) (też co tydzień
+i ręcznie); czerwony wynik oznacza znalezisko do poprawy:
+
+- **gitleaks** – sekrety w commitach PR-a (co tydzień: cała historia),
+- **Bandit** i **Semgrep `p/owasp-top-ten`** – analiza kodu (`app`, `core`, `data`, `scripts`),
+- **Trivy `fs`** i **pip-audit** – podatne zależności (HIGH/CRITICAL z dostępną poprawką) i konfiguracja `Dockerfile`,
+- **Dependabot** – cotygodniowe aktualizacje pip, obrazu Docker i GitHub Actions.
+
+Aplikacja wysyła nagłówki bezpieczeństwa (CSP, `X-Frame-Options`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`,
+`Cross-Origin-Opener-Policy`, `Cache-Control: no-store` dla JSON, HSTS przy `COOKIE_SECURE=1`) i chroni formularze
+tokenem CSRF. Podatności zgłaszaj prywatnie – zasady w [SECURITY.md](SECURITY.md).
+
 ## Zakres i ograniczenia
 
 To prototyp z hackathonu, nie system produkcyjny. Świadomie **nie ma**: prawdziwego logowania (konta demo bez haseł),

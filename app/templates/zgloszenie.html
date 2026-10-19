@@ -21,7 +21,7 @@
 {% endmacro %}
 
 {% block content %}
-<p><a href="{{ '/moje' if is_author else '/' }}">← {{ 'Moje sprawy' if is_author else 'Start' }}</a></p>
+<p><a href="{{ '/moje' if is_author else '/' }}">← {{ 'Moje sprawy' if is_author else 'Start' }}</a></p> {# nosemgrep -- stałe ścieżki '/moje' albo '/' #}
 <h1>Zgłoszenie</h1>
 <div class="card">
   <div class="help-row" data-help="zgloszenie.status"><p class="meta">{{ status(r.status) }} {{ area_tag(r.area) }} {% if r.powiat %}<span>Powiat: {{ r.powiat }}</span>{% endif %}

@@ -278,8 +278,8 @@ def init_schema(con):
     # Migracja istniejących baz (wolumen na produkcji): kolumny dodane po pierwszym wdrożeniu.
     for table, column in (("users", "is_active INTEGER NOT NULL DEFAULT 1"), ("ideas", "hidden INTEGER NOT NULL DEFAULT 0"),
                           ("messages", "hidden INTEGER NOT NULL DEFAULT 0")):
-        if column.split()[0] not in {r[1] for r in con.execute(f"PRAGMA table_info({table})")}:
-            con.execute(f"ALTER TABLE {table} ADD COLUMN {column}")
+        if column.split()[0] not in {r[1] for r in con.execute(f"PRAGMA table_info({table})")}:  # nosemgrep -- migracja: nazwa tabeli/kolumn ze stałej w kodzie, wartości przez ?
+            con.execute(f"ALTER TABLE {table} ADD COLUMN {column}")  # nosemgrep -- migracja: nazwa tabeli/kolumn ze stałej w kodzie, wartości przez ?
     con.commit()
 
 

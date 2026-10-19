@@ -121,7 +121,7 @@ CHECKS_JS = """() => {
 def main(screens=False):
     if not AXE.exists():
         AXE.parent.mkdir(parents=True, exist_ok=True)
-        urllib.request.urlretrieve(AXE_URL, AXE)
+        urllib.request.urlretrieve(AXE_URL, AXE)  # nosec B310 # nosemgrep -- stały adres https (AXE_URL), skrypt deweloperski
     axe_src = AXE.read_text(encoding="utf-8")
     shots = ROOT / "docs" / "zrzuty"
     shots.mkdir(parents=True, exist_ok=True)

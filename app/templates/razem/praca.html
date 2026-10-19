@@ -41,7 +41,7 @@
 <ul class="stat-row stat-row--src" aria-label="Liczby ze źródłem">
   {% for num, text, src, url in W.STATS %}
   {% set parts = num.split(' · ') %}{% if parts|length > 1 %}{% set _ = extra.extend(parts[1:]) %}{% endif %}
-  <li class="stat"><span class="stat__num">{{ parts[0] }}</span> {{ text }} <span class="stat__src"><a href="{{ url }}" rel="noopener">Źródło: {{ src }}</a></span></li>
+  <li class="stat"><span class="stat__num">{{ parts[0] }}</span> {{ text }} <span class="stat__src"><a href="{{ url }}" rel="noopener">Źródło: {{ src }}</a></span></li> {# nosemgrep -- Jinja autoescape; źródła ze stałych w kodzie #}
   {% endfor %}
 </ul>
 <p class="meta">ZAZ to zakłady aktywności zawodowej – firmy, które zatrudniają osoby z niepełnosprawnością.
@@ -71,7 +71,7 @@
       <h3>{{ r.name }}</h3>
       <p class="meta"><span>{{ W.KIND_LABELS[r.kind] }}</span> <span>{{ r.city }}, {{ W.VOIVODESHIPS[r.voivodeship] }}</span>{% if r.powiat %} <span>powiat {{ r.powiat }}</span>{% endif %}</p>
       <p>{{ r.note }}</p>
-      <p class="meta"><a href="{{ r.url }}" rel="noopener">Źródło: {{ r.url.split('/')[2] }}</a> <span>sprawdzono {{ r.checked_at|date }}</span></p>
+      <p class="meta"><a href="{{ r.url }}" rel="noopener">Źródło: {{ r.url.split('/')[2] }}</a> <span>sprawdzono {{ r.checked_at|date }}</span></p> {# nosemgrep -- Jinja autoescape; URL walidowany RE_URL (tylko http/https), zatwierdzony przez Hub #}
     </li>
     {% endfor %}
   </ul>
@@ -83,7 +83,7 @@
   <h3 class="h3">Czego oczekują osoby z zespołem Downa</h3>
   <ul class="grid grid--two">
     {% for title, text, src, url in W.EXPECTATIONS %}
-    <li class="card"><h4>{{ title }}</h4><p>{{ text }}</p><p class="meta"><a href="{{ url }}" rel="noopener">Źródło: {{ src }}</a></p></li>
+    <li class="card"><h4>{{ title }}</h4><p>{{ text }}</p><p class="meta"><a href="{{ url }}" rel="noopener">Źródło: {{ src }}</a></p></li> {# nosemgrep -- Jinja autoescape; źródła ze stałych w kodzie #}
     {% endfor %}
   </ul>
 
@@ -94,13 +94,13 @@
     <li><span>{{ label }}</span><span class="bars__track"><span class="bars__bar w-{{ (pct / 10)|round|int }}" aria-hidden="true"></span></span><span class="bars__n">{{ n }}</span></li>
     {% endfor %}
   </ol>
-  <p class="meta">{{ W.INTERESTS_NOTE[0] }} <a href="{{ W.INTERESTS_NOTE[2] }}" rel="noopener">Źródło: {{ W.INTERESTS_NOTE[1] }}</a></p>
+  <p class="meta">{{ W.INTERESTS_NOTE[0] }} <a href="{{ W.INTERESTS_NOTE[2] }}" rel="noopener">Źródło: {{ W.INTERESTS_NOTE[1] }}</a></p> {# nosemgrep -- Jinja autoescape; źródła ze stałych w kodzie #}
 
   <h3 class="h3">Mity i fakty</h3>
   <dl class="myths">
     {% for myth, fact, src, url in W.MYTHS %}
     <dt><span class="badge badge--closed">Mit</span> {{ myth }}</dt>
-    <dd><span class="badge badge--open">Fakt</span> {{ fact }} <a class="meta" href="{{ url }}" rel="noopener">({{ src }})</a></dd>
+    <dd><span class="badge badge--open">Fakt</span> {{ fact }} <a class="meta" href="{{ url }}" rel="noopener">({{ src }})</a></dd> {# nosemgrep -- Jinja autoescape; źródła ze stałych w kodzie #}
     {% endfor %}
   </dl>
 

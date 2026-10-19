@@ -34,5 +34,5 @@
 </section>
 {% endif %}
 <p class="notice">Karta nie zawiera kwot – koszty trzeba wycenić lokalnie. Źródła finansowania sprawdź w aktualnych naborach.</p>
-<script src="{{ url_for('static', filename='js/druk.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/druk.js') }}" defer></script> {# nosemgrep -- url_for('static') – stała ścieżka #}
 {% endblock %}

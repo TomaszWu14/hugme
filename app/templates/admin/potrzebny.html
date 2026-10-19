@@ -59,7 +59,7 @@
   <ul class="list-plain list-plain--cards">
     {% for w in pending_places %}
     <li><strong>{{ w.name }}</strong> <span class="meta">{{ W.KIND_LABELS[w.kind] }} · {{ w.city }}, {{ W.VOIVODESHIPS[w.voivodeship] }}{% if w.powiat %} · {{ w.powiat }}{% endif %}</span><br>
-      {{ w.note }} <a href="{{ w.url }}" rel="noopener">Źródło</a>
+      {{ w.note }} <a href="{{ w.url }}" rel="noopener">Źródło</a> {# nosemgrep -- Jinja autoescape; URL zgłoszenia walidowany RE_URL (tylko http/https) #}
       <div class="actions">
         <form method="post" action="/admin/potrzebny/miejsce/{{ w.id }}/status">{{ csrf() }}<input type="hidden" name="status" value="zatwierdzone">
           <button type="submit" class="btn btn--small btn--primary">✔ Dodaj na mapę<span class="sr-only"> {{ w.name }}</span></button></form>

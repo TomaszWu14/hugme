@@ -186,9 +186,9 @@ def validate_innovation(form):
 def save_innovation(form, iid=None, is_example=0):
     values = [form.get(k, "").strip() or None if k == "video_url" else form.get(k, "").strip() for k in INNOVATION_FIELDS]
     if iid:
-        db.execute(f"UPDATE innovations SET {', '.join(f'{k} = ?' for k in INNOVATION_FIELDS)} WHERE id = ?", (*values, iid))
+        db.execute(f"UPDATE innovations SET {', '.join(f'{k} = ?' for k in INNOVATION_FIELDS)} WHERE id = ?", (*values, iid))  # nosec B608 # nosemgrep -- kolumny z INNOVATION_FIELDS (stała), wartości przez ?
         return iid
-    new_id = db.execute(f"INSERT INTO innovations ({', '.join(INNOVATION_FIELDS)}, is_example, created_at) "
+    new_id = db.execute(f"INSERT INTO innovations ({', '.join(INNOVATION_FIELDS)}, is_example, created_at) "  # nosec B608 # nosemgrep -- kolumny z INNOVATION_FIELDS (stała), wartości przez ?
                         f"VALUES ({', '.join('?' * len(INNOVATION_FIELDS))}, ?, ?)", (*values, is_example, db.now()))
     notify.notify_followers(form["area"], f"Nowa innowacja w obszarze, który obserwujesz: „{form['title'][:60]}”",
                             f"/biblioteka/{new_id}", exclude=g.user["id"])
@@ -387,7 +387,7 @@ def export(kind):
     else:
         abort(404)
     buf = io.StringIO()
-    w = csv.writer(buf, delimiter=";")
+    w = csv.writer(buf, delimiter=";")  # nosemgrep -- komórki przechodzą przez _csv_cell (ochrona przed formułami)
     w.writerow(header)
     w.writerows([[_csv_cell(v) for v in row] for row in rows])
     return Response("﻿" + buf.getvalue(), mimetype="text/csv",
@@ -465,7 +465,7 @@ def toggle_hidden(kind, oid):
     row = db.one(f"SELECT user_id, hidden FROM {table} WHERE id = ?", (oid,))
     if row is None:
         abort(404)
-    db.execute(f"UPDATE {table} SET hidden = ? WHERE id = ?", (0 if row["hidden"] else 1, oid))
+    db.execute(f"UPDATE {table} SET hidden = ? WHERE id = ?", (0 if row["hidden"] else 1, oid))  # nosec B608 # nosemgrep -- tabela z whitelisty HIDEABLE, id przez ?
     db.execute("INSERT INTO admin_log (admin_id, user_id, action, created_at) VALUES (?,?,?,?)",
                (g.user["id"], row["user_id"], f"{'przywrócono' if row['hidden'] else 'ukryto'} {label} #{oid}", db.now()))
     flash(f"{label.capitalize()} {'przywrócona' if kind == 'wiadomosc' else 'przywrócony'}." if row["hidden"]

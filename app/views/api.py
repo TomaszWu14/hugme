@@ -13,7 +13,7 @@ bp = Blueprint("api", __name__, url_prefix="/api/v1")
 def _innovation(i, res=None):
     out = {"id": i["id"], "tytul": i["title"], "streszczenie": i["summary"], "obszar": i["area"],
            "powiat": i["powiat"], "etap": i["stage"], "dla_kogo": i["audience"], "organizacja": i["org"],
-           "przyklad": bool(i["is_example"]), "url": url_for("wiedza.innovation", iid=i["id"], _external=True)}
+           "przyklad": bool(i["is_example"]), "url": url_for("wiedza.innovation", iid=i["id"], _external=True)}  # nosemgrep -- link do własnej karty innowacji w odpowiedzi publicznego API
     if res:
         out.update(trafnosc=res.score, etykieta=res.label, dlaczego={"slowa": res.words, "tematy": res.topics})
     return out

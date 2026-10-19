@@ -25,7 +25,7 @@ def slug(name):
 def load(key, folder):
     if folder:
         return json.loads((Path(folder) / f"{key}.json").read_text(encoding="utf-8"))
-    return json.loads(urllib.request.urlopen(URLS[key], timeout=60).read())
+    return json.loads(urllib.request.urlopen(URLS[key], timeout=60).read())  # nosec B310 # nosemgrep -- stałe adresy https z URLS, skrypt deweloperski
 
 
 def rings(geom):

@@ -14,6 +14,24 @@ def test_security_headers(client):
     csp = resp.headers["Content-Security-Policy"]
     assert "script-src 'self'" in csp and "frame-ancestors 'none'" in csp
     assert resp.headers["X-Content-Type-Options"] == "nosniff"
+    assert resp.headers["X-Frame-Options"] == "DENY"
+    assert resp.headers["Cross-Origin-Opener-Policy"] == "same-origin"
+    assert resp.headers["Referrer-Policy"] == "same-origin"
+    assert "camera=()" in resp.headers["Permissions-Policy"]
+    assert "no-store" not in resp.headers.get("Cache-Control", "")  # strony HTML bez wymuszania no-store
+    assert "Strict-Transport-Security" not in resp.headers  # bez COOKIE_SECURE nie zakładamy HTTPS
+
+
+def test_api_responses_not_cached(client):
+    assert client.get("/api/v1/innowacje").headers["Cache-Control"] == "no-store"
+    assert client.get("/zdrowie").headers["Cache-Control"] == "no-store"  # JSON poza /api/
+
+
+def test_hsts_only_behind_https(tmp_path):
+    from app import create_app
+    app = create_app({"TESTING": True, "DATABASE": str(tmp_path / "t.db"), "SECRET_KEY": "test",
+                      "SESSION_COOKIE_SECURE": True})
+    assert "max-age=31536000" in app.test_client().get("/").headers["Strict-Transport-Security"]
 
 
 def test_post_without_csrf_rejected(client):

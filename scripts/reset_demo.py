@@ -22,8 +22,8 @@ def last_write(con):
     ponytail: same UPDATE-y (np. zmiana statusu) nie mają znacznika czasu – nie wstrzymują resetu."""
     stamps = []
     for (table,) in con.execute("SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%'"):
-        if "created_at" in {r[1] for r in con.execute(f"PRAGMA table_info({table})")}:
-            stamps.append(con.execute(f"SELECT MAX(created_at) FROM {table}").fetchone()[0])
+        if "created_at" in {r[1] for r in con.execute(f"PRAGMA table_info({table})")}:  # nosemgrep -- tabela z sqlite_master (schemat aplikacji), nie z wejścia
+            stamps.append(con.execute(f"SELECT MAX(created_at) FROM {table}").fetchone()[0])  # nosec B608 # nosemgrep -- tabela z sqlite_master (schemat aplikacji), nie z wejścia
     latest = max((s for s in stamps if s), default=None)
     return datetime.strptime(latest[:19], "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc) if latest else None
 
@@ -38,7 +38,7 @@ def reset(con, force=False, now=None):
               if t not in KEEP]
     con.execute("PRAGMA foreign_keys = OFF")
     for table in tables:
-        con.execute(f"DELETE FROM {table}")
+        con.execute(f"DELETE FROM {table}")  # nosec B608 # nosemgrep -- tabela z sqlite_master (schemat aplikacji), nie z wejścia
     seed.run(con)  # te same identyfikatory kont (1–5), więc zalogowani zostają na swoich rolach
     return True
 
