@@ -4,6 +4,8 @@
 a Hub Innowacji Społecznych widzi, gdzie rozwiązań brakuje.** Prototyp dla Małopolskiego Hubu Innowacji Społecznych
 (ROPS w Krakowie), HackYeah 2026.
 
+🇬🇧 [English summary](README.en.md)
+
 [![Testy](https://github.com/TomaszWu14/hugme/actions/workflows/ci.yml/badge.svg)](https://github.com/TomaszWu14/hugme/actions/workflows/ci.yml)
 
 🏆 **Ocena jury HackYeah 2026: 7,30 przy średniej wszystkich zespołów 5,65**. Projekt zrobiłem sam, a najwyżej
