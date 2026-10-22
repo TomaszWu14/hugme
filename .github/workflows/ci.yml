@@ -30,3 +30,22 @@ jobs:
       - run: pip install -r requirements.txt -r requirements-dev.txt
       - run: python -m playwright install --with-deps chromium
       - run: python scripts/axe_audit.py
+
+  # Demo działa z obrazu Dockera (gunicorn), którego testy wyżej nie uruchamiają.
+  # Ten job łapie zepsuty Dockerfile albo podbicie gunicorn/obrazu bazowego przed scaleniem.
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t hugme:ci .
+      - run: docker run -d --name hugme -p 8000:8000 -e SECRET_KEY=ci -e DEMO_MODE=1 hugme:ci
+      - name: Kontener odpowiada na /zdrowie i stronę główną
+        run: |
+          for i in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:8000/zdrowie && break
+            sleep 2
+          done
+          curl -fsS -o /dev/null http://127.0.0.1:8000/zdrowie
+          curl -fsS -o /dev/null http://127.0.0.1:8000/
+      - if: failure()
+        run: docker logs hugme
