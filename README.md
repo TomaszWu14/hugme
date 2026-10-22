@@ -62,7 +62,7 @@ przykładowymi; reset danych = usunięcie pliku bazy. Najszybszy przegląd: `/de
   czyta tylko `docker compose`.
 
 ```bash
-pytest                                      # 376 testów: ścieżki, role, CSRF, prywatność, trafność, AI
+pytest                                      # 378 testów: ścieżki, role, CSRF, prywatność, trafność, AI
 python -m playwright install chromium
 python scripts/axe_audit.py --zrzuty         # audyt dostępności + zrzuty ekranów
 SECRET_KEY=$(python -c "import secrets;print(secrets.token_hex(32))") docker compose up -d --build   # Docker
@@ -97,7 +97,7 @@ Licznik AI zostaje. Na produkcji: Coolify → Scheduled Tasks, np. co godzinę. 
 | **Claude Haiku – opcjonalnie** | poszerza zapytanie i pisze teksty pomocnicze; nigdy nie decyduje; bez klucza działają reguły i szablony |
 | **SQLite, schemat zgodny z PostgreSQL** | jeden plik w wolumenie wystarcza na prototyp; migracja opisana ([D-08](docs/06-decyzje.md#d-08-sqlite-w-wolumenie-schemat-zgodny-z-postgresql)) |
 | **Docker + Coolify** | jeden kontener z healthcheckiem; wdrożenie po scaleniu do `main` |
-| **pytest + axe-core (Playwright) w CI** | 376 testów i audyt dostępności blokują scalenie zmiany, która psuje ścieżkę albo WCAG |
+| **pytest + axe-core (Playwright) w CI** | 378 testów i audyt dostępności blokują scalenie zmiany, która psuje ścieżkę albo WCAG |
 
 ## Bezpieczeństwo
 
@@ -147,7 +147,7 @@ jawny dopisek `Co-Authored-By: Claude`.
 
 **Moja rola:** cały zespół to jedna osoba. Przeanalizowałem brief HubMi.pl, podjąłem decyzje produktowe przed
 kodowaniem (100 pytań i odpowiedzi w [BRAINSTORM](docs/archiwum/BRAINSTORM.md)), zamieniłem reguły biznesowe na testy
-akceptacyjne (376 testów) i zweryfikowałem działanie; kod powstał z Claude Code jako asystentem programisty.
+akceptacyjne (378 testów) i zweryfikowałem działanie; kod powstał z Claude Code jako asystentem programisty.
 
 ## Prawa
 
