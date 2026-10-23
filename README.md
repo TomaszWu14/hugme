@@ -15,7 +15,7 @@ oceniony został stopień spełnienia wyzwania (7,67). [Oceny we wszystkich kryt
 
 📹 **[Prezentacja działania – 1:46, z lektorem (YouTube)](https://youtu.be/MpFg-FN4G50)** · [plik MP4](https://github.com/TomaszWu14/hugme/releases/download/filmy-2026-10/hugme-portfolio.mp4) · [napisy](docs/film/hugme-portfolio.srt)
 
-🌐 **Demo:** [hugme.twapp.pl](https://hugme.twapp.pl) – konta bez haseł, rolę wybierasz w pasku u góry, dane odnawiają
+▶ **Zobacz demo: [https://hugme.twapp.pl](https://hugme.twapp.pl)** (przy wejściu demo poprosi o imię, nazwisko i firmę) – konta bez haseł, rolę wybierasz w pasku u góry, dane odnawiają
 się po 20 minutach ciszy. Demo może zostać wyłączone bez zapowiedzi – wtedy
 uruchom aplikację lokalnie (instrukcja niżej, ok. 2 minuty).
 
