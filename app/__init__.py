@@ -34,6 +34,8 @@ def create_app(test_config=None):
         app.config.update(test_config)
     # Konta demo bez haseł (pasek, /konto, scenariusze /demo) – jedyne logowanie w prototypie, więc tylko na żądanie.
     app.config.setdefault("DEMO_ACCOUNTS", app.config["DEMO_MODE"] or os.environ.get("DEMO_ACCOUNTS") == "1")
+    # Bramka odwiedzających: przed demo trzeba się przedstawić (app/gate.py). Tylko przy DEMO_MODE; DEMO_VISITOR_GATE=0 wyłącza.
+    app.config.setdefault("DEMO_VISITOR_GATE", app.config["DEMO_MODE"] and os.environ.get("DEMO_VISITOR_GATE") != "0")
 
     Path(app.config["DATABASE"]).parent.mkdir(parents=True, exist_ok=True)
     _ensure_db(app)
@@ -42,7 +44,7 @@ def create_app(test_config=None):
     _security(app)
     _template_globals(app)
 
-    from app import auth, podpowiedzi, scenariusze
+    from app import auth, gate, podpowiedzi, scenariusze
     from app.views import admin, admin_potrzebny, admin_users, api, demo, komunikacja, kreator, posrednik, potrzebny, praca, public, razem, wiedza
     app.register_blueprint(auth.bp)
     app.register_blueprint(public.bp)
@@ -58,6 +60,8 @@ def create_app(test_config=None):
     app.register_blueprint(admin_potrzebny.bp)
     app.register_blueprint(admin_users.bp)
     app.register_blueprint(demo.bp)
+    app.register_blueprint(gate.bp)
+    gate.init(app)
     auth.init(app)
     podpowiedzi.init(app)
     scenariusze.init(app)

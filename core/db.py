@@ -244,6 +244,13 @@ CREATE TABLE IF NOT EXISTS ai_usage (
     day TEXT PRIMARY KEY,
     calls INTEGER NOT NULL DEFAULT 0
 );
+CREATE TABLE IF NOT EXISTS demo_visitors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    created_at TIMESTAMP NOT NULL,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    company TEXT NOT NULL
+);
 CREATE INDEX IF NOT EXISTS ix_reports_created ON reports(created_at);
 CREATE INDEX IF NOT EXISTS ix_notifications_user ON notifications(user_id, is_read);
 CREATE INDEX IF NOT EXISTS ix_messages_thread ON messages(thread_id);
