@@ -10,7 +10,8 @@
 {% set _ = items.append((href, text, here, n)) %}
 {% endfor %}
 {% for href, text in [('/admin/nabory', 'Nabory'), ('/admin/import', 'Import'), ('/admin/poczta', 'Kolejka e-mail'),
-                      ('/admin/uzytkownicy', 'Użytkownicy'), ('/admin/role', 'Role')] %}
+                      ('/admin/uzytkownicy', 'Użytkownicy'), ('/admin/role', 'Role'),
+                      ('/admin/odwiedzajacy', 'Odwiedzający demo')] %}
 {% set _ = more.append((href, text, request.path == href or request.path.startswith(href ~ '/'))) %}
 {% endfor %}
 <nav aria-label="Menu panelu Hubu" class="no-print admin-nav">

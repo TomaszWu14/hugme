@@ -14,7 +14,7 @@ from core import db  # noqa: E402
 from data import seed  # noqa: E402
 
 QUIET = timedelta(minutes=20)
-KEEP = {"ai_usage"}
+KEEP = {"ai_usage", "demo_visitors"}  # liczniki i rejestr odwiedzających (90 dni) przeżywają reset
 
 
 def last_write(con):
@@ -22,6 +22,8 @@ def last_write(con):
     ponytail: same UPDATE-y (np. zmiana statusu) nie mają znacznika czasu – nie wstrzymują resetu."""
     stamps = []
     for (table,) in con.execute("SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%'"):
+        if table in KEEP:  # wpis odwiedzającego nie jest „pracą” oglądającego – nie wstrzymuje resetu
+            continue
         if "created_at" in {r[1] for r in con.execute(f"PRAGMA table_info({table})")}:  # nosemgrep -- tabela z sqlite_master (schemat aplikacji), nie z wejścia
             stamps.append(con.execute(f"SELECT MAX(created_at) FROM {table}").fetchone()[0])  # nosec B608 # nosemgrep -- tabela z sqlite_master (schemat aplikacji), nie z wejścia
     latest = max((s for s in stamps if s), default=None)

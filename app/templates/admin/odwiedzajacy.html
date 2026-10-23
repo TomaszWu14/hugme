@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Odwiedzający demo – panel{% endblock %}
+{% block content %}
+<h1>Odwiedzający demo</h1>
+{% include "admin/_nav.html" %}
+<p class="lead">Osoby, które przedstawiły się przed wejściem do wersji demonstracyjnej (najnowsze na górze). Wpisy znikają po {{ days }} dniach i nie są czyszczone przy odnawianiu demo.</p>
+{% if rows %}
+<div class="table-wrap" tabindex="0" role="region" aria-label="Odwiedzający – na małym ekranie przewiń w bok">
+<table><caption>Odwiedzający: {{ rows|length }}</caption>
+  <thead><tr><th scope="col">Kiedy</th><th scope="col">Imię</th><th scope="col">Nazwisko</th><th scope="col">Firma</th></tr></thead>
+  <tbody>{% for r in rows %}<tr><td>{{ r.created_at|date }} {{ r.created_at[11:16] }}</td><td>{{ r.first_name }}</td><td>{{ r.last_name }}</td><td>{{ r.company }}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<p class="meta">Brak wpisów.</p>{% endif %}
+{% endblock %}
