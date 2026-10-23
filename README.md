@@ -82,6 +82,8 @@ Wszystko przez zmienne środowiskowe; bez żadnej aplikacja startuje lokalnie z 
 | `DEMO_MODE` | wyłączone | `1` = publiczne demo: konta z paska „Tryb demo” nie do zablokowania ani zmiany roli, przyciski „Napisz jako…” jednym kliknięciem dla gościa, komunikat o odnawianiu demo. |
 | `DEMO_ACCOUNTS` | wyłączone (włączone, gdy `DEMO_MODE=1`) | `1` = konta demo bez haseł (pasek „Tryb demo”, `/konto`, scenariusze `/demo`) bez reszty trybu demo – do pracy lokalnej. Bez tej flagi i bez `DEMO_MODE` przełącznik zwraca 404. |
 | `DEMO_VISITOR_GATE` | włączone, gdy `DEMO_MODE=1` | `0` = wyłącza bramkę odwiedzających: przed demo trzeba się przedstawić (imię, nazwisko, firma + zgoda RODO). Wpisy trzyma tabela `demo_visitors` przez 90 dni (nie czyści jej reset demo); lista: `/admin/odwiedzajacy`. |
+| `NTFY_URL` | brak | Pełny adres tematu ntfy (np. `https://ntfy.sh/<tajny-temat>` albo własny serwer). Po każdym udanym przedstawieniu się w bramce wysyła w tle powiadomienie push „imię nazwisko (firma) wszedł do hugme” (timeout 5 s, błąd tylko w logu). Bez zmiennej – brak wysyłki. |
+| `NTFY_TOKEN` | brak | Opcjonalny token dla serwera ntfy z kontrolą dostępu (nagłówek `Authorization: Bearer …`). |
 | `ANTHROPIC_API_KEY` | brak | Włącza funkcje AI. Bez klucza działają reguły i szablony. |
 | `ANTHROPIC_MODEL` | `claude-haiku-4-5` | Model używany przez `core/ai.py`. |
 | `AI_DAILY_LIMIT` | `300` | Dzienna pula wywołań AI (licznik w bazie, wspólny dla workerów); po wyczerpaniu szablony do północy UTC. |

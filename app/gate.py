@@ -16,6 +16,7 @@ from flask import (
 from itsdangerous import BadSignature, URLSafeTimedSerializer
 
 from app.auth import role_required, safe_next
+from app.visitor_notify import notify_visitor
 from core import db
 from core.privacy import mask
 
@@ -87,6 +88,7 @@ def enter():
         shown = {key: request.form.get(key, "").strip() for key, _ in FIELDS}
         return render_template("gate.html", next=nxt, values=shown, errors=errors), 422
     record(values["first_name"], values["last_name"], values["company"])
+    notify_visitor(values["first_name"], values["last_name"], values["company"])
     resp = redirect(nxt)
     resp.set_cookie(COOKIE, _serializer().dumps(1), max_age=VALID_DAYS * 24 * 3600, httponly=True, samesite="Lax",
                     secure=current_app.config["SESSION_COOKIE_SECURE"] or request.is_secure)
