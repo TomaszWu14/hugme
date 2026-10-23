@@ -1,10 +1,21 @@
 """Powiadomienie push (ntfy) o nowym odwiedzającym demo: tylko po udanym zapisie, w tle, nigdy nie psuje wejścia."""
 import pytest
 
-from app import visitor_notify
-from tests.test_gate import GOOD, gated, gc, submit, visitors  # noqa: F401 – fikstury bramki
+from app import create_app, visitor_notify
+from tests.test_gate import submit, visitors
 
 URL = "https://ntfy.example/tajny-temat"
+
+
+@pytest.fixture
+def gated(tmp_path):
+    return create_app({"TESTING": True, "DATABASE": str(tmp_path / "n.db"), "SECRET_KEY": "t", "DEMO_MODE": True,
+                       "DEMO_VISITOR_GATE": True})
+
+
+@pytest.fixture
+def gc(gated):
+    return gated.test_client()
 
 
 class SyncThread:

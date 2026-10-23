@@ -18,9 +18,9 @@ def _send(url, body, token):
         headers["Authorization"] = f"Bearer {token}"
     req = urllib.request.Request(url, data=body.encode("utf-8"), headers=headers, method="POST")
     try:
-        with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:  # noqa: S310 – adres z konfiguracji właściciela
+        with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:
             resp.read()
-    except Exception as exc:  # powiadomienie jest dodatkiem – nigdy nie psuje wejścia gościa
+    except Exception as exc:  # noqa: BLE001 – powiadomienie jest dodatkiem, nigdy nie psuje wejścia gościa
         log.warning("Powiadomienie ntfy nie wysłane: %s", exc)
 
 
@@ -32,5 +32,5 @@ def notify_visitor(first_name, last_name, company):
     body = f"{first_name} {last_name} ({company}) wszedł do {APP}"[:MAX_BODY]
     try:
         threading.Thread(target=_send, args=(url, body, os.environ.get("NTFY_TOKEN", "").strip()), daemon=True).start()
-    except Exception as exc:
+    except RuntimeError as exc:  # np. brak możliwości uruchomienia wątku
         log.warning("Powiadomienie ntfy nie wysłane: %s", exc)
