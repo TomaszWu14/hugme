@@ -106,3 +106,12 @@ def test_list_only_for_admin_newest_first(gated, gc):
     gc.post("/konto", data={"_csrf": csrf_of(gc, "/"), "user_id": 5})  # admin
     html = gc.get("/admin/odwiedzajacy").get_data(as_text=True)
     assert html.index("Druga") < html.index("Pierwsza")
+
+
+def test_clause_mentions_activity_record(gc):
+    html = gc.get("/wejscie").get_data(as_text=True)
+    assert ("powiadomień push ntfy. Zapisuję też, ile i jakie ekrany wersji demonstracyjnej obejrzałeś (bez adresu IP), "
+            "żeby wiedzieć, co zainteresowało gości. Poza tym nikomu danych nie przekazuję.") in html
+    assert ("via the ntfy push notification service. I also record how many and which screens of the demo you viewed "
+            "(without your IP address) to see what visitors find interesting. Apart from that I do not share") in html
+    assert "push ntfy; poza tym" not in html

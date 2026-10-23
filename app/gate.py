@@ -15,6 +15,7 @@ from flask import (
 )
 from itsdangerous import BadSignature, URLSafeTimedSerializer
 
+from app import visitor_activity
 from app.auth import role_required, safe_next
 from app.visitor_notify import notify_visitor
 from core import db
@@ -33,12 +34,23 @@ def _serializer():
     return URLSafeTimedSerializer(current_app.config["SECRET_KEY"], salt="demo-visitor")
 
 
-def _admitted():
+def _flag():
+    """Zawartość ważnego, podpisanego ciasteczka gościa albo None (brak, podrobione, wygasłe)."""
     try:
-        _serializer().loads(request.cookies.get(COOKIE, ""), max_age=VALID_DAYS * 24 * 3600)
-        return True
+        return _serializer().loads(request.cookies.get(COOKIE, ""), max_age=VALID_DAYS * 24 * 3600)
     except BadSignature:
-        return False
+        return None
+
+
+def _admitted():
+    return _flag() is not None
+
+
+def visitor_id():
+    """Id wpisu gościa z podpisanego ciasteczka; None dla flag sprzed zapisu aktywności (bez id) i bez flagi."""
+    flag = _flag() if request.cookies.get(COOKIE) else None
+    value = flag.get("v") if isinstance(flag, dict) else None
+    return value if isinstance(value, int) and not isinstance(value, bool) else None
 
 
 def init(app):
@@ -48,6 +60,17 @@ def init(app):
             return None
         target = request.full_path.rstrip("?") if request.method == "GET" else "/"
         return redirect(url_for("gate.enter", next=target))
+
+    @app.after_request
+    def visitor_activity_count(resp):
+        try:
+            if request.cookies.get(COOKIE) and visitor_activity.countable(request, resp, EXEMPT):
+                vid = visitor_id()
+                if vid is not None:
+                    visitor_activity.track(vid, request.path)
+        except Exception as exc:  # noqa: BLE001 – statystyka nigdy nie psuje odpowiedzi
+            current_app.logger.warning("Aktywność gościa pominięta: %s", exc)
+        return resp
 
 
 def clean(value):
@@ -59,13 +82,14 @@ def clean(value):
 
 
 def record(first_name, last_name, company):
-    """Zapisuje odwiedzającego i usuwa wpisy starsze niż 90 dni."""
+    """Zapisuje odwiedzającego, usuwa wpisy starsze niż 90 dni i zwraca id nowego wpisu."""
     cutoff = (datetime.now(timezone.utc) - timedelta(days=RETENTION_DAYS)).strftime("%Y-%m-%d %H:%M:%S")
     con = db.get_db()
     con.execute("DELETE FROM demo_visitors WHERE created_at < ?", (cutoff,))
-    con.execute("INSERT INTO demo_visitors (created_at, first_name, last_name, company) VALUES (?, ?, ?, ?)",
-                (db.now(), first_name, last_name, company))
+    cur = con.execute("INSERT INTO demo_visitors (created_at, first_name, last_name, company) VALUES (?, ?, ?, ?)",
+                      (db.now(), first_name, last_name, company))
     con.commit()
+    return cur.lastrowid
 
 
 @bp.route("/wejscie", methods=["GET", "POST"])
@@ -87,10 +111,10 @@ def enter():
     if errors:
         shown = {key: request.form.get(key, "").strip() for key, _ in FIELDS}
         return render_template("gate.html", next=nxt, values=shown, errors=errors), 422
-    record(values["first_name"], values["last_name"], values["company"])
+    vid = record(values["first_name"], values["last_name"], values["company"])
     notify_visitor(values["first_name"], values["last_name"], values["company"])
     resp = redirect(nxt)
-    resp.set_cookie(COOKIE, _serializer().dumps(1), max_age=VALID_DAYS * 24 * 3600, httponly=True, samesite="Lax",
+    resp.set_cookie(COOKIE, _serializer().dumps({"v": vid}), max_age=VALID_DAYS * 24 * 3600, httponly=True, samesite="Lax",
                     secure=current_app.config["SESSION_COOKIE_SECURE"] or request.is_secure)
     return resp
 
@@ -99,4 +123,5 @@ def enter():
 @role_required("admin")
 def visitors():
     rows = db.query("SELECT * FROM demo_visitors ORDER BY created_at DESC, id DESC")
+    rows = [{**dict(r), **visitor_activity.summary(r)} for r in rows]
     return render_template("admin/odwiedzajacy.html", rows=rows, days=RETENTION_DAYS)

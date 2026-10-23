@@ -12,6 +12,8 @@ services:
       DEMO_MODE: ${DEMO_MODE:-0}  # 1 = publiczne demo: konta bez haseł, przełącznik kont, reset po ciszy
       NTFY_URL: ${NTFY_URL:-}  # opcjonalnie: powiadomienie push o nowym odwiedzającym demo
       NTFY_TOKEN: ${NTFY_TOKEN:-}
+      NTFY_WATCH_COMPANIES: ${NTFY_WATCH_COMPANIES:-}  # frazy firm (po przecinku) dla pilnego pusha
+      NTFY_ENGAGED_VIEWS: ${NTFY_ENGAGED_VIEWS:-10}  # push po tylu ekranach demo; 0 = wyłączone
     volumes:
       - hugme-data:/data
 
