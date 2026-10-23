@@ -18,7 +18,8 @@ def _send(url, body, token):
         headers["Authorization"] = f"Bearer {token}"
     req = urllib.request.Request(url, data=body.encode("utf-8"), headers=headers, method="POST")
     try:
-        with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:
+        # schemat ograniczony do http(s) w notify_visitor; URL z konfiguracji operatora
+        with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:  # nosec B310
             resp.read()
     except Exception as exc:  # noqa: BLE001 – powiadomienie jest dodatkiem, nigdy nie psuje wejścia gościa
         log.warning("Powiadomienie ntfy nie wysłane: %s", exc)
@@ -28,6 +29,9 @@ def notify_visitor(first_name, last_name, company):
     """Wysyła w tle „{imię} {nazwisko} ({firma}) wszedł do hugme” na NTFY_URL; bez NTFY_URL nic nie robi."""
     url = os.environ.get("NTFY_URL", "").strip()
     if not url:
+        return
+    if not url.lower().startswith(("https://", "http://")):
+        log.warning("NTFY_URL pominięty: dozwolone tylko adresy http(s)")
         return
     body = f"{first_name} {last_name} ({company}) wszedł do {APP}"[:MAX_BODY]
     try:

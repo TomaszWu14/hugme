@@ -116,3 +116,13 @@ def test_runs_in_daemon_thread(monkeypatch):
     monkeypatch.setattr(visitor_notify.threading, "Thread", Spy)
     visitor_notify.notify_visitor("Anna", "Kowalska", "Acme")
     assert started == [True]
+
+
+def test_non_http_url_is_ignored(monkeypatch):
+    from app import visitor_notify
+
+    started = []
+    monkeypatch.setenv("NTFY_URL", "file:///etc/passwd")
+    monkeypatch.setattr(visitor_notify.threading, "Thread", lambda *a, **k: started.append(k) or None)
+    visitor_notify.notify_visitor("Jan", "Kowalski", "ACME")
+    assert started == []
