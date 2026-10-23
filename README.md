@@ -15,7 +15,7 @@ oceniony został stopień spełnienia wyzwania (7,67). [Oceny we wszystkich kryt
 
 📹 **[Prezentacja działania – 1:46, z lektorem (YouTube)](https://youtu.be/MpFg-FN4G50)** · [plik MP4](https://github.com/TomaszWu14/hugme/releases/download/filmy-2026-10/hugme-portfolio.mp4) · [napisy](docs/film/hugme-portfolio.srt)
 
-🌐 **Demo:** [hugme.twapp.pl](https://hugme.twapp.pl) – konta bez haseł, rolę wybierasz w pasku u góry, dane odnawiają
+▶ **Zobacz demo: [https://hugme.twapp.pl](https://hugme.twapp.pl)** (przy wejściu demo poprosi o imię, nazwisko i firmę) – konta bez haseł, rolę wybierasz w pasku u góry, dane odnawiają
 się po 20 minutach ciszy. Demo może zostać wyłączone bez zapowiedzi – wtedy
 uruchom aplikację lokalnie (instrukcja niżej, ok. 2 minuty).
 
@@ -64,7 +64,7 @@ przykładowymi; reset danych = usunięcie pliku bazy. Najszybszy przegląd: `/de
   czyta tylko `docker compose`.
 
 ```bash
-pytest                                      # 378 testów: ścieżki, role, CSRF, prywatność, trafność, AI
+pytest                                      # 433 testy: ścieżki, role, CSRF, prywatność, trafność, AI
 python -m playwright install chromium
 python scripts/axe_audit.py --zrzuty         # audyt dostępności + zrzuty ekranów
 SECRET_KEY=$(python -c "import secrets;print(secrets.token_hex(32))") docker compose up -d --build   # Docker
@@ -84,6 +84,8 @@ Wszystko przez zmienne środowiskowe; bez żadnej aplikacja startuje lokalnie z 
 | `DEMO_VISITOR_GATE` | włączone, gdy `DEMO_MODE=1` | `0` = wyłącza bramkę odwiedzających: przed demo trzeba się przedstawić (imię, nazwisko, firma + zgoda RODO). Wpisy trzyma tabela `demo_visitors` przez 90 dni (nie czyści jej reset demo); lista: `/admin/odwiedzajacy`. |
 | `NTFY_URL` | brak | Pełny adres tematu ntfy (np. `https://ntfy.sh/<tajny-temat>` albo własny serwer). Po każdym udanym przedstawieniu się w bramce wysyła w tle powiadomienie push „imię nazwisko (firma) wszedł do hugme” (timeout 5 s, błąd tylko w logu). Bez zmiennej – brak wysyłki. |
 | `NTFY_TOKEN` | brak | Opcjonalny token dla serwera ntfy z kontrolą dostępu (nagłówek `Authorization: Bearer …`). |
+| `NTFY_WATCH_COMPANIES` | brak | Frazy po przecinku (np. `acme, globex`). Gdy nazwa firmy gościa zawiera którąś z nich (bez wielkości liter i polskich znaków, fraza min. 2 znaki), push idzie jako pilny: „UWAGA firma z listy”. Wartość trzymaj tylko w zmiennych środowiska (Coolify), nie w repo. |
+| `NTFY_ENGAGED_VIEWS` | `10` | Po tylu obejrzanych ekranach demo gość daje jeden push „Gosc oglada demo” (firma z listy – pilny). `0` = wyłączone. Liczba ekranów, czas wizyty i najczęstsze sekcje są widoczne na `/admin/odwiedzajacy`. |
 | `ANTHROPIC_API_KEY` | brak | Włącza funkcje AI. Bez klucza działają reguły i szablony. |
 | `ANTHROPIC_MODEL` | `claude-haiku-4-5` | Model używany przez `core/ai.py`. |
 | `AI_DAILY_LIMIT` | `300` | Dzienna pula wywołań AI (licznik w bazie, wspólny dla workerów); po wyczerpaniu szablony do północy UTC. |

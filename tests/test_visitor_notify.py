@@ -126,3 +126,41 @@ def test_non_http_url_is_ignored(monkeypatch):
     monkeypatch.setattr(visitor_notify.threading, "Thread", lambda *a, **k: started.append(k) or None)
     visitor_notify.notify_visitor("Jan", "Kowalski", "ACME")
     assert started == []
+
+
+def _headers(req):
+    return {k.lower(): v for k, v in req.header_items()}
+
+
+@pytest.mark.parametrize("company", ["ÄCME sp. z o.o.", "  acme   SPÓŁKA", "Grupa Acme"])
+def test_watched_company_sends_urgent(monkeypatch, gc, sent, company):
+    monkeypatch.setenv("NTFY_URL", URL)
+    monkeypatch.setenv("NTFY_WATCH_COMPANIES", " x , acme,  ")  # „x” za krótka – pominięta
+    assert submit(gc, company=company).status_code == 302
+    req = sent[0][0]
+    headers = _headers(req)
+    assert headers["priority"] == "urgent" and headers["tags"] == "rotating_light"
+    assert headers["title"] == "UWAGA firma z listy: hugme" and all(v.isascii() for v in headers.values())
+    assert req.data.decode("utf-8") == f"⚠️ Anna Kowalska ({company.strip()}) wszedł do hugme"
+
+
+def test_diacritics_in_phrase_match_plain_company(monkeypatch):
+    monkeypatch.setenv("NTFY_WATCH_COMPANIES", "Łódzka Fabryka")
+    assert visitor_notify.watched("LODZKA   fabryka S.A.")
+    assert not visitor_notify.watched("Krakowska Fabryka")
+
+
+@pytest.mark.parametrize("phrases", ["", " , ,", "globex", "a"])
+def test_no_match_or_empty_list_sends_normal(monkeypatch, gc, sent, phrases):
+    monkeypatch.setenv("NTFY_URL", URL)
+    monkeypatch.setenv("NTFY_WATCH_COMPANIES", phrases)
+    submit(gc)
+    headers = _headers(sent[0][0])
+    assert headers["priority"] == "high" and headers["tags"] == "bell" and headers["title"] == "Nowy gosc: hugme"
+    assert sent[0][0].data.decode("utf-8") == "Anna Kowalska (Acme Sp. z o.o.) wszedł do hugme"
+
+
+def test_watched_company_without_url_sends_nothing(monkeypatch, gc, sent):
+    monkeypatch.setenv("NTFY_WATCH_COMPANIES", "acme")
+    assert submit(gc).status_code == 302
+    assert sent == []

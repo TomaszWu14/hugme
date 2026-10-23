@@ -19,6 +19,8 @@ def no_visitor_gate(monkeypatch):
 def no_ntfy(monkeypatch):
     monkeypatch.delenv("NTFY_URL", raising=False)  # powiadomienia push: w testach nigdy prawdziwej sieci
     monkeypatch.delenv("NTFY_TOKEN", raising=False)
+    monkeypatch.delenv("NTFY_WATCH_COMPANIES", raising=False)
+    monkeypatch.delenv("NTFY_ENGAGED_VIEWS", raising=False)
 
 
 @pytest.fixture
