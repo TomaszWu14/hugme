@@ -48,6 +48,12 @@ def test_exempt_paths_open_and_pages_redirect(gc):
     assert "przedstaw się, proszę" in gc.get("/wejscie").get_data(as_text=True)
 
 
+def test_gate_hides_owner_email_from_scrapers(gc):
+    html = gc.get("/wejscie").get_data(as_text=True)
+    assert "tomasz.wierzbowski@op.pl" not in html
+    assert "tomasz.wierzbowski [at] op.pl" in html
+
+
 @pytest.mark.parametrize("over", [{"first_name": None}, {"last_name": " a "}, {"company": ""}, {"consent": None},
                                   {"first_name": "A\x00nna"}, {"company": "x" * 101}, {"first_name": "jan@x.pl"}])
 def test_missing_or_bad_data_is_refused(gated, gc, over):
