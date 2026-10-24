@@ -20,3 +20,5 @@ demo/portfolio/*.wav
 demo/portfolio/*.mp4
 demo/portfolio/audio.txt
 demo/portfolio/klatki/
+
+.secret_key
