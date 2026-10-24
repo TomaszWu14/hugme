@@ -19,6 +19,18 @@ jobs:
       - run: pip install -r requirements.txt -r requirements-dev.txt
       - run: python -m pytest -q
 
+  # Osobny job (nie macierz), żeby nazwa wymaganego checka `test` się nie zmieniła.
+  test-py314:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+          cache: pip
+      - run: pip install -r requirements.txt -r requirements-dev.txt
+      - run: python -m pytest -q
+
   a11y:
     runs-on: ubuntu-latest
     steps:
