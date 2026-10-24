@@ -7,12 +7,14 @@ def test_home_has_problem_field_and_example(client):
     assert "Co jest trudne? Kogo to dotyczy?" in html
     assert "zespołem Downa" in html
     assert 'href="#tresc"' in html  # skip link
+    assert '<img src="https://portfolio.twapp.pl/px/hugme" alt="" width="1" height="1" hidden>' in html  # piksel statystyk portfolio
 
 
 def test_security_headers(client):
     resp = client.get("/")
     csp = resp.headers["Content-Security-Policy"]
     assert "script-src 'self'" in csp and "frame-ancestors 'none'" in csp
+    assert "img-src 'self' data: https://portfolio.twapp.pl" in csp
     assert resp.headers["X-Content-Type-Options"] == "nosniff"
     assert resp.headers["X-Frame-Options"] == "DENY"
     assert resp.headers["Cross-Origin-Opener-Policy"] == "same-origin"
