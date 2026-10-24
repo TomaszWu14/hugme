@@ -33,7 +33,9 @@ jobs:
           problems=()
           get() { curl -sS --max-time 30 --retry 3 --retry-delay 20 --retry-all-errors "$@"; }
 
-          code=$(get -o /dev/null -w '%{http_code}' "$DEMO_URL/") || true
+          # Bramka odwiedzających (app/gate.py) przekierowuje / na /wejscie (302) – idziemy za przekierowaniem
+          # (-L); końcowy 200 to strona bramki albo strona główna.
+          code=$(get -L --max-redirs 3 -o /dev/null -w '%{http_code}' "$DEMO_URL/") || true
           [ "$code" = 200 ] || problems+=("Strona główna / zwraca HTTP ${code:-brak odpowiedzi}")
 
           health=$(get "$DEMO_URL/zdrowie") || health=''
