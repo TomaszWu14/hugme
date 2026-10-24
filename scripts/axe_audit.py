@@ -60,7 +60,15 @@ PAGES = [
     ("admin", "/admin/uzytkownicy", "26-uzytkownicy"), ("admin", "/admin/uzytkownicy/2", None), ("admin", "/admin/uzytkownicy/nowy", None),
     ("admin", "/admin/role", "27-role"),
 ]
+# Ekran z kotwicą: na telefonie zrzut samej sekcji (cała strona dublowałaby zrzut ekranu nadrzędnego).
+SECTION_SHOTS = {"13-luki": "section[aria-labelledby=luki]"}  # /admin/luki → /admin/trendy#luki
 ROLE_UID = {"mieszkaniec": 1, "ngo": 2, "gmina": 3, "ekspert": 4, "admin": 5}  # id kont demo z seeda
+
+
+def section_clip(page, selector):
+    """Pełna szerokość strony, od nagłówka sekcji (z marginesem) do jej końca."""
+    return page.evaluate("""(sel) => { const r = document.querySelector(sel).getBoundingClientRect(), y = r.top + scrollY;
+      return {x: 0, y: Math.max(0, y - 16), width: document.documentElement.clientWidth, height: r.height + 32}; }""", selector)
 
 
 def serve():
@@ -148,7 +156,11 @@ def main(screens=False):
                                                 [n["target"][0] for n in v["nodes"][:3]]) for v in axe["violations"]],
                                 "passes": len(axe["passes"]), **extra})
                 if screens and shot:
-                    page.screenshot(path=str(shots / f"{shot}-{vp_name}.png"), full_page=vp_name == "telefon")
+                    out = str(shots / f"{shot}-{vp_name}.png")
+                    if vp_name == "telefon" and shot in SECTION_SHOTS:
+                        page.screenshot(path=out, full_page=True, clip=section_clip(page, SECTION_SHOTS[shot]))
+                    else:
+                        page.screenshot(path=out, full_page=vp_name == "telefon")
             # Tryb wysokiego kontrastu i większego tekstu – strona startowa
             for pref in ("kontrast", "duzy-tekst"):
                 ctx.clear_cookies()
