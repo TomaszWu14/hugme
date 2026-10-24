@@ -244,6 +244,16 @@ CREATE TABLE IF NOT EXISTS ai_usage (
     day TEXT PRIMARY KEY,
     calls INTEGER NOT NULL DEFAULT 0
 );
+CREATE TABLE IF NOT EXISTS demo_visitors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    created_at TIMESTAMP NOT NULL,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    company TEXT NOT NULL,
+    page_views INTEGER NOT NULL DEFAULT 0,
+    last_seen_at TIMESTAMP,
+    sections TEXT NOT NULL DEFAULT '{}'
+);
 CREATE INDEX IF NOT EXISTS ix_reports_created ON reports(created_at);
 CREATE INDEX IF NOT EXISTS ix_notifications_user ON notifications(user_id, is_read);
 CREATE INDEX IF NOT EXISTS ix_messages_thread ON messages(thread_id);
@@ -277,7 +287,9 @@ def init_schema(con):
     con.executescript(SCHEMA)
     # Migracja istniejących baz (wolumen na produkcji): kolumny dodane po pierwszym wdrożeniu.
     for table, column in (("users", "is_active INTEGER NOT NULL DEFAULT 1"), ("ideas", "hidden INTEGER NOT NULL DEFAULT 0"),
-                          ("messages", "hidden INTEGER NOT NULL DEFAULT 0")):
+                          ("messages", "hidden INTEGER NOT NULL DEFAULT 0"),
+                          ("demo_visitors", "page_views INTEGER NOT NULL DEFAULT 0"), ("demo_visitors", "last_seen_at TIMESTAMP"),
+                          ("demo_visitors", "sections TEXT NOT NULL DEFAULT '{}'")):
         if column.split()[0] not in {r[1] for r in con.execute(f"PRAGMA table_info({table})")}:  # nosemgrep -- migracja: nazwa tabeli/kolumn ze stałej w kodzie, wartości przez ?
             con.execute(f"ALTER TABLE {table} ADD COLUMN {column}")  # nosemgrep -- migracja: nazwa tabeli/kolumn ze stałej w kodzie, wartości przez ?
     con.commit()

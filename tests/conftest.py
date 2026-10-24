@@ -10,6 +10,19 @@ def no_ai(monkeypatch):
     monkeypatch.setenv("AI_DISABLED", "1")
 
 
+@pytest.fixture(autouse=True)
+def no_visitor_gate(monkeypatch):
+    monkeypatch.setenv("DEMO_VISITOR_GATE", "0")  # bramka odwiedzających: włącza ją dopiero test_gate.py
+
+
+@pytest.fixture(autouse=True)
+def no_ntfy(monkeypatch):
+    monkeypatch.delenv("NTFY_URL", raising=False)  # powiadomienia push: w testach nigdy prawdziwej sieci
+    monkeypatch.delenv("NTFY_TOKEN", raising=False)
+    monkeypatch.delenv("NTFY_WATCH_COMPANIES", raising=False)
+    monkeypatch.delenv("NTFY_ENGAGED_VIEWS", raising=False)
+
+
 @pytest.fixture
 def app(tmp_path):
     return create_app({"TESTING": True, "DATABASE": str(tmp_path / "test.db"), "SECRET_KEY": "test", "DEMO_ACCOUNTS": True})

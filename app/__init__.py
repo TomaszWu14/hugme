@@ -1,5 +1,6 @@
 """Fabryka aplikacji HugMe: konfiguracja, bezpieczeństwo (CSRF, CSP, ciasteczka), blueprinty."""
 import hmac
+import logging
 import os
 import secrets
 from pathlib import Path
@@ -19,10 +20,36 @@ CSP = (
 )
 
 
+def _persistent_secret_key(path: Path) -> str:
+    """Klucz z pliku obok bazy (tworzony raz, chmod 600) – stały po restarcie i wspólny dla workerów gunicorna.
+
+    Gdy SECRET_KEY nie jest ustawiony w env. Zapis atomowy (plik tymczasowy + link), więc równoległe workery
+    nigdy nie widzą pustego pliku ani nie rozjeżdżają się na różne klucze."""
+    try:
+        if not path.exists():
+            tmp = path.with_name(f"{path.name}.{os.getpid()}.tmp")
+            fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+            with os.fdopen(fd, "w") as f:
+                f.write(secrets.token_urlsafe(48))
+            try:
+                os.link(tmp, path)
+            except FileExistsError:
+                pass
+            finally:
+                tmp.unlink(missing_ok=True)
+        key = path.read_text().strip()
+        if key:
+            return key
+    except OSError:
+        pass
+    logging.getLogger(__name__).warning("Brak klucza sesji w konfiguracji i nie można zapisać %s – klucz losowy do restartu.", path)
+    return secrets.token_hex(32)
+
+
 def create_app(test_config=None):
     app = Flask(__name__, instance_path=str(ROOT / "instance"))
     app.config.update(
-        SECRET_KEY=os.environ.get("SECRET_KEY") or secrets.token_hex(32),
+        SECRET_KEY=os.environ.get("SECRET_KEY"),
         DATABASE=os.environ.get("DATABASE", str(ROOT / "instance" / "hugme.db")),
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Lax",
@@ -34,15 +61,19 @@ def create_app(test_config=None):
         app.config.update(test_config)
     # Konta demo bez haseł (pasek, /konto, scenariusze /demo) – jedyne logowanie w prototypie, więc tylko na żądanie.
     app.config.setdefault("DEMO_ACCOUNTS", app.config["DEMO_MODE"] or os.environ.get("DEMO_ACCOUNTS") == "1")
+    # Bramka odwiedzających: przed demo trzeba się przedstawić (app/gate.py). Tylko przy DEMO_MODE; DEMO_VISITOR_GATE=0 wyłącza.
+    app.config.setdefault("DEMO_VISITOR_GATE", app.config["DEMO_MODE"] and os.environ.get("DEMO_VISITOR_GATE") != "0")
 
     Path(app.config["DATABASE"]).parent.mkdir(parents=True, exist_ok=True)
+    if not app.config.get("SECRET_KEY"):
+        app.config["SECRET_KEY"] = _persistent_secret_key(Path(app.config["DATABASE"]).parent / ".secret_key")
     _ensure_db(app)
     app.teardown_appcontext(db.close_db)
 
     _security(app)
     _template_globals(app)
 
-    from app import auth, podpowiedzi, scenariusze
+    from app import auth, gate, podpowiedzi, scenariusze
     from app.views import admin, admin_potrzebny, admin_users, api, demo, komunikacja, kreator, posrednik, potrzebny, praca, public, razem, wiedza
     app.register_blueprint(auth.bp)
     app.register_blueprint(public.bp)
@@ -58,6 +89,8 @@ def create_app(test_config=None):
     app.register_blueprint(admin_potrzebny.bp)
     app.register_blueprint(admin_users.bp)
     app.register_blueprint(demo.bp)
+    app.register_blueprint(gate.bp)
+    gate.init(app)
     auth.init(app)
     podpowiedzi.init(app)
     scenariusze.init(app)

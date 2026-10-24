@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf %}
+{% block title %}Przedstaw się{% endblock %}
+{% block content %}
+<h1>Zanim wejdziesz do wersji demonstracyjnej, przedstaw się, proszę.</h1>
+<p class="lead">Before you enter the demo, please introduce yourself.</p>
+{% if errors %}<div class="notice" role="alert"><ul>{% for e in errors.values() %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+<form method="post" action="{{ url_for('gate.enter') }}" class="form">
+  {{ csrf() }}
+  <input type="hidden" name="next" value="{{ next }}">
+  <div hidden><label>Nie wypełniaj tego pola <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+  <p><label for="first_name">Imię / First name</label>
+    <input id="first_name" name="first_name" required minlength="2" maxlength="100" autocomplete="given-name" value="{{ values.get('first_name', '') }}"></p>
+  <p><label for="last_name">Nazwisko / Last name</label>
+    <input id="last_name" name="last_name" required minlength="2" maxlength="100" autocomplete="family-name" value="{{ values.get('last_name', '') }}"></p>
+  <p><label for="company">Firma / Company</label>
+    <input id="company" name="company" required minlength="2" maxlength="100" autocomplete="organization" value="{{ values.get('company', '') }}"></p>
+  <p><label><input type="checkbox" name="consent" value="1" required> Zapoznałem(-am) się z informacją o przetwarzaniu danych poniżej. / I have read the data processing notice below.</label></p>
+  <button type="submit" class="btn btn--primary">Wchodzę do demo</button>
+</form>
+<section aria-labelledby="rodo-h" class="meta">
+  <h2 id="rodo-h" class="h3">Informacja o przetwarzaniu danych (RODO)</h2>
+  <p>Administratorem danych jest Tomasz Wierzbowski (kontakt: tomasz.wierzbowski [at] op.pl). Imię, nazwisko i nazwę firmy przetwarzam wyłącznie w celu kontroli dostępu do wersji demonstracyjnej i statystyki odwiedzin portfolio, na podstawie prawnie uzasadnionego interesu (art. 6 ust. 1 lit. f RODO). Dane przechowuję 90 dni, potem są automatycznie usuwane. O każdej wizycie (imię, nazwisko, firma) dostaję powiadomienie na telefon przez usługę powiadomień push ntfy. Zapisuję też, ile i jakie ekrany wersji demonstracyjnej obejrzałeś (bez adresu IP), żeby wiedzieć, co zainteresowało gości. Poza tym nikomu danych nie przekazuję. Masz prawo dostępu do danych, ich sprostowania, usunięcia, ograniczenia przetwarzania i sprzeciwu – napisz na adres powyżej. Przysługuje Ci skarga do Prezesa UODO.</p>
+  <p lang="en">The controller is Tomasz Wierzbowski (contact: tomasz.wierzbowski [at] op.pl). I process your first name, last name and company name solely to control access to the demo and for portfolio visit statistics, on the basis of legitimate interest (Art. 6(1)(f) GDPR). I keep the data for 90 days, after which it is deleted automatically. I receive a phone notification of each visit (first name, last name, company) via the ntfy push notification service. I also record how many and which screens of the demo you viewed (without your IP address) to see what visitors find interesting. Apart from that I do not share the data with anyone. You have the right of access, rectification, erasure, restriction of processing and objection – write to the address above. You may lodge a complaint with the President of the Polish data protection authority (UODO).</p>
+</section>
+{% endblock %}
