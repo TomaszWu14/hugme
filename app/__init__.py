@@ -42,7 +42,7 @@ def _persistent_secret_key(path: Path) -> str:
             return key
     except OSError:
         pass
-    logging.getLogger(__name__).warning("Brak SECRET_KEY i nie można zapisać %s – klucz losowy do restartu.", path)
+    logging.getLogger(__name__).warning("Brak klucza sesji w konfiguracji i nie można zapisać %s – klucz losowy do restartu.", path)
     return secrets.token_hex(32)
 
 
