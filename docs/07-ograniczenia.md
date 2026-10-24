@@ -34,7 +34,7 @@ Lista do decyzji, nie zadania do naprawy w tym repozytorium.
 | 11 | Liczba miejsc w ofercie po cichu ograniczana do 1–20 | `app/views/potrzebny.py` `save_offer` | Komunikat czy twardy błąd? |
 | 12 | Wydarzenia bez limitu miejsc | `app/views/razem.py` `toggle_signup` | – |
 | 13 | Kolejka e-mail rośnie bez końca | `core/notify.py` | – |
-| 14 | Bez `SECRET_KEY` restart aplikacji wylogowuje wszystkich | `app/__init__.py` `create_app` | – |
+| 14 | Bez `SECRET_KEY` klucz leży w pliku `.secret_key` obok bazy; gdy katalog nie jest trwały, restart wylogowuje wszystkich | `app/__init__.py` `create_app` | – |
 | 15 | Wartości wielokrotne jako CSV w polach tekstowych | `core/db.py` | – |
 | 16 | Trafność zmierzona na 16 zdaniach testowych | `tests/test_trafnosc.py` | Jak wypadnie na prawdziwych zgłoszeniach? |
 

@@ -76,7 +76,7 @@ Wszystko przez zmienne środowiskowe; bez żadnej aplikacja startuje lokalnie z 
 
 | Zmienna | Domyślnie | Do czego |
 |---|---|---|
-| `SECRET_KEY` | losowy przy każdym starcie | Podpis sesji i tokenów CSRF. **Na serwerze ustaw stały** – inaczej restart wylogowuje wszystkich. `docker-compose.yml` go wymaga. |
+| `SECRET_KEY` | wygenerowany raz i zapisany w `.secret_key` obok pliku bazy (chmod 600) | Podpis sesji i tokenów CSRF. Najlepiej ustaw jawnie (`docker-compose.yml` go wymaga). Bez zmiennej klucz jest stały po restarcie i wspólny dla workerów, o ile katalog bazy (`/data`) jest trwały i zapisywalny; inaczej – losowy do restartu (ostrzeżenie w logu). |
 | `DATABASE` | `instance/hugme.db` (w obrazie `/data/hugme.db`) | Ścieżka pliku SQLite; czyta ją też `scripts/reset_demo.py`. |
 | `COOKIE_SECURE` | wyłączone (w obrazie `1`) | `1` = ciasteczko sesji tylko po HTTPS. |
 | `DEMO_MODE` | wyłączone | `1` = publiczne demo: konta z paska „Tryb demo” nie do zablokowania ani zmiany roli, przyciski „Napisz jako…” jednym kliknięciem dla gościa, komunikat o odnawianiu demo. |
