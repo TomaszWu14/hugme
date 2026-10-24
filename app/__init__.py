@@ -14,7 +14,7 @@ from core.match import label as score_label
 ROOT = Path(__file__).resolve().parent.parent
 
 CSP = (
-    "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
+    "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://portfolio.twapp.pl; "
     "font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; "
     "form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"
 )
