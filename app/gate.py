@@ -8,6 +8,7 @@ from flask import (
     Blueprint,
     abort,
     current_app,
+    g,
     redirect,
     render_template,
     request,
@@ -15,7 +16,7 @@ from flask import (
 )
 from itsdangerous import BadSignature, URLSafeTimedSerializer
 
-from app import visitor_activity
+from app import portfolio_pass, visitor_activity
 from app.auth import role_required, safe_next
 from app.visitor_notify import notify_visitor
 from core import db
@@ -27,6 +28,7 @@ COOKIE = "visitor_ok"
 VALID_DAYS = 30
 RETENTION_DAYS = 90
 EXEMPT = ("/zdrowie", "/static/", "/api/", "/wejscie")
+PASS_NAME = "Gość z portfolio"
 FIELDS = (("first_name", "Imię"), ("last_name", "Nazwisko"), ("company", "Firma"))
 
 
@@ -53,16 +55,30 @@ def visitor_id():
     return value if isinstance(value, int) and not isinstance(value, bool) else None
 
 
+def _admit_by_pass():
+    """Przepustka z portfolio (ciasteczko gosc): wpis „z portfolio” bez danych osobowych i bez pusha ntfy.
+    Ciasteczko demo ustawia after_request; True = gość wpuszczony."""
+    if not portfolio_pass.valid(request.cookies.get(portfolio_pass.COOKIE, "")):
+        return False
+    g.portfolio_visitor = record(PASS_NAME, "", "")
+    return True
+
+
 def init(app):
     @app.before_request
     def visitor_gate():
         if not current_app.config["DEMO_VISITOR_GATE"] or request.path.startswith(EXEMPT) or _admitted():
+            return None
+        if _admit_by_pass():
             return None
         target = request.full_path.rstrip("?") if request.method == "GET" else "/"
         return redirect(url_for("gate.enter", next=target))
 
     @app.after_request
     def visitor_activity_count(resp):
+        vid = g.get("portfolio_visitor")
+        if vid is not None:
+            set_flag(resp, vid)
         try:
             if request.cookies.get(COOKIE) and visitor_activity.countable(request, resp, EXEMPT):
                 vid = visitor_id()
@@ -92,12 +108,19 @@ def record(first_name, last_name, company):
     return cur.lastrowid
 
 
+def set_flag(resp, vid):
+    resp.set_cookie(COOKIE, _serializer().dumps({"v": vid}), max_age=VALID_DAYS * 24 * 3600, httponly=True, samesite="Lax",
+                    secure=current_app.config["SESSION_COOKIE_SECURE"] or request.is_secure)
+
+
 @bp.route("/wejscie", methods=["GET", "POST"])
 def enter():
     if not current_app.config["DEMO_VISITOR_GATE"]:
         abort(404)
     nxt = safe_next(request.values.get("next"), "/")
     if request.method == "GET":
+        if not _admitted() and _admit_by_pass():  # ważna przepustka: bez formularza
+            return redirect(nxt)
         return render_template("gate.html", next=nxt, values={}, errors={})
     if request.form.get("website"):  # pułapka na boty (pole ukryte)
         abort(400)
@@ -114,8 +137,7 @@ def enter():
     vid = record(values["first_name"], values["last_name"], values["company"])
     notify_visitor(values["first_name"], values["last_name"], values["company"])
     resp = redirect(nxt)
-    resp.set_cookie(COOKIE, _serializer().dumps({"v": vid}), max_age=VALID_DAYS * 24 * 3600, httponly=True, samesite="Lax",
-                    secure=current_app.config["SESSION_COOKIE_SECURE"] or request.is_secure)
+    set_flag(resp, vid)
     return resp
 
 

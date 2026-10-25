@@ -107,7 +107,7 @@
     <p><a href="/dostepnosc">Deklaracja dostępności</a> · <a href="/prywatnosc">Prywatność</a> · <a href="/api/v1/innowacje">Dane otwarte (dla programistów)</a></p>
   </div>
 </footer>
-<img src="https://portfolio.twapp.pl/px/hugme" alt="" width="1" height="1" hidden>{# piksel statystyk portfolio – bez JS, jedno miejsce na wszystkich ekranach #}
+{% block px %}<img src="https://portfolio.twapp.pl/px/hugme" alt="" width="1" height="1" hidden>{% endblock %}{# piksel statystyk portfolio – bez JS, jedno miejsce na wszystkich ekranach #}
 <script src="{{ url_for('static', filename='js/czekaj.js') }}" defer></script> {# nosemgrep -- url_for('static') – stała ścieżka #}
 </body>
 </html>
